@@ -37,7 +37,7 @@ class Parser {
       this.variables[key] = value
     }
     
-    else if (initializer == "access" {
+    else if (initializer == "access") {
       let name = lex.nextToken();
       return this.variables[name];
     }

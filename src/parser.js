@@ -1,8 +1,8 @@
 // parser.js
 
-const keywords = require("./keywords.js");
-const arguments = require("./arguments.js");
-const initializers = require("./initializers.js");
+const keywords = require("./keyword.js");
+const arguments = require("./argument.js");
+const initializers = require("./initializer.js");
 
 
 

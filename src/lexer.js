@@ -1,13 +1,15 @@
 // lexer.py
 const keywords = require("./keyword.js");
+const arguments = require("./arguments.js");
 
 
 
 class Lexer {
   constructor (source) {
     this.source = source;
-    this.keywords = keywords;
-    this.parsed = source.split(' ');
+    this.chars = [].concat(keywords,arguments);
+    this.parsed = this.source.split(' ');
+
     this.curPos = 0;
    
   }

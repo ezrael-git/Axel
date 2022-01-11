@@ -29,6 +29,7 @@ class Parser {
     if (initializer == "log") {
       console.log("log initiated");
       console.log(lex.nextToken());
+      return "LOG";
     }
     
     // define, name, =, value
@@ -37,6 +38,7 @@ class Parser {
       lex.nextToken();
       let value = lex.nextToken();
       this.variables[key] = value
+      return "SET_OR_DEFINE";
     }
     
     else if (initializer == "access") {

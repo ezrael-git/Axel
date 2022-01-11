@@ -19,14 +19,11 @@ class Parser {
   
   parse () {
     let lex = this.lex;
-    let initializer = lex.nextToken();
+    let initializer = lex.parsed[0];
+    lex.nextToken();
     console.log("parse initiated");
     console.log("initializer: " + initializer);
     
-    if (!initializers.includes(initializer)) {
-      return false
-    }
-    console.log("passed check");
     
     // log, expression
     if (initializer == "log") {

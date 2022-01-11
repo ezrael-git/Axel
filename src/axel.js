@@ -1,12 +1,18 @@
 const Lexer = require("./lexer.js");
 const Parser = require("./parser.js");
 
+class Axel {
 
-function program (src) {
-  let lexer = new Lexer(src);
-  let parser = new Parser(src,lexer);
-  let r = parser.parse();
-  return r
+  initialize () {
+    this.parser = new Parser();
+  }
+
+  program (src) {
+    let lex = new Lexer(src);
+    let r = this.parser.parse(lex);
+    return r
+  }
+
 }
 
 

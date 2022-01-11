@@ -8,7 +8,7 @@ const initializers = require("./initializer.js");
 
 
 class Parser {
-  constructor (src,lexical) {
+  constructor (lexical) {
     this.source = src;
     this.lex = lexical;
     this.accepted = [].concat(keywords,arguments);

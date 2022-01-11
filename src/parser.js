@@ -8,17 +8,14 @@ const initializers = require("./initializer.js");
 
 
 class Parser {
-  constructor (lexical) {
-    this.source = src;
-    this.lex = lexical;
+  constructor () {
     this.accepted = [].concat(keywords,arguments);
     
     this.variables = {}
     
   }
   
-  parse () {
-    let lex = this.lex;
+  parse (lex) {
     let initializer = lex.parsed[0];
     lex.nextToken();
     console.log("parse initiated");

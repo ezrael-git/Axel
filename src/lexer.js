@@ -10,7 +10,7 @@ class Lexer {
     this.chars = [].concat(keywords,arguments);
     this.parsed = this.source.split(' ');
 
-    this.curPos = 0;
+    this.curPos = -1;
    
   }
   

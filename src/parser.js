@@ -20,12 +20,16 @@ class Parser {
   parse () {
     let lex = this.lex;
     let initializer = lex.nextToken();
+    console.log("parse initiated");
     if (!initializers.includes(initializer)) {
       return false
     }
+    console.log("passed check");
+    console.log("initializer: " + initializer);
     
     // log, expression
     else if (initializer == "log") {
+      console.log("log initiated");
       console.log(lex.nextToken());
     }
     

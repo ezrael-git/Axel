@@ -28,7 +28,7 @@ class Parser {
     console.log("initializer: " + initializer);
     
     // log, expression
-    else if (initializer == "log") {
+    if (initializer == "log") {
       console.log("log initiated");
       console.log(lex.nextToken());
     }

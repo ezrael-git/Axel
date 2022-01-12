@@ -8,12 +8,17 @@ class Axel {
   }
 
   program (src) {
-    let lex = new Lexer(src);
-    let r = this.parser.parse(lex);
-    return r
+    let strp = src.split(';');
+    let log = [];
+    strp.forEach(function (line) {
+      let lex = new Lexer(line);
+      let r = this.parser.parse(lex);
+      log.push(r);
+    }
+    return log;
   }
 
 }
 
 
-module.exports = program;
+module.exports = Axel;

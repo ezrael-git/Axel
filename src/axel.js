@@ -1,5 +1,5 @@
-const Lexer = require("./lexer.js");
-const Parser = require("./parser.js");
+const Lexer = require("./compiler/lexer.js");
+const Parser = require("./compiler/parser.js");
 
 class Axel {
 

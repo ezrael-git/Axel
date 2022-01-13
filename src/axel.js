@@ -14,7 +14,7 @@ class Axel {
       let lex = new Lexer(line);
       let r = this.parser.parse(lex);
       log.push(r);
-    }
+    });
     return log;
   }
 

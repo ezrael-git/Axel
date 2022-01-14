@@ -1,7 +1,7 @@
 // analysis.js
 // checks for syntax errors and so on
-const Error = require("./exceptions/exception.js");
-const Data = require("./data/bundler.js");
+const Error = require("../exceptions/exception.js");
+const Data = require("../data/bundler.js");
 
 class Analyze {
   constructor (code) {

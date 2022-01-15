@@ -14,6 +14,26 @@ class Parser {
     this.variables = {"initialized": true}
     
   }
+
+  _save(arg, starter, stoppers) {
+    let saved = "";
+    let saving = false
+    arg.split('').forEach(function (c) {
+
+      if (c == starter) {
+        saving = true
+      };
+
+      if (stoppers.includes(c)) {
+        saving = false
+      };
+
+      if (saving == true) {
+        saved += c
+      };
+    };
+    return saved;
+  }
   
   parse (lex) {
     let line = lex.source;
@@ -35,23 +55,9 @@ class Parser {
     let stoppers = [' ', ')', '('] // all the letters that cannot be used in a variable name
     if (line.includes('#')) {
 
-      let saved = "";
-      let saving = false
-      line.split('').forEach(function (c) {
 
-        if (c == "#") {
-          saving = true
-        };
 
-        if (stoppers.includes(c)) {
-          saving = false
-        };
-
-        if (saving == true) {
-          saved += c
-        };
-
-      });
+      let parsed = this._save(line, "#", stoppers);
       line = line.replaceAll(saved, this.variables[saved]);
 
     };

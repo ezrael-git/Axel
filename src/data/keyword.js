@@ -1,5 +1,5 @@
 // replacement of keywords
 
 module.exports = {
-  "log": "console.log"
+  "console.log": "log"
 }

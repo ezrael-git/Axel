@@ -3,7 +3,7 @@ const Parser = require("./compiler/parser.js");
 
 class Axel {
 
-  initialize () {
+  constructor () {
     this.parser = new Parser();
   }
 

@@ -10,9 +10,10 @@ class Axel {
   program (src) {
     let strp = src.split(';');
     let log = [];
+    let parser = this.parser;
     strp.forEach(function (line) {
       let lex = new Lexer(line);
-      let r = this.parser.parse(lex);
+      let r = parser.parse(lex);
       log.push(r);
     });
     return log;

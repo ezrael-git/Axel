@@ -11,7 +11,7 @@ class Parser {
   constructor () {
     this.accepted = [].concat(keywords,arguments);
     
-    this.variables = {}
+    this.variables = {"initialized": true}
     
   }
   

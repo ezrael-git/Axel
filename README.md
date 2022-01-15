@@ -11,8 +11,8 @@ Designed to be simple, flexible, and fast.
 const Axel = require("axel.js");
 Axel.program('
 
-define fruits = ['apple', 'banana', 'pear'];
-log(access fruits);
+@fruit = 'peach';
+log(#fruit);
 
 ');
 ```
@@ -20,4 +20,5 @@ log(access fruits);
 In the first line, we require the main Axel file.
 In the second line, we access the `Axel.program()` method. This is necessary for our code, as the Axel compiler needs to receive the input as a multiline string.
 
-In the rest of the lines, we define a simple Axel program that makes a list called `fruits` and later logs it to the console.
+Next, we make a variable called `fruit` and assign to it the string `'peach'`. `@` in Axel is for the declaration of variables, whereas `#` accesses the variables.
+All variables are technically global in Axel. 

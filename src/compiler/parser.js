@@ -31,7 +31,7 @@ class Parser {
       if (saving == true) {
         saved += c
       };
-    };
+    });
     return saved;
   }
   

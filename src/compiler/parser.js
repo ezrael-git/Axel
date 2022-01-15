@@ -20,9 +20,6 @@ class Parser {
     let saving = false
     arg.split('').forEach(function (c) {
 
-      if (c == starter) {
-        saving = true
-      };
 
       if (stoppers.includes(c)) {
         saving = false
@@ -31,6 +28,11 @@ class Parser {
       if (saving == true) {
         saved += c
       };
+
+      if (c == starter) {
+        saving = true
+      };
+
     });
     return saved;
   }
@@ -58,7 +60,6 @@ class Parser {
 
 
       let parsed = this._save(line, "#", stoppers);
-      console.log("PARSED KW: " + parsed);
       line = line.replaceAll("#" + parsed, this.variables[parsed]);
 
     };

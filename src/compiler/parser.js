@@ -25,7 +25,7 @@ class Parser {
     };
 
     // now we can run the line
-    console.log(line);
+    console.log("parsed: " + line);
     eval(line);
     
   }

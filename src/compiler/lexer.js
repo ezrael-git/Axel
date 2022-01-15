@@ -1,6 +1,6 @@
 // lexer.py
-const keywords = require("..data/keyword.js");
-const arguments = require("..data/argument.js");
+const keywords = require("../data/keyword.js");
+const arguments = require("../data/argument.js");
 
 
 

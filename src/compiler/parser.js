@@ -21,7 +21,7 @@ class Parser {
     // let's first replace all the keywords with their JS correspondents
     for (const key in keywords) {
       let val = keywords[key];
-      let line = line.replaceAll(key, val);
+      line = line.replaceAll(key, val);
     };
 
     // now we can run the line

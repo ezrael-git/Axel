@@ -9,12 +9,12 @@ Designed to be simple, flexible, and fast.
 # Quick Usage
 ```js
 const Axel = require("axel.js");
-Axel.program('
+Axel.program(`
 
 @fruit = 'peach';
 log(#fruit);
 
-');
+`);
 ```
 **Explanation:** 
 In the first line, we require the main Axel file.

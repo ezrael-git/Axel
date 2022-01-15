@@ -16,32 +16,17 @@ class Parser {
   }
   
   parse (lex) {
-    let initializer = lex.parsed[0];
-    lex.nextToken();
-    console.log("parse initiated");
-    console.log("initializer: " + initializer);
-    
-    
-    // log, expression
-    if (initializer == "log") {
-      console.log("log initiated");
-      console.log(lex.nextToken());
-      return "LOG";
-    }
-    
-    // define, name, =, value
-    else if (initializer == "define") {
-      let key = lex.nextToken();
-      lex.nextToken();
-      let value = lex.nextToken();
-      this.variables[key] = value
-      return "SET_OR_DEFINE";
-    }
-    
-    else if (initializer == "access") {
-      let name = lex.nextToken();
-      return this.variables[name];
-    }
+    let line = lex.source;
+    // translating to JS
+    // let's first replace all the keywords with their JS correspondents
+    for (const key in keywords) {
+      let val = keywords[key];
+      line.replaceAll(key, val);
+    };
+
+    // now we can run the line
+    console.log(line);
+    eval(line);
     
   }
 }

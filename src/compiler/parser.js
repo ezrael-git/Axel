@@ -24,6 +24,38 @@ class Parser {
       line = line.replaceAll(key, val);
     };
 
+    // add variable declarations to this.variables
+    if (line.includes("@")) {
+      let temp = line.replaceAll('@', 'this.variables[');
+      temp = temp.replaceAll('=', '] = ');
+      line = temp;
+    };
+
+    // replace accessed variables with their values
+    let stoppers = [' ', ')', '('] // all the letters that cannot be used in a variable name
+    if (line.includes('#')) {
+
+      let saved = "";
+      let saving = false
+      line.split('').forEach(function (c) {
+
+        if (c == "#") {
+          saving = true
+        };
+
+        if (stoppers.includes(c)) {
+          saving = false
+        };
+
+        if (saving == true) {
+          saved += c
+        };
+
+      });
+      line = line.replaceAll(saved, this.variables[saved]);
+
+    };
+
     // now we can run the line
     console.log("parsed: " + line);
     eval(line);

@@ -26,8 +26,8 @@ class Parser {
 
     // add variable declarations to this.variables
     if (line.includes("@")) {
-      let temp = line.replaceAll('@', 'this.variables[');
-      temp = temp.replaceAll('=', '] = ');
+      let temp = line.replaceAll('@', "this.variables['");
+      temp = temp.replaceAll('=', "'] = ");
       line = temp;
     };
 

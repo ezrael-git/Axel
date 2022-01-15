@@ -58,7 +58,8 @@ class Parser {
 
 
       let parsed = this._save(line, "#", stoppers);
-      line = line.replaceAll(parsed, this.variables[parsed]);
+      console.log("PARSED KW: " + parsed);
+      line = line.replaceAll("#" + parsed, this.variables[parsed]);
 
     };
 

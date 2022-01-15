@@ -58,7 +58,7 @@ class Parser {
 
 
       let parsed = this._save(line, "#", stoppers);
-      line = line.replaceAll(parsed, this.variables[saved]);
+      line = line.replaceAll(parsed, this.variables[parsed]);
 
     };
 

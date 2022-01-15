@@ -22,3 +22,5 @@ In the second line, we access the `Axel.program()` method. This is necessary for
 
 Next, we make a variable called `fruit` and assign to it the string `'peach'`. `@` in Axel is for the declaration of variables, whereas `#` accesses the variables.
 All variables are technically global in Axel. 
+
+**Neat trick:** You can see the produced JavaScript code by using `log(line)` in your Axel program.

@@ -7,7 +7,7 @@ class Text {
     this.value = value; // raw value
   }
   
-  execute () {
+  eval () {
     return String(this.value);
   }
 }

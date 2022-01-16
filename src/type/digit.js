@@ -6,7 +6,7 @@ class Digit {
     this.value = value; // the raw value
   }
   
-  execute () {
+  eval () {
     return parseInt(this.value);
   }
   

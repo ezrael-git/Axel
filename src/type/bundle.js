@@ -1,11 +1,11 @@
 // bundle.js
-const Text = require("./text.js");
-const Digit = require("./digit.js");
-const Hash = require("./hash.js");
+module.exports = {
+  Digit: require("./digit.js"),
+  Hash: require("./hash.js"),
+  Text: require("./text.js"),
+  Variable: require("./variable.js")
+}
 
 
 
 
-let exposed = [Text,Digit,Hash];
-
-module.exports = exposed

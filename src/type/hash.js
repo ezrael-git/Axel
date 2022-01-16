@@ -1,7 +1,7 @@
 // hash.js
 
 
-class Hash {
+module.exports = class Hash {
   initialize () {
     this.value = {};
   }

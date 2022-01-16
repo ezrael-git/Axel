@@ -1,17 +1,23 @@
 // lexer.py
-const keywords = require("../data/keyword.js");
-const arguments = require("../data/argument.js");
-
-
+const Initializer = require("../data/initializer.js");
+const Type = require("../type/bundle.js");
 
 class Lexer {
   constructor (source) {
     this.source = source;
-    this.chars = [].concat(keywords,arguments);
-    this.parsed = this.source.split(' ');
+    this.parsed = undefined;
 
     this.curPos = -1;
    
+  }
+
+  lex () {
+    let
+    for (const ini in Initializer) {
+      if (this.source.includes(ini)) {
+        parsed.push(ini);
+      }
+    }
   }
   
   nextToken () {

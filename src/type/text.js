@@ -2,7 +2,7 @@
 
 
 
-class Text {
+module.exports = class Text {
   initialize (value) {
     this.value = value; // raw value
   }

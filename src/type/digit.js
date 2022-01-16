@@ -1,7 +1,7 @@
 // digit.js
 
 
-class Digit {
+module.exports = class Digit {
   initialize (value) {
     this.value = value; // the raw value
   }

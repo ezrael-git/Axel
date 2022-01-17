@@ -2,6 +2,7 @@
 const Initializer = require("../data/initializer.js");
 const Type = require("../type/bundle.js");
 
+
 class Lexer {
   constructor (source) {
     this.source = source;
@@ -41,7 +42,24 @@ class Lexer {
     });
 
     // let's do the same for all the strings
+    parsed.forEach(function (piece) {
+      if (['"', "'"].includes(piece)) {
+        let ind = parsed.indexOf(piece);
+        let converted = new Type.String(piece);
+        parsed[ind] = converted;
+      };
+    });
     
+    // time to do the same to all the signs
+    parsed.forEach(function (piece) {
+      if (Type.Signs.signs.includes(piece)) {
+        let ind = parsed.indexOf(piece);
+        let converted = new Type.Signs(piece);
+        parsed[ind] = converted;
+      };
+    });
+
+    return parsed;
 
   }
   

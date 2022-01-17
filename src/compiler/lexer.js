@@ -32,32 +32,24 @@ class Lexer {
 
     });
 
+    function _convert (check_for, convert_to) {
+      parsed.forEach(function (piece) {
+        if (check_for.includes(piece)) {
+          let ind = parsed.indexOf(piece);
+          let converted = new convert_to(piece);
+          parsed[ind] = converted;
+        };
+      });
+    }
+
     // now we can check for the parsed digits and convert them
-    parsed.forEach(function (piece) {
-      if (digits.includes(piece)) {
-        let ind = parsed.indexOf(piece);
-        let converted = new Type.Digit(piece);
-        parsed[ind] = converted;
-      };
-    });
+    _convert( digits, Type.Digit );
 
     // let's do the same for all the strings
-    parsed.forEach(function (piece) {
-      if (['"', "'"].includes(piece)) {
-        let ind = parsed.indexOf(piece);
-        let converted = new Type.String(piece);
-        parsed[ind] = converted;
-      };
-    });
+    _convert( ['"', "'"], Type.Text );
     
     // time to do the same to all the signs
-    parsed.forEach(function (piece) {
-      if (Type.Signs.signs.includes(piece)) {
-        let ind = parsed.indexOf(piece);
-        let converted = new Type.Signs(piece);
-        parsed[ind] = converted;
-      };
-    });
+    _convert( Type.Sign.signs, Type.Sign );
 
     return parsed;
 

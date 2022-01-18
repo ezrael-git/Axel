@@ -6,5 +6,8 @@ module.exports = [
   "cls",
   "for",
   "while",
-  "return"
+  "return",
+  "true",
+  "false", 
+  "nil"
 ]

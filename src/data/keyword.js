@@ -1,6 +1,10 @@
-// replacement of keywords
+// defined keywords
 
-module.exports = {
-  "log": "console.log",
-  "def": "function"
-}
+module.exports = [
+  "def",
+  "fn", 
+  "cls",
+  "for",
+  "while",
+  "return"
+]

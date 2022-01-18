@@ -1,9 +1,12 @@
 // bundle.js
 module.exports = {
-  Digit: require("./digit.js"),
+
+  Variable: require("./variable.js"),
   Hash: require("./hash.js"),
+  List: require("./list.js"),
   Text: require("./text.js"),
-  Variable: require("./variable.js")
+  Digit: require("./digit.js")
+
 }
 
 

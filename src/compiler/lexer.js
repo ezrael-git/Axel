@@ -1,6 +1,7 @@
 // lexer.py
 const Iden = require("../data/identifier.js");
 const Type = require("../type/bundle.js");
+const Error = require("../exception/bundle.js");
 
 
 class Lexer {
@@ -64,58 +65,56 @@ class Lexer {
   lex () {
 
     let tokens = [];
+    let src = this.source.split(' ');
 
-    let letters = this.letters;
     let digits = this.digits;
-    let both = this.let_dig;
-    let process = this.process;
-    let src = this.source.split('');
-    let proarr = this.process_arr;
-    let blocking = this.blocking;
-    let quotes = this.quotes;
 
-    while true {
+    src.forEach(function (piece) {
 
-        src.forEach(function (char) {
+      // check for Text
+      if (piece.startsWith('"') and piece.endsWith('"')) {
+        tokens.push(Type.Text(piece));
+      }
 
-          if (letters.includes(char)) {
+      // check for Digit
+      else if (digits.includes(piece[0])) {
+        tokens.push(Type.Digit(piece));
+      }
 
-            let id = process(source, char);
-            tokens.push(new Type.Identifier(id));
-            src = proarr(src, char);
-            break;
+      // check for List
+      else if (piece.startsWith("[")) {
+        tokens.push(Type.List(piece));
+      }
 
-          }
-          else if (digits.includes(char)) {
-            let id = process(source, char);
-            tokens.push(new Type.Digit(id));
-            src = proarr(src, char);
-            break;
-          }
-          else if (Type.Sign.signs().includes(char)) {
-            let id = process(source, char);
-            tokens.push(new Type.Sign(id));
-            src = proarr(src, char);
-            break;
-          }
-          else if (quotes.includes(char)) {
-            // ong string found 
-            let id = process(source, char, quotes);
-            tokens.push(new Type.Identifier(id));
-            src = proarr(src, char, quotes);
-            break;
-          }
+      // check for Dict
+      else if (piece.startsWith("{")) {
+        tokens.push(Type.Dict(piece));
+      }
 
+      // check for Sign
+      else if (Type.Sign.signs.includes(piece)) {
+        tokens.push(Type.Sign(piece));
+      }
 
+      // check for Identifier
+      else if (letters.includes(piece)) {
+        tokens.push(Type.Identifier(piece));
+      }
 
-    }
+      // throw syntax error
+      else {
+        tokens.push(Error.IllegalCharacterError);
+      }
 
-      
+    return tokens;
 
 
 
 
     });
+
+
+    
 
 
   }

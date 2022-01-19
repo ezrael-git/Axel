@@ -11,6 +11,7 @@ class Lexer {
     this.digits = "0123456789".split('');
     this.let_dig = letters.concat(digits);
     this.blocking = ["+", "-", " ", "(", ")", "/"];
+    this.quotes = ['"', "'"];
 
     this.curPos = -1;
    
@@ -70,6 +71,8 @@ class Lexer {
     let process = this.process;
     let src = this.source.split('');
     let proarr = this.process_arr;
+    let blocking = this.blocking;
+    let quotes = this.quotes;
 
     while true {
 
@@ -83,6 +86,28 @@ class Lexer {
             break;
 
           }
+          else if (digits.includes(char)) {
+            let id = process(source, char);
+            tokens.push(new Type.Digit(id));
+            src = proarr(src, char);
+            break;
+          }
+          else if (Type.Sign.signs().includes(char)) {
+            let id = process(source, char);
+            tokens.push(new Type.Sign(id));
+            src = proarr(src, char);
+            break;
+          }
+          else if (quotes.includes(char)) {
+            // ong string found 
+            let id = process(source, char, quotes);
+            tokens.push(new Type.Identifier(id));
+            src = proarr(src, char, quotes);
+            break;
+          }
+
+
+
     }
 
       

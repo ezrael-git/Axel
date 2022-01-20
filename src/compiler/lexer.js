@@ -60,7 +60,7 @@ class Lexer {
     src.forEach(function (piece) {
 
       // check for Text
-      if (piece.startsWith('"') and piece.endsWith('"')) {
+      if (piece.startsWith('"') && piece.endsWith('"')) {
         tokens.push(new Type.Text(piece));
       }
 

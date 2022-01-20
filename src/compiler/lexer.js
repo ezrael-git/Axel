@@ -120,7 +120,7 @@ class Lexer {
       }
 
       // check for Identifier
-      else if (Iden.includes(piece)) {
+      else if (letters.includes(piece)) {
         tokens.push(Type.Identifier(piece));
       }
 

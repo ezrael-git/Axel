@@ -44,41 +44,6 @@ class Lexer {
   // processing
 
 
-
-  process_str (item, starting, blocking=this.blocking) {
-    let saved = "";
-    let save = false;
-    item.split('').forEach(function (c) {
-      if (starting.includes(c)) {
-        save = true;
-      }
-      if (blocking.includes(c)) {
-        return saved;
-      }
-      if (save == true) {
-        saved += c;
-      }
-    });
-    return saved;
-  }
-
-  process_arr (arr, starting, blocking=this.blocking) {
-    let de = false;
-    let rem = this._rem;
-    arr.forEach(function (c) {
-      if (starting.includes(c)) {
-        de = true;
-      }
-      if (blocking.includes(c)) {
-        return arr;
-      }
-      if (de == true) {
-        arr = rem(arr, c);
-      }
-    });
-    return saved;
-  }
-
   // lexing
 
   lex () {
@@ -96,32 +61,32 @@ class Lexer {
 
       // check for Text
       if (piece.startsWith('"') and piece.endsWith('"')) {
-        tokens.push(Type.Text(piece));
+        tokens.push(new Type.Text(piece));
       }
 
       // check for Digit
       else if (digits.includes(piece[0])) {
-        tokens.push(Type.Digit(piece));
+        tokens.push(new Type.Digit(piece));
       }
 
       // check for List
       else if (piece.startsWith("[")) {
-        tokens.push(Type.List(piece));
+        tokens.push(new Type.List(piece));
       }
 
       // check for Dict
       else if (piece.startsWith("{")) {
-        tokens.push(Type.Dict(piece));
+        tokens.push(new Type.Dict(piece));
       }
 
       // check for Sign
       else if (Type.Sign.signs.includes(piece)) {
-        tokens.push(Type.Sign(piece));
+        tokens.push(new Type.Sign(piece));
       }
 
       // check for Identifier
       else if (letters.includes(piece)) {
-        tokens.push(Type.Identifier(piece));
+        tokens.push(new Type.Identifier(piece));
       }
 
       // check for parentheses
@@ -138,7 +103,8 @@ class Lexer {
         tokens.push(Error.IllegalCharacterError);
       }
 
-    return tokens;
+    this.lexed = tokens;
+    return this.lexed;
 
 
 

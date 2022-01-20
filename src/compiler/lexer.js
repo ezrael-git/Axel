@@ -10,7 +10,7 @@ class Lexer {
     this.lexed = source;
     this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     this.digits = "0123456789".split('');
-    this.let_dig = this.letters.concat(digits);
+    this.let_dig = this.letters.concat(this.digits);
     this.blocking = ["+", "-", " ", "(", ")", "/"];
     this.quotes = ['"', "'"];
 
@@ -100,7 +100,9 @@ class Lexer {
 
       // throw syntax error
       else {
-        tokens.push(Error.IllegalCharacterError);
+        // tokens.push(Error.IllegalCharacterError);
+        console.log("Illegal Character: " + piece);
+        return
       }
 
     this.lexed = tokens;

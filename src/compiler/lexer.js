@@ -10,7 +10,7 @@ class Lexer {
     this.lexed = source;
     this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     this.digits = "0123456789".split('');
-    this.let_dig = letters.concat(digits);
+    this.let_dig = this.letters.concat(digits);
     this.blocking = ["+", "-", " ", "(", ")", "/"];
     this.quotes = ['"', "'"];
 

@@ -31,12 +31,14 @@ class Lexer {
   };
 
   _split (str, tokens) {
-    var tempChar = tokens[0]; // We can use the first token as a temporary join character
-    for(var i = 1; i < tokens.length; i++){
-      str = str.split(tokens[i]).join(tempChar);
-    }
-    str = str.split(tempChar);
-    return str;
+    let tempChar = "()()()"; // We can use the first token as a temporary join character
+    tokens.forEach(function (t) {
+      str.replaceAll(t, t+tempChar);
+    });
+
+    let result = str.split(tempChar);
+    console.log("_split(): " + result);
+    return result;
   }
 
   // processing
@@ -82,10 +84,14 @@ class Lexer {
   lex () {
 
     let tokens = [];
-    let src = this.source.split(' ');
 
+    let spltrs = [" ", ",", "[", "]", "(", ")"].concat(Iden);
+    let src = this._split(this.source, spltrs);
+
+    let letters = this.letters;
     let digits = this.digits;
 
+    // type checking
     src.forEach(function (piece) {
 
       // check for Text
@@ -114,7 +120,7 @@ class Lexer {
       }
 
       // check for Identifier
-      else if (letters.includes(piece)) {
+      else if (Iden.includes(piece)) {
         tokens.push(Type.Identifier(piece));
       }
 

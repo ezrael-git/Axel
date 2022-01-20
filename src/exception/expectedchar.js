@@ -1,7 +1,7 @@
 // 
 const Base = require("./baseclass.js");
 
-module.exports = class ExpectedCharError extends BaseException {
+module.exports = class ExpectedCharError extends Base {
 
   constructor (pos_start, pos_end, details) {
 

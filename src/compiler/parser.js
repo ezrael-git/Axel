@@ -9,66 +9,67 @@ const initializers = require("../data/initializer.js");
 
 class Parser {
   constructor () {
-    this.accepted = [].concat(keywords,arguments);
+    this.parsed = []; // parsed lines
+    this.parsedLine = 0; // line being parsed
+    this.cur = []; // current list of tokens to iterate through
+    this.curPos = 0; // position of current token being analyzed
     
     this.variables = {"initialized": true}
     
   }
 
-  _save(arg, starter, stoppers) {
-    let saved = "";
-    let saving = false
-    arg.split('').forEach(function (c) {
-
-
-      if (stoppers.includes(c)) {
-        saving = false
-      };
-
-      if (saving == true) {
-        saved += c
-      };
-
-      if (c == starter) {
-        saving = true
-      };
-
-    });
-    return saved;
-  }
-  
-  parse (lex) {
-    let line = lex.source;
-    // translating to JS
-    // let's first replace all the keywords with their JS correspondents
-    for (const key in keywords) {
-      let val = keywords[key];
-      line = line.replaceAll(key, val);
-    };
-
-    // add variable declarations to this.variables
-    if (line.includes("@")) {
-      let temp = line.replaceAll('@', "this.variables['");
-      temp = temp.replaceAll(' = ', "'] = ");
-      line = temp;
-    };
-
-    // replace accessed variables with their values
-    let stoppers = [' ', ')', '('] // all the letters that cannot be used in a variable name
-    if (line.includes('#')) {
-
-
-
-      let parsed = this._save(line, "#", stoppers);
-      line = line.replaceAll("#" + parsed, this.variables[parsed]);
-
-    };
-
-    // now we can run the line
-    console.log("parsed: " + line);
-    eval(line);
+  // error handling
+  raise (e) {
+    console.log(`main.py:{e.name} at {e.line}:\n{e.message}`);
+    throw new Error ();
     
   }
+
+  // iterating tools
+
+  ref (n=undefined) { // refresh the cur and curPos
+    this.cur = n;
+    this.curPos = 0;
+  }
+
+  addLine (tks) {
+    this.parsed += tks.join("");
+    this.parsedLine += 1;
+  }
+
+
+  next () {
+    let n = this.cur[this.curPos];
+    this.curPos += 1;
+    return n;
+  }
+
+  
+  
+  parse (tks) { // general note: tks stands for tokens
+    this.addLine(tks);
+    this.ref(tks)
+    let next = this.next;
+    let iden = next();
+    let raise = this.raise;
+
+    // as a general rule, all lines must begin with an Identifier token
+    // so we can use that to help us parse
+
+    if (iden == "log") {
+      let exp_lparen = next();
+      let exp_rparen = tks[-1];
+      if (exp_lparen != Paren.Left) {
+        raise(new Exception.SyntaxError("Expected LPAREN after IDEN log", this.parsedLine))
+      } else if (exp_rparen != Paren.Right) {
+        raise(new Exception.SyntaxError("Expected Paren.Right after IDEN log EXPR", this.parsedLine))
+      }
+      let expr = next();
+      console.log(expr.eval());
+    }
+
+
+
 }
 
 

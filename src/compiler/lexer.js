@@ -85,7 +85,7 @@ class Lexer {
       }
 
       // check for Identifier
-      else if (letters.includes(piece)) {
+      else if (letters.includes(piece.toUpperCase)) {
         tokens.push(new Type.Identifier(piece));
       }
 
@@ -105,13 +105,14 @@ class Lexer {
         return
       }
 
-    this.lexed = tokens;
-    return this.lexed;
 
 
 
 
     });
+
+    this.lexed = tokens;
+    return this.lexed;
 
 
     

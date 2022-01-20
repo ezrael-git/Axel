@@ -33,7 +33,7 @@ class Lexer {
   _split (str, tokens) {
     let tempChar = "@@@@@#$_&"; // We can use the first token as a temporary join character
     tokens.forEach(function (t) {
-      str.replaceAll(t, t+tempChar);
+      str = str.replaceAll(t, t+tempChar);
     });
 
     let result = str.split(tempChar);
@@ -50,7 +50,7 @@ class Lexer {
 
     let tokens = [];
 
-    let spltrs = [" ", ",", "[", "]", "(", ")"].concat(Iden);
+    let spltrs = [" ", ",", "[", "]", "(", ")", "log"].concat(Iden);
     let src = this._split(this.source, spltrs);
 
     let letters = this.letters;

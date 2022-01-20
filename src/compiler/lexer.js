@@ -124,6 +124,15 @@ class Lexer {
         tokens.push(Type.Identifier(piece));
       }
 
+      // check for parentheses
+      else if (Type.Paren.bundle.includes(piece)) {
+        if (piece == "(") {
+          tokens.push(Type.Paren.left);
+        } else if (piece == ")") {
+          tokens.push(Type.Paren.right);
+        }
+      }
+
       // throw syntax error
       else {
         tokens.push(Error.IllegalCharacterError);

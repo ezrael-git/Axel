@@ -1,5 +1,5 @@
 module.exports = class Sign {
-  static signs = {}
+  static signs = ["+", "-", "*", "/"];
 
   static Div = class Div {
     static value = "/"

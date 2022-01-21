@@ -65,6 +65,7 @@ module.exports = class Parser {
       let exp_lparen = this.next();
 
       let expr = this.next();
+      console.log(expr);
       console.log(">>>" + expr.eval());
     }
   }

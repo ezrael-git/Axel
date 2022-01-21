@@ -3,6 +3,7 @@
 const Keyword = require("../data/keyword.js");
 const Iden = require("../data/identifier.js");
 const Type = require("../type/bundle.js");
+const Exception = require("../exception/bundle.js");
 
 
 
@@ -19,7 +20,7 @@ module.exports = class Parser {
   }
 
   // error handling
-  raise (e) {
+  raise (name, line, msg) {
     console.log(`main.py:{e.name} at {e.line}:\n{e.message}`);
     throw new Error ();
     
@@ -64,9 +65,9 @@ module.exports = class Parser {
       let exp_lparen = this.next();
       let exp_rparen = tks[-1];
       if (exp_lparen != Type.Paren.Left) {
-        this.raise(new Exception.SyntaxError("Expected LPAREN after IDEN log", this.parsedLine))
+        this.raise("InvalidSyntax", this.parsedLine, "Expected {LPAREN} after {IDEN: log}, got " + exp_lparen + " instead")
       } else if (exp_rparen != Type.Paren.Right) {
-        this.raise(new Exception.SyntaxError("Expected Paren.Right after IDEN log EXPR", this.parsedLine))
+        this.raise("InvalidSyntax", this.parsedLine, "Expected {RPAREN} after {IDEN: log}, got " + exp_rparen + " instead")
       }
       let expr = this.next();
       console.log(">>>" + expr.eval());

@@ -57,7 +57,7 @@ class Lexer {
     let digits = this.digits;
 
     // type checking
-    src.forEach(function (piece) {
+    for (let piece of src) {
       if (piece == undefined) {
         continue
       }

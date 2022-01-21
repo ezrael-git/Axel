@@ -7,7 +7,7 @@ const initializers = require("../data/initializer.js");
 
 
 
-class Parser {
+module.exports = class Parser {
   constructor () {
     this.parsed = []; // parsed lines
     this.parsedLine = 0; // line being parsed
@@ -78,5 +78,3 @@ class Parser {
 
 }
 
-
-module.exports = Parser;

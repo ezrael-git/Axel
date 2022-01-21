@@ -21,7 +21,7 @@ module.exports = class Parser {
 
   // error handling
   raise (name, line, msg) {
-    console.log(`main.py:{name} at {line}:\n{message}`);
+    console.log(`main.py:${name} at ${line}:\n${msg}`);
     throw new Error ();
     
   }

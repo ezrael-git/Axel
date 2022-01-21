@@ -8,6 +8,6 @@ module.exports = class Text {
   }
   
   eval () {
-    return this.value;
+    return this.value.replaceAll('"', '').replaceAll("'", "");
   }
 }

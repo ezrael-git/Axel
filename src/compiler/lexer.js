@@ -112,7 +112,7 @@ class Lexer {
 
 
 
-    });
+    }; // for loop's brace
 
     this.lexed = tokens;
     return this.lexed;

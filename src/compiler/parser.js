@@ -64,10 +64,10 @@ module.exports = class Parser {
     if (iden == "log") {
       let exp_lparen = this.next();
       let exp_rparen = tks[-1];
-      if (exp_lparen.value != "(") {
-        this.raise("InvalidSyntax", this.parsedLine, "Expected {LPAREN} after {IDEN: log}, got " + exp_lparen.value + " instead")
-      } else if (exp_rparen.value != ")") {
-        this.raise("InvalidSyntax", this.parsedLine, "Expected {RPAREN} after {IDEN: log}, got " + exp_rparen.value + " instead")
+      if (exp_lparen != "(") {
+        this.raise("InvalidSyntax", this.parsedLine, "Expected {LPAREN} after {IDEN: log}, got " + exp_lparen + " instead")
+      } else if (exp_rparen != ")") {
+        this.raise("InvalidSyntax", this.parsedLine, "Expected {RPAREN} after {IDEN: log}, got " + exp_rparen + " instead")
       }
       let expr = this.next();
       console.log(">>>" + expr.eval());

@@ -58,7 +58,7 @@ class Lexer {
 
     // type checking
     for (let piece of src) {
-      if (piece == undefined) {
+      if (piece[0] == undefined) {
         continue
       }
 

@@ -54,6 +54,7 @@ module.exports = class Parser {
     this.addLine(tks);
     this.ref(tks)
     let iden = this.next();
+    console.log("IDEN " + iden);
 
     // as a general rule, all lines must begin with an Identifier token
     // so we can use that to help us parse

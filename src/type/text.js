@@ -8,6 +8,6 @@ module.exports = class Text {
   }
   
   eval () {
-    return String(this.value);
+    return this.value;
   }
 }

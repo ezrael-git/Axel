@@ -53,10 +53,7 @@ module.exports = class Parser {
   parse (tks) { // general note: tks stands for tokens
     this.addLine(tks);
     this.ref(tks)
-    let next = this.next;
-    let iden = next();
-    let raise = this.raise;
-    let emit = this.emit;
+    let iden = this.next();
 
     // as a general rule, all lines must begin with an Identifier token
     // so we can use that to help us parse

@@ -58,7 +58,9 @@ class Lexer {
 
     // type checking
     src.forEach(function (piece) {
-      console.log(piece[0])
+      if (piece == undefined) {
+        continue
+      }
 
       // check for Text
       if (piece.startsWith('"') && piece.endsWith('"')) {

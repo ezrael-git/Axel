@@ -100,6 +100,7 @@ class Lexer {
       // throw syntax error
       else {
         // assume is string lmao
+        console.log("ok so uhhh we don't know how to handle this one " + piece);
         tokens.push(new Type.Text(piece));
       }
 

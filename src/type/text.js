@@ -3,8 +3,8 @@
 
 
 module.exports = class Text {
-  initialize (value) {
-    this.value = value; // raw value
+  constructor (value) {
+    this.value = String(value); // raw value
   }
   
   eval () {

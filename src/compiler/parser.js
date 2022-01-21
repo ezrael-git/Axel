@@ -25,6 +25,11 @@ class Parser {
     
   }
 
+  // emitting
+  emit (s) {
+    console.log(">>> " + s);
+  }
+
   // iterating tools
 
   ref (n=undefined) { // refresh the cur and curPos
@@ -52,6 +57,7 @@ class Parser {
     let next = this.next;
     let iden = next();
     let raise = this.raise;
+    let emit = this.emit;
 
     // as a general rule, all lines must begin with an Identifier token
     // so we can use that to help us parse
@@ -65,7 +71,7 @@ class Parser {
         raise(new Exception.SyntaxError("Expected Paren.Right after IDEN log EXPR", this.parsedLine))
       }
       let expr = next();
-      console.log(expr.eval());
+      console.log(">>>" + expr.eval());
     }
 
 

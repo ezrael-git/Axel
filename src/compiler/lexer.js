@@ -93,12 +93,8 @@ class Lexer {
       }
 
       // check for parentheses
-      else if (Type.Paren.bundle.includes(piece)) {
-        if (piece == "(") {
-          tokens.push(Type.Paren.left);
-        } else if (piece == ")") {
-          tokens.push(Type.Paren.right);
-        }
+      else if (["(", ")"].includes(piece)) {
+        tokens.push(piece);
       }
 
       // throw syntax error

@@ -85,7 +85,7 @@ class Lexer {
       }
 
       // check for Identifier
-      else if (letters.includes(piece.toUpperCase)) {
+      else if (piece.split('')[0].toUpperCase.includes(letters)) {
         tokens.push(new Type.Identifier(piece));
       }
 

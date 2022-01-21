@@ -2,6 +2,7 @@
 
 const Keyword = require("../data/keyword.js");
 const Iden = require("../data/identifier.js");
+const Type = require("../type/bundle.js");
 
 
 
@@ -62,9 +63,9 @@ module.exports = class Parser {
     if (iden == "log") {
       let exp_lparen = this.next();
       let exp_rparen = tks[-1];
-      if (exp_lparen != Paren.Left) {
+      if (exp_lparen != Type.Paren.Left) {
         this.raise(new Exception.SyntaxError("Expected LPAREN after IDEN log", this.parsedLine))
-      } else if (exp_rparen != Paren.Right) {
+      } else if (exp_rparen != Type.Paren.Right) {
         this.raise(new Exception.SyntaxError("Expected Paren.Right after IDEN log EXPR", this.parsedLine))
       }
       let expr = this.next();

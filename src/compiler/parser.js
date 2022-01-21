@@ -62,14 +62,14 @@ module.exports = class Parser {
     // so we can use that to help us parse
 
     if (iden == "log") {
-      let exp_lparen = next();
+      let exp_lparen = this.next();
       let exp_rparen = tks[-1];
       if (exp_lparen != Paren.Left) {
-        raise(new Exception.SyntaxError("Expected LPAREN after IDEN log", this.parsedLine))
+        this.raise(new Exception.SyntaxError("Expected LPAREN after IDEN log", this.parsedLine))
       } else if (exp_rparen != Paren.Right) {
-        raise(new Exception.SyntaxError("Expected Paren.Right after IDEN log EXPR", this.parsedLine))
+        this.raise(new Exception.SyntaxError("Expected Paren.Right after IDEN log EXPR", this.parsedLine))
       }
-      let expr = next();
+      let expr = this.next();
       console.log(">>>" + expr.eval());
     }
   }

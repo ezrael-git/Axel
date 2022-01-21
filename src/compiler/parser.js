@@ -1,8 +1,7 @@
 // parser.js
 
-const keywords = require("../data/keyword.js");
-const arguments = require("../data/argument.js");
-const initializers = require("../data/initializer.js");
+const Keyword = require("../data/keyword.js");
+const Iden = require("../data/identifier.js");
 
 
 

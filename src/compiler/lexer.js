@@ -63,7 +63,7 @@ class Lexer {
       }
 
       // check for Text
-      if (piece.startsWith('"') && piece.endsWith('"')) {
+      if (piece.startsWith('"') && piece.endsWith('"') || piece.startsWith("'") && piece.endsWith("'")) {
         tokens.push(new Type.Text(piece));
       }
 
@@ -103,9 +103,8 @@ class Lexer {
 
       // throw syntax error
       else {
-        // tokens.push(Error.IllegalCharacterError);
-        console.log("Illegal Character: " + piece);
-        return
+        // assume is string lmao
+        tokens.push(new Type.Text(piece));
       }
 
 

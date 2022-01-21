@@ -73,6 +73,7 @@ module.exports = class Parser {
       let expr = next();
       console.log(">>>" + expr.eval());
     }
+  }
 
 
 

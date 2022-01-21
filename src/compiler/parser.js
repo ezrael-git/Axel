@@ -53,7 +53,7 @@ module.exports = class Parser {
   parse (tks) { // general note: tks stands for tokens
     this.addLine(tks);
     this.ref(tks)
-    let iden = this.next();
+    let iden = this.next().name;
     console.log("IDEN " + iden);
 
     // as a general rule, all lines must begin with an Identifier token

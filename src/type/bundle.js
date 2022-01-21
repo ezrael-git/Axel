@@ -6,6 +6,7 @@ module.exports = {
   Text: require("./text.js"),
   Digit: require("./digit.js"),
 
+  Identifier: require("./identifier.js"),
   Paren: require("./parentheses.js"),
   Sign: require("./sign.js")
 

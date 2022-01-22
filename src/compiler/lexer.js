@@ -122,7 +122,7 @@ class Lexer {
     src = this.remove_emp(src);
 
 
-    this.lexed = tokens;
+    this.lexed = src;
     return this.lexed;
 
 

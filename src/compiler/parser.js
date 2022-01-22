@@ -68,6 +68,13 @@ module.exports = class Parser {
       let expr = this.next();
       this.emit(`console.log(${expr.eval()})`);
     }
+    else if (iden == "if") {
+      this.next();
+      let condition = this.next();
+    }
+    else {
+      this.emit(tks.join(""));
+    }
   }
 
 

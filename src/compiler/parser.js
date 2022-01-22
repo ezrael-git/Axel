@@ -67,9 +67,9 @@ module.exports = class Parser {
     let replacements = [
       ["v.", "this.variables"]
     ];
-    replacements.forEach(function (r) {
+    for (let r of replacements) {
       this.cur.replaceAll(r[0], r[1]);
-    });
+    };
 
     if (iden == "log") {
       let expr;

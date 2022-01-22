@@ -15,12 +15,12 @@ class Axel {
     for (let line of strp) {
       let lexer = new Lexer(src);
       let lex = lexer.lex();
-      let r = this.parser.parse(lex);
-      log.push(r);
+      console.log("Lexer: " + lex);
+      this.parser.parse(lex);
     }
     this.emitter.add(this.parser.emitted);
-    console.log(this.parser.emitted);
-    return log;
+    console.log("Parser: " + this.parser.emitted);
+    return 0;
   }
 
 }

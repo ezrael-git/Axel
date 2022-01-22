@@ -101,3 +101,8 @@ end
 
 That was it. Don't forget your semi-colons and happy coding.
 
+# Support
+
+Have a question? Stop by at Axel-lang's Discord server (warning: it's pretty dead) 
+
+https://discord.gg/xPhcZwGpSC

@@ -13,7 +13,7 @@ class Axel {
     let n = [];
     lis.forEach(function (e) {
       if (e != " " && e != "" && e.length > 0) {
-        n.push(e.replaceAll(" ", ""));
+        n.push(e);
       }
     });
     return n;

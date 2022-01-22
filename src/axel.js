@@ -13,10 +13,10 @@ class Axel {
     let strp = src.split(';');
     let log = [];
     for (let line of strp) {
-      let lexer = new Lexer(src);
+      let lexer = new Lexer(line);
       let lex = lexer.lex();
       console.log("Lexer: " + lex);
-      this.parser.parse(lex);
+      this.parser.parse(lex,line);
     }
     this.emitter.add(this.parser.emitted);
     console.log("Parser: " + this.parser.emitted);

@@ -8,6 +8,14 @@ Designed to be simple and flexible.
 
 # Index
 1. [Index](https://github.com/ezrael-git/Axel/tree/development#index)
+2. [Why?](https://github.com/ezrael-git/Axel/tree/development#Why?)
+3. [Installing](https://github.com/ezrael-git/Axel/tree/development#Installing)
+4. [Comments](https://github.com/ezrael-git/Axel/tree/development#Comments)
+5. [Variables](https://github.com/ezrael-git/Axel/tree/development#Variables)
+6. [Lists and Hashes](https://github.com/ezrael-git/Axel/tree/development#Lists-and-Hashes)
+7. [Functions](https://github.com/ezrael-git/Axel/tree/development#Functions)
+8. [Classes](https://github.com/ezrael-git/Axel/tree/development#Classes)
+
 
 # Why?
 

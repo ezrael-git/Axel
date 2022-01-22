@@ -58,6 +58,7 @@ module.exports = class Parser {
     this.addLine(tks);
     this.ref(tks)
     let iden = this.next();
+    console.log("Received Tokens: " + tks);
     console.log("IDEN " + iden);
 
 

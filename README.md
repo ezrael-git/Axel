@@ -15,6 +15,7 @@ Designed to be simple and flexible.
 6. [Lists and Hashes](https://github.com/ezrael-git/Axel/tree/development#Lists-and-Hashes)
 7. [Functions](https://github.com/ezrael-git/Axel/tree/development#Functions)
 8. [Classes](https://github.com/ezrael-git/Axel/tree/development#Classes)
+9. [Support](https://github.com/ezrael-git/Axel/tree/development#Support)
 
 
 # Why?

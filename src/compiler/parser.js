@@ -91,7 +91,7 @@ module.exports = class Parser {
     else if (iden == "fn") {
       let name = this.next();
       let lparen = this.next();
-      let it = "":
+      let it = "";
       let args = [];
       while (it != ")") {
         it = this.next();

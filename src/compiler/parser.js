@@ -97,6 +97,11 @@ module.exports = class Parser {
         it = this.next();
         args.push(it);
       }
+      let s = `function ${name} (`
+      args.forEach(a => s += a + ",");
+      s = s.split('').splice(-1, 1).join('');
+      s += ") {"
+      this.emit(s);
     }
     else {
       this.emit(orig);

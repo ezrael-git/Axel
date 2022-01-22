@@ -43,21 +43,9 @@ class Lexer {
 
   // processing
 
-
-  // lexing
-
-  lex () {
-
+  type_format (splt) {
     let tokens = [];
-
-    let spltrs = [" ", ",", "[", "]", "(", ")", "log"].concat(Iden);
-    let src = this._split(this.source, spltrs);
-
-    let letters = this.letters;
-    let digits = this.digits;
-
-    // type checking
-    for (let piece of src) {
+    for (let piece of splt) {
       if (piece[0] == undefined) {
         continue
       }
@@ -68,7 +56,7 @@ class Lexer {
       }
 
       // check for Digit
-      else if (digits.includes(piece[0])) {
+      else if (this.digits.includes(piece[0])) {
         tokens.push(new Type.Digit(piece));
       }
 
@@ -88,7 +76,7 @@ class Lexer {
       }
 
       // check for Identifier
-      else if (letters.includes(piece[0].toUpperCase())) {
+      else if (this.letters.includes(piece[0].toUpperCase())) {
         tokens.push(new Type.Identifier(piece));
       }
 
@@ -109,6 +97,19 @@ class Lexer {
 
 
     }; // for loop's brace
+    return tokens;
+  }
+
+
+  // lexing
+
+  lex () {
+
+    let tokens = [];
+
+    let spltrs = [" ", ",", "[", "]", "(", ")", "log", "fn", "def"].concat(Iden);
+    let src = this._split(this.source, spltrs);
+
 
     this.lexed = tokens;
     return this.lexed;

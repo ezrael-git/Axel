@@ -19,12 +19,9 @@ class Axel {
     return n;
   }
 
-  program (src) {
-    let strp = src.split(';');
-    console.log("STRP " + strp);
-    strp = this.remove_emp(strp);
+  program (...statements) {
     let log = [];
-    for (let line of strp) {
+    for (let line of statements) {
       let lexer = new Lexer(line);
       let lex = lexer.lex();
       this.parser.parse(lex,line);

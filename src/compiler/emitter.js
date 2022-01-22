@@ -2,13 +2,17 @@
 
 module.exports = class Emitter {
   constructor (in_it="") {
-    this.parsed = "";
-    this.parsed += in_it;
     this.variables = {};
+    this.parsed = "let v = " + this.variables + "\n"; // JS code to be executed
+    this.parsed += in_it;
+  }
+
+  refresh_vars () {
+    this.parsed += "v = this.variables\n";
   }
 
   add (n) {
-    this.parsed += n;
+    this.parsed += n + "\n";
   }
 
   eval () {

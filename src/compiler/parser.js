@@ -67,18 +67,6 @@ module.exports = class Parser {
     // as a general rule, all lines must begin with an Identifier token
     // so we can use that to help us parse
 
-    // replacements
-    let replacements = [
-      ["v.", "this.variables"]
-    ];
-    for (let r of replacements) {
-      for (let e of this.cur) {
-        let n = e.replaceAll(r[0], r[1]);
-        let ind = this.cur.indexOf(e);
-        this.cur[ind] = n;
-      };
-    };
-
     if (iden == "log") {
       let expr;
       if (this.cur.length == 2) {

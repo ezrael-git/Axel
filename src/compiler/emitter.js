@@ -1,8 +1,9 @@
 // executor / collector / emitter
 
 module.exports = class Emitter {
-  constructor (in_it) {
-    this.parsed = in_it;
+  constructor (in_it="") {
+    this.parsed = "";
+    this.parsed += in_it;
   }
 
   eval () {

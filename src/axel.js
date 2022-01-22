@@ -18,7 +18,7 @@ class Axel {
       let r = this.parser.parse(lex);
       log.push(r);
     }
-    emitter.add(this.parser.emitted);
+    this.emitter.add(this.parser.emitted);
     return log;
   }
 

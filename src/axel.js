@@ -21,10 +21,10 @@ class Axel {
 
   program (src) {
     let strp = src.split(';');
+    console.log("STRP " + strp);
     strp = this.remove_emp(strp);
     let log = [];
     for (let line of strp) {
-      console.log("LINE " + line);
       let lexer = new Lexer(line);
       let lex = lexer.lex();
       this.parser.parse(lex,line);

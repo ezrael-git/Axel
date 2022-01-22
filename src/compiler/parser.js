@@ -88,6 +88,16 @@ module.exports = class Parser {
       let value = this.next();
       this.emit(`this.variables['${name}'] = ${value}`);
     }
+    else if (iden == "fn") {
+      let name = this.next();
+      let lparen = this.next();
+      let it = "":
+      let args = [];
+      while (it != ")") {
+        it = this.next();
+        args.push(it);
+      }
+    }
     else {
       this.emit(orig);
     }

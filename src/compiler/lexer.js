@@ -37,7 +37,6 @@ class Lexer {
     });
 
     let result = str.split(tempChar);
-    console.log("_split(): " + result);
     return result;
   }
 

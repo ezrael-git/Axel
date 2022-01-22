@@ -14,10 +14,10 @@ class Axel {
     let log = [];
     for (let line of strp) {
       let lex = new Lexer(line);
-      let r = parser.parse(lex);
+      let r = this.parser.parse(lex);
       log.push(r);
     }
-    emitter.add(parser.emitted);
+    emitter.add(this.parser.emitted);
     return log;
   }
 

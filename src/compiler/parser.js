@@ -60,6 +60,10 @@ module.exports = class Parser {
     let iden = this.next();
     console.log("IDEN " + iden);
 
+    String.prototype.replaceAt = function(index, replacement) {
+      return this.substr(0, index) + replacement + this.substr(index + replacement.length);
+    }
+
     // as a general rule, all lines must begin with an Identifier token
     // so we can use that to help us parse
 
@@ -68,7 +72,11 @@ module.exports = class Parser {
       ["v.", "this.variables"]
     ];
     for (let r of replacements) {
-      this.cur.replaceAll(r[0], r[1]);
+      for (let e of this.cur) {
+        let n = e.replaceAll(r[0], r[1]);
+        let ind = this.cur.indexOf(e);
+        this.cur[ind] = n;
+      };
     };
 
     if (iden == "log") {

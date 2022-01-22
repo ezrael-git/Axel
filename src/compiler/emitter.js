@@ -7,6 +7,10 @@ module.exports = class Emitter {
     this.variables = {};
   }
 
+  add (n) {
+    this.parsed += n;
+  }
+
   eval () {
     eval(this.parsed);
     console.log("Axel main.js at 0");

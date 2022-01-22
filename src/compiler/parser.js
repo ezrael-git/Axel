@@ -51,12 +51,13 @@ module.exports = class Parser {
     return n;
   }
 
+
   
   
   parse (tks) { // general note: tks stands for tokens
     this.addLine(tks);
     this.ref(tks)
-    let iden = this.next().name;
+    let iden = this.next();
     console.log("IDEN " + iden);
 
     // as a general rule, all lines must begin with an Identifier token
@@ -66,11 +67,24 @@ module.exports = class Parser {
       let exp_lparen = this.next();
 
       let expr = this.next();
-      this.emit(`console.log(${expr.eval()})`);
+      this.emit(`console.log(${expr})`);
     }
     else if (iden == "if") {
-      this.next();
       let condition = this.next();
+      this.emit(`if (${condition}) {`)
+    }
+    else if (iden == "end") {
+      this.emit("}");
+    }
+    else if (iden == "def") {
+      let name = this.next();
+      let eq = this.next();
+      let value = this.next();
+      this.emit(`this.variables[${name}] = ${value}`);
+    }
+    else if (iden == "v.") {
+      let name = iden.replace("v.", "");
+      this.emit(`this.variables[${name}]`);
     }
     else {
       this.emit(tks.join(""));

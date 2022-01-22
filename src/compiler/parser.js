@@ -60,9 +60,6 @@ module.exports = class Parser {
     let iden = this.next();
     console.log("IDEN " + iden);
 
-    String.prototype.replaceAt = function(index, replacement) {
-      return this.substr(0, index) + replacement + this.substr(index + replacement.length);
-    }
 
     // as a general rule, all lines must begin with an Identifier token
     // so we can use that to help us parse

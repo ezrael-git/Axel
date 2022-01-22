@@ -10,12 +10,13 @@ const Exception = require("../exception/bundle.js");
 
 module.exports = class Parser {
   constructor () {
-    this.parsed = []; // parsed lines
+    this.parsed = []; // parsed lines (raw, they are not parsed. for clarity, think of these as processed lines)
     this.parsedLine = 0; // line being parsed
     this.cur = []; // current list of tokens to iterate through
     this.curPos = 0; // position of current token being analyzed
     
-    this.variables = {"initialized": true}
+    this.vars = {"initialized": true}
+    this.emitted = ""; // actual parsed lines
     
   }
 
@@ -28,7 +29,7 @@ module.exports = class Parser {
 
   // emitting
   emit (s) {
-    console.log(">>> " + s);
+    this.emitted += s + "\n";
   }
 
   // iterating tools
@@ -65,8 +66,7 @@ module.exports = class Parser {
       let exp_lparen = this.next();
 
       let expr = this.next();
-      console.log(expr);
-      console.log(">>>" + expr.eval());
+      this.emit(`console.log(${expr.eval()})`);
     }
   }
 

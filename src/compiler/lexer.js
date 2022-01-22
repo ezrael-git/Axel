@@ -104,7 +104,7 @@ class Lexer {
     let n = [];
     lis.forEach(function (e) {
       if (e != " " && e != "") {
-        n.push(e.removeAll(" "));
+        n.push(e.replaceAll(" ", ""));
       }
     });
     return n;

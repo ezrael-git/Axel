@@ -54,7 +54,7 @@ module.exports = class Parser {
 
   
   
-  parse (tks) { // general note: tks stands for tokens
+  parse (tks, orig="") { // general note: tks stands for tokens
     this.addLine(tks);
     this.ref(tks)
     let iden = this.next();
@@ -62,6 +62,14 @@ module.exports = class Parser {
 
     // as a general rule, all lines must begin with an Identifier token
     // so we can use that to help us parse
+
+    // replacements
+    let replacements = [
+      ["v.", "this.variables"]
+    ];
+    replacements.forEach(function (r) {
+      this.cur.replaceAll(r[0], r[1]);
+    });
 
     if (iden == "log") {
       let expr;
@@ -86,12 +94,8 @@ module.exports = class Parser {
       let value = this.next();
       this.emit(`this.variables['${name}'] = ${value}`);
     }
-    else if (iden == "v.") {
-      let name = iden.replace("v.", "");
-      this.emit(`this.variables['${name}']`);
-    }
     else {
-      this.emit(tks.join(""));
+      this.emit(orig);
     }
   }
 

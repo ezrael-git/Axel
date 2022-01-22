@@ -86,7 +86,7 @@ module.exports = class Parser {
       let name = this.next();
       let eq = this.next();
       let value = this.next();
-      this.emit(`this.variables['${name}'] = ${value}`);
+      this.emit(`let ${name} = ${value}`);
     }
     else if (iden == "fn") {
       let name = this.next();

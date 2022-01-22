@@ -19,6 +19,7 @@ class Axel {
       log.push(r);
     }
     this.emitter.add(this.parser.emitted);
+    this.emitter.eval();
     return log;
   }
 

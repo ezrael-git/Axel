@@ -19,7 +19,7 @@ class Axel {
       log.push(r);
     }
     this.emitter.add(this.parser.emitted);
-    this.emitter.eval();
+    console.log(this.parser.emitted);
     return log;
   }
 

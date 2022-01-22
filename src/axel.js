@@ -20,7 +20,8 @@ class Axel {
     }
     this.emitter.add(this.parser.emitted);
     console.log("Parser: " + this.parser.emitted);
-    return 0;
+    console.log("Emitter:");
+    this.emitter.eval();
   }
 
 }

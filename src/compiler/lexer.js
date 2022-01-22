@@ -103,7 +103,7 @@ class Lexer {
   remove_emp (lis) {
     let n = [];
     lis.forEach(function (e) {
-      if (e != " " && e != "" && e.length > 1) {
+      if (e != " " && e != "" && e.length > 0) {
         n.push(e.replaceAll(" ", ""));
       }
     });

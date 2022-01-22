@@ -84,11 +84,11 @@ module.exports = class Parser {
       let name = this.next();
       let eq = this.next();
       let value = this.next();
-      this.emit(`this.variables[${name}] = ${value}`);
+      this.emit(`this.variables['${name}'] = ${value}`);
     }
     else if (iden == "v.") {
       let name = iden.replace("v.", "");
-      this.emit(`this.variables[${name}]`);
+      this.emit(`this.variables['${name}']`);
     }
     else {
       this.emit(tks.join(""));

@@ -9,8 +9,19 @@ class Axel {
     this.emitter = new Emitter();
   }
 
+  remove_emp (lis) {
+    let n = [];
+    lis.forEach(function (e) {
+      if (e != " " && e != "" && e.length > 0) {
+        n.push(e.replaceAll(" ", ""));
+      }
+    });
+    return n;
+  }
+
   program (src) {
     let strp = src.split(';');
+    strp = this.remove_emp(strp);
     let log = [];
     for (let line of strp) {
       console.log("LINE " + line);

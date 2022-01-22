@@ -64,11 +64,12 @@ module.exports = class Parser {
     // so we can use that to help us parse
 
     if (iden == "log") {
+      let expr;
       if (this.cur.length == 2) {
-        let expr = this.next()
+        expr = this.next();
       } else {
         this.next();
-        let expr = this.next();
+        expr = this.next();
       }
       this.emit(`console.log(${expr})`);
     }

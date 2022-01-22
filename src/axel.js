@@ -13,7 +13,8 @@ class Axel {
     let strp = src.split(';');
     let log = [];
     for (let line of strp) {
-      let lex = new Lexer(line);
+      let lexer = new Lexer();
+      let lex = lexer.lex();
       let r = this.parser.parse(lex);
       log.push(r);
     }

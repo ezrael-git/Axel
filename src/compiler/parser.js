@@ -70,8 +70,15 @@ module.exports = class Parser {
       this.emit(`console.log(${expr})`);
     }
     else if (iden == "if") {
-      let condition = this.cur.replace(iden);
+      let condition = orig.replace("if ");
       this.emit(`if (${condition}) {`)
+    }
+    else if (iden == "elif) {
+      let condition = orig.replace("elif ");
+      this.emit(`else if (${condition}) {`)
+    }
+    else if (iden == "else") {
+      this.emit(`else {`)
     }
     else if (iden == "end") {
       this.emit("}");

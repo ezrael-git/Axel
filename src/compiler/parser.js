@@ -66,17 +66,11 @@ module.exports = class Parser {
     // so we can use that to help us parse
 
     if (iden == "log") {
-      let expr;
-      if (this.cur.length == 2) {
-        expr = this.next();
-      } else {
-        this.next();
-        expr = this.next();
-      }
+      let expr = this.next();
       this.emit(`console.log(${expr})`);
     }
     else if (iden == "if") {
-      let condition = this.next();
+      let condition = this.cur.replace(iden);
       this.emit(`if (${condition}) {`)
     }
     else if (iden == "end") {
@@ -90,18 +84,22 @@ module.exports = class Parser {
     }
     else if (iden == "fn") {
       let name = this.next();
-      let lparen = this.next();
       let it = "";
       let args = [];
-      while (it != ")") {
-        it = this.next();
-        args.push(it);
+      if (orig.includes("(")) {
+        while (it != ")") {
+          it = this.next();
+          args.push(it);
+        }
+        let s = `function ${name} (`
+        args.forEach(a => s += a + ",");
+        s = s.split('').splice(s.length - 1, 1).join('');
+        s += ") {"
+        this.emit(s);
       }
-      let s = `function ${name} (`
-      args.forEach(a => s += a + ",");
-      s = s.split('').splice(-1, 1).join('');
-      s += ") {"
-      this.emit(s);
+      else {
+        this.emit(`function ${name} () {`);
+      }
     }
     else {
       this.emit(orig);

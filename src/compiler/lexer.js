@@ -109,6 +109,16 @@ class Lexer {
     return n;
   }
 
+  remove (lis, item) {
+    let n = [];
+    lis.forEach(function (e) {
+      if (e != item) {
+        n.push(e);
+      }
+    });
+    return n;
+  }
+
 
   // lexing
 
@@ -119,6 +129,7 @@ class Lexer {
     let spltrs = [" ", ",", "[", "]", "(", ")", "log", "fn", "def"].concat(Iden);
     let src = this._split(this.source, spltrs);
     src = this.remove_emp(src);
+    src = this.remove(this.remove(src, "("), ")");
 
 
     this.lexed = src;

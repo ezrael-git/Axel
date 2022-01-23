@@ -87,15 +87,8 @@ module.exports = class Parser {
       let it = "";
       let args = [];
       if (orig.includes("(")) {
-        while (it != ")") {
-          it = this.next();
-          args.push(it);
-        }
-        let s = `function ${name} (`
-        args.forEach(a => s += a + ",");
-        s = s.split('').splice(s.length - 1, 1).join('');
-        s += ") {"
-        this.emit(s);
+        let arglist = orig.replaceAll("(", "").replaceAll(")", "").replace("fn ", "").split(",");
+        this.emit(`function ${name} (${arglist.join(",").replaceAll(" ", "")}) {`);
       }
       else {
         this.emit(`function ${name} () {`);

@@ -9,7 +9,7 @@ class Axel {
     this.emitter = new Emitter();
   }
 
-  remove_emp (lis) {
+  purify (lis) {
     let n = [];
     lis.forEach(function (e) {
       if (e != " " && e != "" && e.length > 0) {
@@ -19,8 +19,9 @@ class Axel {
     return n;
   }
 
-  program (...statements) {
+  program (statements) {
     let log = [];
+    statements = statements.trim().split('\n');
     for (let line of statements) {
       let lexer = new Lexer(line);
       let lex = lexer.lex();

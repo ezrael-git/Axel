@@ -27,6 +27,7 @@ Axel is one of those languages that'll, well, just work. If you miss a brace, Ax
 ```js
 log("hello world"
 ```
+(Just a note: this probably won't work for non-native functions, or functions that you made / functions not recognized by Axel).
 So yeah, maintain your own readability, folks. Axel won't enforce many syntax laws.
 Also, you can run JS code in Axel's compiler, since Axel compiles to JS. You can also see the compiled JavaScript code by adding `log(this.parsed)` to your code. Neat, huh?
 

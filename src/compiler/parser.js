@@ -73,7 +73,7 @@ module.exports = class Parser {
       let condition = orig.replace("if ");
       this.emit(`if (${condition}) {`)
     }
-    else if (iden == "elif) {
+    else if (iden == "elif") {
       let condition = orig.replace("elif ");
       this.emit(`else if (${condition}) {`)
     }

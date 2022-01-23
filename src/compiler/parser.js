@@ -70,11 +70,11 @@ module.exports = class Parser {
       this.emit(`console.log(${expr})`);
     }
     else if (iden == "if") {
-      let condition = orig.replace("if ");
+      let condition = orig.replace("if ", "");
       this.emit(`if (${condition}) {`)
     }
     else if (iden == "ef") {
-      let condition = orig.replace("ef ");
+      let condition = orig.replace("ef ", "");
       this.emit(`else if (${condition}) {`)
     }
     else if (iden == "es") {

@@ -84,7 +84,7 @@ class Lexer {
         tokens.push(piece);
       }
 
-      // throw syntax error
+
       else {
         // assume is string lmao
         console.log("ok so uhhh we don't know how to handle this one " + piece);
@@ -126,7 +126,7 @@ class Lexer {
 
     let tokens = [];
 
-    let spltrs = [" ", ",", "[", "]", "(", ")", "log", "fn", "def"].concat(Iden);
+    let spltrs = [" ", ",", "[", "]", "(", ")", "log", "fn", "def", "imm"].concat(Iden);
     let src = this._split(this.source, spltrs);
     src = this.remove_emp(src);
     src = this.remove(this.remove(src, "("), ")");

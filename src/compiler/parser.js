@@ -66,7 +66,7 @@ module.exports = class Parser {
     // so we can use that to help us parse
 
     if (iden == "log") {
-      let expr = this.next();
+      let expr = orig.replace("log ", "");
       this.emit(`console.log(${expr})`);
     }
     else if (iden == "if") {
@@ -79,7 +79,7 @@ module.exports = class Parser {
     else if (iden == "def") {
       let name = this.next();
       let eq = this.next();
-      let value = this.next();
+      let value = orig.replace("def ", "").replace(name, "").replace(eq, "");
       this.emit(`let ${name} = ${value}`);
     }
     else if (iden == "fn") {

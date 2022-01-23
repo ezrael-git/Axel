@@ -59,19 +59,19 @@ Mutable variables are defined using `def:`, and immutable using `imm:`.
 
 Example:
 ```py
-def:foo = "bar";
+def foo = "bar";
 ```
 
 # Lists and hashes
 Lists are a collection of variables. You can define them using `[]` syntax.
 
 ```js
-def:fruits = ["peach", "orange"];
+def fruits = ["peach", "orange"];
 ```
 
 Hashes, or dictionaries, can be made using curly braces (`{}`).
 ```js
-def:headers = {"Authentication" => "Bearer"};
+def headers = {"Authentication" : "Bearer"};
 ```
 
 # Functions
@@ -79,10 +79,12 @@ You can define a function in Axel using the `fn` keyword.
 
 
 ```rust
-fn greet ()
+fn greet
   log("hello world");
 end
 ```
+
+Note that you probably shouldn't add in parentheses `()` after your function's name if you don't have any arguments. Or do, it's up to you.
 
 
 # Classes
@@ -106,4 +108,4 @@ That was it. Don't forget your semi-colons and happy coding.
 
 Have a question? Stop by at Axel-lang's Discord server (warning: it's pretty dead) 
 
-https://discord.gg/xPhcZwGpSC
+[Discord](https://discord.gg/xPhcZwGpSC)

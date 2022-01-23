@@ -93,6 +93,12 @@ module.exports = class Parser {
       else {
         this.emit(`function ${name} () {`);
       }
+    else if (iden == "imm") {
+      let name = this.next();
+      let eq = this.next();
+      let value = this.next();
+      this.emit(`const ${name} = ${value}`);
+    }
     }
     else {
       this.emit(orig);

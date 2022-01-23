@@ -94,7 +94,7 @@ module.exports = class Parser {
       let it = "";
       let args = [];
       if (orig.includes("(")) {
-        let arglist = orig.replaceAll("(", "").replaceAll(")", "").replace("fn ", "").split(",");
+        let arglist = orig.replaceAll("(", "").replaceAll(")", "").replace("fn ", "").replace(name, "").split(",");
         this.emit(`function ${name} (${arglist.join(",").replaceAll(" ", "")}) {`);
       }
       else {

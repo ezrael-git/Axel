@@ -109,8 +109,14 @@ module.exports = class Parser {
     }
     else if (this.cur.length > 1) {
       console.log("funcTry triggered");
-      let funcTry = eval(iden.replaceAll("(", "").replaceAll(")", ""));
-      if (typeof funcTry !== "function") {
+      let funcNameRaw = iden.replaceAll("(", "").replaceAll(")", "");
+      let isFunc = false;
+      for (let line of this.parsed.split("\n")) {
+        if (line.includes("fn " + funcNameRaw)) {
+          isFunc = true;
+        }
+      }
+      if (isFunc != true) {
         this.emit(orig);
         console.log("funcTry failed, type: " + typeof funcTry);
         return 0;

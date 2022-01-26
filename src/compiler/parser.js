@@ -115,6 +115,7 @@ module.exports = class Parser {
         if (line.includes("fn " + funcNameRaw)) {
           isFunc = true;
         }
+        console.log("funcTry line " + line);
       }
       if (isFunc != true) {
         this.emit(orig);

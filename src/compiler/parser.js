@@ -107,7 +107,7 @@ module.exports = class Parser {
       let value = this.next();
       this.emit(`const ${name} = ${value}`);
     }
-    else if (typeof eval(iden.replaceAll("(", "").replaceAll(")", "") === "function" && this.cur.length > 1) {
+    else if (typeof eval(iden.replaceAll("(", "").replaceAll(")", "")) === "function" && this.cur.length > 1) {
       // ong, function call found
       let saved = "";
       let funcName = for (let c of orig.split('')) {

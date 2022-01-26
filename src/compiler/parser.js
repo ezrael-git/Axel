@@ -108,6 +108,7 @@ module.exports = class Parser {
       this.emit(`const ${name} = ${value}`);
     }
     else if (this.cur.length > 1) {
+      console.log("funcTry triggered");
       let funcTry = eval(iden.replaceAll("(", "").replaceAll(")", ""));
       if (typeof funcTry !== "function") {
         this.emit(orig);
@@ -124,7 +125,7 @@ module.exports = class Parser {
       }
       let funcName = saved;
       let funcArgs = orig.replaceAll(funcName + "(", "").replaceAll(funcName + " ", "").replaceAll(")", "").replaceAll(" ", "").split(",");
-      console.log(funcName + " " + funcArgs);
+      console.log("FNFA " + funcName + " " + funcArgs);
       this.emit(`${funcName}(${funcArgs})`)
     }
     else {

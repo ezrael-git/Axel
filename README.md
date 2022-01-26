@@ -23,11 +23,10 @@ Designed to be simple and flexible.
 I was bored.
 Also I wanted a language mixing Ruby, JavaScript and Python's syntax.
 
-Axel is one of those languages that'll, well, just work. If you miss a brace, Axel won't throw much of a fit (most of the times). To put this into perspective, this is valid Axel code:
+Axel is one of those languages that'll, well, just work. If you miss a closing brace, Axel won't throw much of a fit (most of the times). To put this into perspective, this is valid Axel code:
 ```js
 log("hello world"
 ```
-(Just a note: this probably won't work for non-native functions, or functions that you made / functions not recognized by Axel).
 So yeah, maintain your own readability, folks. Axel won't enforce many syntax laws.
 Also, you can run JS code in Axel's compiler, since Axel compiles to JS. You can also see the compiled JavaScript code by adding `log(this.parsed)` to your code. Neat, huh?
 
@@ -56,7 +55,7 @@ Comments are made using `//`. Multiline comments are made using `/* comment */`
 
 # Variables
 There are two kinds of variables in Axel: mutable and immutable.
-Mutable variables are defined using `def:`, and immutable using `imm:`.
+Mutable variables are defined using `def`, and immutable using `imm`.
 
 Example:
 ```py
@@ -64,7 +63,7 @@ def foo = "bar";
 ```
 
 # Lists and hashes
-Lists are a collection of variables. You can define them using `[]` syntax.
+Lists are a collection of items. You can define them using `[]` syntax.
 
 ```js
 def fruits = ["peach", "orange"];
@@ -80,12 +79,11 @@ You can define a function in Axel using the `fn` keyword.
 
 
 ```rust
-fn greet
+fn greet ()
   log("hello world");
 end
 ```
-
-Note that you probably shouldn't add in parentheses `()` after your function's name if you don't have any arguments. Or do, it's up to you.
+Tiny note: the parentheses after the function name isn't necessary, but it's recommended for the sake of readability.
 
 
 # Classes
@@ -103,10 +101,10 @@ end
 ```
 
 
-That was it. Don't forget your semi-colons and happy coding.
+That's it.
 
 # Support
 
 Have a question? Stop by at Axel-lang's Discord server (warning: it's pretty dead) 
 
-[Discord](https://discord.gg/xPhcZwGpSC)
+- [Discord](https://discord.gg/xPhcZwGpSC)

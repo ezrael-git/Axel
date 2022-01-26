@@ -108,14 +108,12 @@ module.exports = class Parser {
       this.emit(`const ${name} = ${value}`);
     }
     else if (this.cur.length > 1) {
-      console.log("funcTry triggered");
       let funcNameRaw = iden.replaceAll("(", "").replaceAll(")", "");
       let isFunc = false;
       for (let line of this.parsed.split("\n")) {
-        if (line.includes("fn " + funcNameRaw)) {
+        if (line.includes("fn" + funcNameRaw)) {
           isFunc = true;
         }
-        console.log("funcTry line " + line);
       }
       if (isFunc != true) {
         this.emit(orig);

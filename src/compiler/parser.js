@@ -124,6 +124,7 @@ module.exports = class Parser {
       }
       let funcName = saved;
       let funcArgs = orig.replaceAll(funcName + "(", "").replaceAll(funcName + " ", "").replaceAll(")", "").replaceAll(" ", "").split(",");
+      console.log(funcName + " " + funcArgs);
       this.emit(`${funcName}(${funcArgs})`)
     }
     else {

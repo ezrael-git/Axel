@@ -110,12 +110,13 @@ module.exports = class Parser {
     else if (typeof eval(iden.replaceAll("(", "").replaceAll(")", "")) === "function" && this.cur.length > 1) {
       // ong, function call found
       let saved = "";
-      let funcName = for (let c of orig.split('')) {
+      for (let c of orig.split('')) {
         if (c == " " || c == "(") {
           break;
         }
         saved += c;
       }
+      let funcName = saved;
       let funcArgs = orig.replaceAll(funcName + "(", "").replaceAll(funcName + " ", "").replaceAll(")", "").replaceAll(" ", "").split(",");
       this.emit(`${funcName}(${funcArgs})`)
     }

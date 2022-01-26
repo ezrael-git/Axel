@@ -107,8 +107,13 @@ module.exports = class Parser {
       let value = this.next();
       this.emit(`const ${name} = ${value}`);
     }
-    let funcTry = eval(iden.replaceAll("(", "").replaceAll(")", ""));
-    else if (typeof funcTry === "function" && this.cur.length > 1) {
+    else if (this.cur.length > 1) {
+      let funcTry = eval(iden.replaceAll("(", "").replaceAll(")", ""));
+      if (typeof funcTry !== "function") {
+        this.emit(orig);
+        console.log("funcTry failed, type: " + typeof funcTry);
+        return 0;
+      }
       // ong, function call found
       let saved = "";
       for (let c of orig.split('')) {

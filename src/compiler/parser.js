@@ -11,6 +11,7 @@ const Exception = require("../exception/bundle.js");
 module.exports = class Parser {
   constructor () {
     this.parsed = []; // parsed lines (raw, they are not parsed. for clarity, think of these as processed lines)
+    // also they contain no whitespaces
     this.parsedLine = 0; // line being parsed
     this.cur = []; // current list of tokens to iterate through
     this.curPos = 0; // position of current token being analyzed
@@ -30,6 +31,29 @@ module.exports = class Parser {
   // emitting
   emit (s) {
     this.emitted += s + "\n";
+  }
+
+  literal_replace (a) {
+    let rep = {
+      "@": "this."
+    }
+    for (let k in rep) {
+      let v = rep[k];
+      let starting = false;
+      for (let char of a) {
+        if (["'", '"'].includes(char) && starting == false) {
+          starting = true;
+        }
+        else if (["'", '"'].includes(char) && starting == true) {
+          starting = false;
+        }
+        else if (char == k) {
+          a = a.split("");
+          a[a.indexOf(char)] = v;
+          a = a.join("");
+        }
+      }
+    }
   }
 
   // iterating tools
@@ -134,7 +158,8 @@ module.exports = class Parser {
       this.emit(`${funcName}(${funcArgs})`)
     }
     else {
-      this.emit(orig);
+      let processed = this.literal_replace(orig);
+      this.emit(processed);
     }
   }
 

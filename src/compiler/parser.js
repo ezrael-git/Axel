@@ -47,7 +47,7 @@ module.exports = class Parser {
         else if (["'", '"'].includes(char) && starting == true) {
           starting = false;
         }
-        else if (char == k) {
+        else if (char == k && starting == false) {
           a = a.split("");
           a[a.indexOf(char)] = v;
           a = a.join("");

@@ -7,6 +7,10 @@ class Axel {
   constructor () {
     this.parser = new Parser();
     this.emitter = new Emitter();
+
+    this.stdblib = `fn log expr
+      console.log(expr)
+    end`;
   }
 
   purify (lis) {
@@ -21,7 +25,7 @@ class Axel {
 
   program (statements) {
     let log = [];
-    statements = statements.trim().split('\n');
+    statements = this.stdblib + "\n" + statements.trim().split('\n');
     for (let line of statements) {
       let lexer = new Lexer(line);
       let lex = lexer.lex();

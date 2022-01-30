@@ -120,6 +120,9 @@ module.exports = class Parser {
       if (orig.includes("(")) {
         let arglist = orig.replaceAll("(", "").replaceAll(")", "").replace("fn ", "").replace(name, "").split(",");
         this.emit(`function ${name} (${arglist.join(",").replaceAll(" ", "")}) {`);
+      } else if (orig.split(" ").length > 2) {
+        let arglist = orig.replace("fn " + name, "").replaceAll(" ", "").split(",");
+        this.emit(`function ${name} (${arglist}) {`);
       }
       else {
         this.emit(`function ${name} () {`);

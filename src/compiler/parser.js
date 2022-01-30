@@ -139,7 +139,7 @@ module.exports = class Parser {
       let funcNameRaw = iden.replaceAll("(", "").replaceAll(")", "");
       let isFunc = false;
       for (let line of this.parsed.split("\n")) {
-        if (line.includes("fn" + funcNameRaw)) {
+        if (line.includes("fn" + funcNameRaw) || line.includes("function" + funcNameRaw)) {
           isFunc = true;
         }
       }

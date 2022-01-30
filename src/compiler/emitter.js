@@ -4,9 +4,9 @@ module.exports = class Emitter {
   constructor (in_it="") {
     this.parsed = `
     // standard builtin library
-    fn log (exp)
+    function log (exp) {
       console.log(exp);
-    end
+    }
     `
   }
 

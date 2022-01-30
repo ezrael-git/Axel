@@ -2,7 +2,12 @@
 
 module.exports = class Emitter {
   constructor (in_it="") {
-    this.parsed = "";
+    this.parsed = `
+    // standard builtin library
+    function log (exp) {
+      console.log(exp);
+    };
+    `
   }
 
   add (n) {

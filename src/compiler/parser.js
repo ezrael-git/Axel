@@ -88,12 +88,13 @@ module.exports = class Parser {
 
     // as a general rule, all lines must begin with an Identifier token
     // so we can use that to help us parse
-
+    /*
     if (iden == "log") {
       let expr = orig.replace("log ", "");
       this.emit(`console.log(${expr})`);
     }
-    else if (iden == "if") {
+    */
+    if (iden == "if") {
       let condition = orig.replace("if ", "");
       this.emit(`if (${condition}) {`)
     }

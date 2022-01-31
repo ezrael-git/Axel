@@ -11,7 +11,7 @@ end
 
 fn compile (statements)
   statements = statements.trim().split('\n')
-  for line in statements
+  for line of statements
     def lexer = new Lexer(line);
     def lex = lexer.lex();
     this.parser.parse(lex,line);

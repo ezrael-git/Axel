@@ -126,7 +126,7 @@ module.exports = class Parser {
     else if (iden == "imm") {
       let name = this.next();
       let eq = this.next();
-      let value = this.next();
+      let value = orig.replace("imm ", "").replace(name, "").replace(eq, "");
       this.emit(`const ${name} = ${value}`);
     }
     else if (iden == "for") {

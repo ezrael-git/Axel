@@ -129,6 +129,10 @@ module.exports = class Parser {
       let value = this.next();
       this.emit(`const ${name} = ${value}`);
     }
+    else if (iden == "for") {
+      let condition = orig.replace("for ", "");
+      this.emit(`for (${condition}) {`);
+    }
     else if (this.cur.length > 1) {
       let funcNameRaw = iden.replaceAll("(", "").replaceAll(")", "");
       let isFunc = false;

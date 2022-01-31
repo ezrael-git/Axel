@@ -8,7 +8,7 @@ Designed to be simple and flexible.
 
 # Index
 1. [Index](https://github.com/ezrael-git/Axel/tree/development#index)
-2. [Why?](https://github.com/ezrael-git/Axel/tree/development#Why?)
+2. [Introduction](https://github.com/ezrael-git/Axel/tree/development#Why?)
 3. [Installing](https://github.com/ezrael-git/Axel/tree/development#Installing)
 4. [Comments](https://github.com/ezrael-git/Axel/tree/development#Comments)
 5. [Variables](https://github.com/ezrael-git/Axel/tree/development#Variables)
@@ -18,7 +18,9 @@ Designed to be simple and flexible.
 9. [Support](https://github.com/ezrael-git/Axel/tree/development#Support)
 
 
-# Why?
+# Introduction
+
+## Why?
 
 I was bored.
 Also I wanted a language mixing Ruby, JavaScript and Python's syntax.
@@ -27,8 +29,19 @@ Axel is one of those languages that'll, well, just work. If you miss a closing b
 ```js
 log("hello world"
 ```
-So yeah, maintain your own readability, folks. Axel won't enforce many syntax laws.
-Also, you can run JS code in Axel's compiler, since Axel compiles to JS. You can also see the compiled JavaScript code by adding `log(this.parsed)` to your code. Neat, huh?
+
+Oh, and did I tell you that you can use JS along with Axel, in the same line?
+Axel takes what it needs and leaves the rest for the JavaScript compiler. If you use JS syntax, Axel won't throw an error. It'll just work.
+This is valid Axel code:
+```js
+log "axel"
+console.log("is")
+function weird () {
+  log "weird"
+end
+weird()
+```
+Although, it's recommended to always use `fn` for declaring functions. This is because if you don't, Axel won't consider it a valid function, and hence you may not be able to use no-parentheses syntax when calling the function, along with some other problems.
 
 Let's get to the installation and the syntax.
 
@@ -99,9 +112,6 @@ cls className
   end
 end
 ```
-
-
-That's it.
 
 # Support
 

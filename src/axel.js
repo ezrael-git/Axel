@@ -25,6 +25,7 @@ class Axel {
 
   program (statements) {
     let log = [];
+    statements = this.stdblib + "\n" + statements;
     statements = statements.trim().split('\n');
     for (let line of statements) {
       let lexer = new Lexer(line);

@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const Lexer = require("./compiler/lexer.js");
 const Parser = require("./compiler/parser.js");
 const Emitter = require("./compiler/emitter.js");
@@ -8,9 +10,9 @@ class Axel {
     this.parser = new Parser();
     this.emitter = new Emitter();
 
-    this.stdblib = `fn log expr
-      console.log(expr)
-    end`;
+    this.stdblib = fs.readFileSync("./standard/stdblib.js",
+    {encoding:'utf8', flag:'r'}
+    );
   }
 
   purify (lis) {

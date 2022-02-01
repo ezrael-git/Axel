@@ -1,28 +1,87 @@
-def : def IDENT EQ EXPR
+# Legend
+
+- expr = expression
+- iden = identifier
+- ... = some code
 
 
-fn : fn IDENT LPAREN *args RPAREN 
-     EXPR
-     END
+# Syntax
+
+### blocks
+Blocks of code need a starter and an ender to work properly. Think of these as curly braces in JS.
+
+The starter is `&` and the ender is `end`, or `#`.
+Most blocks of code don't need a starter (the opposite of `end`), however some do, such as in class methods.
+
+For example, this code doesn't need a starter,
+```rb
+fn hello
+  log "hey"
+end
+```
+as Axel puts them automatically. However there are some cases where you do need one, like here:
+```rb
+cls Person
+  greet () &
+    log "hey"
+  #
+#
+```
+
+### data types
+Variables:
+```rb
+def mutable = "hello"
+
+imm immutable = "hey"
+```
+Lists:
+```
+["something", "something"]
+```
+Hashes:
+```
+{"name" : "Axel"}
+```
+
+### if, elf, and els
+```rb
+if expr
+    ...
+end
+elf expr
+    ...
+end
+els
+    ...
+end
+```
 
 
-cls : cls IDENT 
-      EXPR
-      END
+### loops
+```rb
+while expr
+    ...
+end
+
+for a in b
+    ...
+end
+
+for a of b
+    ...
+end
+```
 
 
+### functions and classes
+```rb
+fn iden
+    ...
+end
 
-for : for IDENT IDENT 
-      EXPR
-      END
-
-
-
-while : while CONDITION
-        EXPR
-        END
-
-
-
-
-return : return EXPR
+cls iden
+    ...
+#
+```
+It is convention to use the `#` ender when ending a class.

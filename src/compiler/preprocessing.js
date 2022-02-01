@@ -3,26 +3,32 @@ class Processor {
     this.op = options;
   }
 
-  process (code) {
-    code = code.trim().split('\n');
-    let processed = [];
-    let flag = false;
-    // remove unnecessary code
-    for (let line of code) {
-
-      if (flag == true) {
-        continue;
-      }
-      else if (line.includes("js")) {
-        line = line.replaceAll("js");
-        flag = true;
-      }
-      if (flag == true && line.includes("}")) {
-        flag = false;
-      }
-
-      processed.push(line);
-
+  literal_replace (a) {
+    let rep = {
+      "@": "this.",
+      "do": "}"
     }
+    for (let k in rep) {
+      let v = rep[k];
+      let starting = false;
+      for (let char of a) {
+        if (["'", '"'].includes(char) && starting == false) {
+          starting = true;
+        }
+        else if (["'", '"'].includes(char) && starting == true) {
+          starting = false;
+        }
+        else if (char == k && starting == false) {
+          a = a.split("");
+          a[a.indexOf(char)] = v;
+          a = a.join("");
+        }
+      }
+    }
+    return a;
+  }
+
+  process (code) {
+    return literal_replace(code);
   }
 }

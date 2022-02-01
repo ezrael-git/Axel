@@ -4,6 +4,15 @@
 - iden = identifier
 - ... = some code
 
+# Index
+- [Legend](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Legend)
+- [Index](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Index)
+- [Syntax](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Syntax)
+- - [blocks](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#blocks)
+
+
+
+
 
 # Syntax
 

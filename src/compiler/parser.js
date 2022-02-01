@@ -50,7 +50,7 @@ module.exports = class Parser {
     }
 
     // do the same for the end
-    it = 0:
+    it = 0;
     while (on.endsWith(" ")) {
       it += 1;
       on = this.removeStrAt(on, it, "");

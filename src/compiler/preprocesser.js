@@ -6,7 +6,7 @@ module.exports = class Preprocessor {
   literal_replace (a) {
     let rep = {
       "@": "this.",
-      "do": "}"
+      "#": "{"
     }
     for (let k in rep) {
       let v = rep[k];

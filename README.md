@@ -13,7 +13,8 @@ Designed to be simple and flexible.
 4. [Comments](https://github.com/ezrael-git/Axel/tree/development#Comments)
 5. [Data Types](https://github.com/ezrael-git/Axel/tree/development#Data-Types)
 6. [Object Oriented Axel](https://github.com/ezrael-git/Axel/tree/development#Object-Oriented-Axel)
-7. [Support](https://github.com/ezrael-git/Axel/tree/development#Support)
+7. [Grammar](https://github.com/ezrael-git/Axel/tree/development#Grammar)
+8. [Support](https://github.com/ezrael-git/Axel/tree/development#Support)
 
 
 # Introduction
@@ -104,15 +105,18 @@ Tiny note: the parentheses after the function name isn't necessary, but it's rec
 Classes are made using the `cls` keyword.
 ```
 cls className
-  constructor (name)
+  constructor (name) &
     this.name = name;
-  end
+  #
 
-  fuck () 
+  fuck () &
     log(this.name + " has been fucked!");
-  end
-end
+  #
+#
 ```
+
+# Grammar
+Detailed information about keywords and syntax is available in the `grammar.md` file, located inside the `src/data/` folder.
 
 # Support
 

@@ -54,6 +54,7 @@ module.exports = class Parser {
         }
       }
     }
+    return a;
   }
 
   removeStrAt (st, pos, new) {

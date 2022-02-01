@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const Preprocessor = require("./compiler/preprocessor.js");
+const Preprocesser = require("./compiler/preprocesser.js");
 const Lexer = require("./compiler/lexer.js");
 const Parser = require("./compiler/parser.js");
 const Emitter = require("./compiler/emitter.js");
@@ -8,7 +8,7 @@ const Emitter = require("./compiler/emitter.js");
 class Axel {
 
   constructor () {
-    this.preprocessor = new Preprocessor();
+    this.preprocessor = new Preprocesser();
     this.parser = new Parser();
     this.emitter = new Emitter();
 
@@ -32,7 +32,7 @@ class Axel {
     statements = this.stdblib + "\n" + statements;
     statements = statements.trim().split('\n');
     for (let line of statements) {
-      line = this.preprocessor.process(line);
+      line = this.preprocesser.process(line);
       let lexer = new Lexer(line);
       let lex = lexer.lex();
       this.parser.parse(lex,line);

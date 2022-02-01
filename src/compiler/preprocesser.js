@@ -1,4 +1,4 @@
-class Processor {
+module.exports = class Preprocessor {
   constructor (options) {
     this.op = options;
   }

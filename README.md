@@ -11,11 +11,9 @@ Designed to be simple and flexible.
 2. [Introduction](https://github.com/ezrael-git/Axel/tree/development#Why?)
 3. [Installing](https://github.com/ezrael-git/Axel/tree/development#Installing)
 4. [Comments](https://github.com/ezrael-git/Axel/tree/development#Comments)
-5. [Variables](https://github.com/ezrael-git/Axel/tree/development#Variables)
-6. [Lists and Hashes](https://github.com/ezrael-git/Axel/tree/development#Lists-and-Hashes)
-7. [Functions](https://github.com/ezrael-git/Axel/tree/development#Functions)
-8. [Classes](https://github.com/ezrael-git/Axel/tree/development#Classes)
-9. [Support](https://github.com/ezrael-git/Axel/tree/development#Support)
+5. [Data Types](https://github.com/ezrael-git/Axel/tree/development#Data-Types)
+6. [Object Oriented Axel](https://github.com/ezrael-git/Axel/tree/development#Object-Oriented-Axel)
+7. [Support](https://github.com/ezrael-git/Axel/tree/development#Support)
 
 
 # Introduction
@@ -66,7 +64,9 @@ your Axel code
 Comments are made using `//`. Multiline comments are made using `/* comment */`
 
 
-# Variables
+# Data Types
+So, data types.
+## Variables
 There are two kinds of variables in Axel: mutable and immutable.
 Mutable variables are defined using `def`, and immutable using `imm`.
 
@@ -75,8 +75,8 @@ Example:
 def foo = "bar";
 ```
 
-# Lists and hashes
-Lists are a collection of items. You can define them using `[]` syntax.
+## Lists and hashes
+Lists are a collection of objects, or items. You can define them using `[]` syntax.
 
 ```js
 def fruits = ["peach", "orange"];
@@ -87,7 +87,8 @@ Hashes, or dictionaries, can be made using curly braces (`{}`).
 def headers = {"Authentication" : "Bearer"};
 ```
 
-# Functions
+# Object Oriented Axel
+## Functions
 You can define a function in Axel using the `fn` keyword.
 
 
@@ -99,7 +100,7 @@ end
 Tiny note: the parentheses after the function name isn't necessary, but it's recommended for the sake of readability.
 
 
-# Classes
+## Classes
 Classes are made using the `cls` keyword.
 ```
 cls className

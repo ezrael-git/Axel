@@ -126,7 +126,7 @@ class Lexer {
 
     let tokens = [];
 
-    let spltrs = [" ", ",", "[", "]", "(", ")", "log", "fn", "def", "imm", "if", "elf", "els"].concat(Iden);
+    let spltrs = [" ", ",", "[", "]", "(", ")", "log", "fn", "def", "imm", "if", "elf", "els", "cls"].concat(Iden);
     let src = this._split(this.source, spltrs);
     src = this.remove_emp(src);
     src = this.remove(this.remove(src, "("), ")");

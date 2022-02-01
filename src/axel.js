@@ -8,7 +8,7 @@ const Emitter = require("./compiler/emitter.js");
 class Axel {
 
   constructor () {
-    this.preprocessor = new Preprocesser();
+    this.preprocesser = new Preprocesser();
     this.parser = new Parser();
     this.emitter = new Emitter();
 

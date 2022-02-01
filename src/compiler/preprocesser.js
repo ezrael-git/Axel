@@ -29,6 +29,6 @@ module.exports = class Preprocessor {
   }
 
   process (code) {
-    return literal_replace(code);
+    return this.literal_replace(code);
   }
 }

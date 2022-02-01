@@ -28,7 +28,7 @@ module.exports = class Parser {
     
   }
 
-  // emitting
+  // emitting and formatting
   emit (s) {
     this.emitted += s + "\n";
   }
@@ -54,6 +54,31 @@ module.exports = class Parser {
         }
       }
     }
+  }
+
+  removeStrAt (st, pos, new) {
+    st = st.split('')
+    st[pos] = new
+    st = st.join('')
+    return st;
+  }
+
+  clean_whitespace (on) {
+    // remove all whitespace from the start of on
+    let it = 0;
+    while (on.startsWith(" ")) {
+      it += 1;
+      on = this.removeStrAt(on, it, "");
+    }
+
+    // do the same for the end
+    it = 0:
+    while (on.endsWith(" ")) {
+      it += 1;
+      on = this.removeStrAt(on, it, "");
+    }
+
+    return on;
   }
 
   // iterating tools
@@ -108,6 +133,12 @@ module.exports = class Parser {
       let value = orig.replace("def ", "").replace(name, "").replace(eq, "");
       this.emit(`let ${name} = ${value}`);
     }
+    else if (iden == "imm") {
+      let name = this.next();
+      let eq = this.next();
+      let value = orig.replace("imm ", "").replace(name, "").replace(eq, "");
+      this.emit(`const ${name} = ${value}`);
+    }
     else if (iden == "fn") {
       let name = this.next();
       let it = "";
@@ -123,15 +154,14 @@ module.exports = class Parser {
         this.emit(`function ${name} () {`);
       }
     }
-    else if (iden == "imm") {
-      let name = this.next();
-      let eq = this.next();
-      let value = orig.replace("imm ", "").replace(name, "").replace(eq, "");
-      this.emit(`const ${name} = ${value}`);
-    }
+
     else if (iden == "for") {
       let condition = orig.replace("for ", "");
       this.emit(`for (${condition}) {`);
+    }
+    else if (iden == "cls") {
+      let name = this.next();
+      this.emit(`class ${name} {`);
     }
     else if (this.cur.length > 1) {
       let funcNameRaw = iden.replaceAll("(", "").replaceAll(")", "");

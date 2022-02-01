@@ -8,7 +8,21 @@
 - [Legend](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Legend)
 - [Index](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Index)
 - [Syntax](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Syntax)
-- - [blocks](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#blocks)
+  - [blocks](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#blocks)
+  - [data types](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#data-types)
+    - [variables](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#variables)
+    - [lists](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#lists)
+    - [hashes](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#hashes)
+  - [if statements](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#if-statements)
+  - [loops](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#loops)
+  - [functions and classes](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#functions-and-classes)
+
+
+
+
+
+
+
 
 
 
@@ -38,22 +52,22 @@ cls Person
 ```
 
 ### data types
-Variables:
+#### variables:
 ```rb
 def mutable = "hello"
 
 imm immutable = "hey"
 ```
-Lists:
+#### lists:
 ```
 ["something", "something"]
 ```
-Hashes:
+#### hashes:
 ```
 {"name" : "Axel"}
 ```
 
-### if, elf, and els
+### if statements
 ```rb
 if expr
     ...

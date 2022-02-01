@@ -168,8 +168,7 @@ module.exports = class Parser {
       this.emit(`${funcName}(${funcArgs})`)
     }
     else {
-      let processed = this.literal_replace(orig);
-      this.emit(processed);
+      this.emit(orig);
     }
   }
 

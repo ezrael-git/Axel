@@ -33,33 +33,10 @@ module.exports = class Parser {
     this.emitted += s + "\n";
   }
 
-  literal_replace (a) {
-    let rep = {
-      "@": "this."
-    }
-    for (let k in rep) {
-      let v = rep[k];
-      let starting = false;
-      for (let char of a) {
-        if (["'", '"'].includes(char) && starting == false) {
-          starting = true;
-        }
-        else if (["'", '"'].includes(char) && starting == true) {
-          starting = false;
-        }
-        else if (char == k && starting == false) {
-          a = a.split("");
-          a[a.indexOf(char)] = v;
-          a = a.join("");
-        }
-      }
-    }
-    return a;
-  }
 
-  removeStrAt (st, pos, new) {
+  removeStrAt (st, pos, new_char) {
     st = st.split('')
-    st[pos] = new
+    st[pos] = new_char
     st = st.join('')
     return st;
   }

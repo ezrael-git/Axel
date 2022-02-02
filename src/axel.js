@@ -27,10 +27,46 @@ class Axel {
     return n;
   }
 
+  identify_macros (stats) {
+    let elem = 0;
+    let macros = [];
+    let flag = false;
+    for (let line of stats) {
+      elem += 1;
+      if (line.includes("+++")) {
+        if (flag == false) {
+          flag = true;
+        } else {
+          flag = false;
+        }
+      }
+      if (flag == true) {
+        macros.push(line);
+      }
+    }
+    let prepr = [];
+    for (let macro of macros) {
+      if (macro != "+++") {
+        prepr.push(macro);
+      }
+    }
+    return prepr;
+  }
+
+  process_macros (macros) {
+    let rep;
+    for (macro of macros) {
+      eval(rep);
+    }
+  }
+
   program (statements) {
     let log = [];
     statements = this.stdblib + "\n" + statements;
     statements = statements.trim().split('\n');
+    // identify and process macros because they have to run before anything else
+    let macros = this.identify_macros(statements);
+    this.process_macros(macros);
     for (let line of statements) {
       line = this.preprocesser.process(line);
       let lexer = new Lexer(line);

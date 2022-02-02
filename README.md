@@ -104,15 +104,22 @@ Tiny note: the parentheses after the function name isn't necessary, but it's rec
 ## Classes
 Classes are made using the `cls` keyword.
 ```
-cls className
+cls Person
   constructor (name) &
-    this.name = name;
+    @name = name;
   #
 
   fuck () &
-    log(this.name + " has been fucked!");
+    log(@name + " has been fucked!");
   #
 #
+```
+
+The class can then be instantiated using the `new` keyword.
+```js
+arnold = new Person("Arnold")
+arnold.fuck()
+// >>> Arnold has been fucked!
 ```
 
 # Grammar

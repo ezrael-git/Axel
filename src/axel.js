@@ -54,9 +54,8 @@ class Axel {
   }
 
   process_macros (macros) {
-    let rep;
     for (macro of macros) {
-      eval(rep);
+      eval(macro);
     }
   }
 

@@ -40,7 +40,7 @@ function weird () &
 }
 weird()
 ```
-Although, it's recommended to always use `fn` for declaring functions. This is because if you don't, Axel won't consider it a valid function, and hence you may not be able to use no-parentheses syntax when calling the function, along with some other problems.
+Although, it's recommended to always use `fn` for declaring functions. This is because if you don't, it'll be practically invisible for the Axel compiler, and hence you may not be able to use no-parentheses syntax when calling the function, along with some other problems.
 
 Let's get to the installation and the syntax.
 

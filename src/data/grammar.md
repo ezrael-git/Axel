@@ -16,7 +16,9 @@
   - [if statements](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#if-statements)
   - [loops](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#loops)
   - [functions and classes](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#functions-and-classes)
-
+- [Standard Builtin Library (stdblib)](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Standard-Builtin-Library)
+  - [description](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#description)
+  - [common functions](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#common-functions)
 
 
 
@@ -108,3 +110,18 @@ cls iden
 #
 ```
 It is convention to use the `#` ender when ending a class.
+
+# Standard Builtin Library
+## description
+The Standard Builtin Library, or stdblib (not to be confused with Standard Library, or stdlib), holds built-in Axel functions and classes.
+The stdblib is defined in the `src/standard/stdblib.js` file. It is injected into every program that you run by the main Axel file, `src/axel.js`. It compiles everytime you run your program.
+
+The stdblib is mostly written in Axel and JavaScript.
+
+## common functions
+
+Some common functions in the stdblib are:
+
+`log`: Logs a message to the console.
+
+`compile`: Compiles Axel or JavaScript code, from a string.

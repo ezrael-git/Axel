@@ -19,7 +19,7 @@
 - [Standard Builtin Library (stdblib)](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Standard-Builtin-Library)
   - [description](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#description)
   - [common functions](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#common-functions)
-
+  - [script](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#script)
 
 
 
@@ -125,3 +125,15 @@ Some common functions in the stdblib are:
 `log`: Logs a message to the console.
 
 `compile`: Compiles Axel or JavaScript code, from a string.
+
+## script
+The `Script` class of the stdblib handles everything related to the current program/script being executed.
+It contains information such as the script name, the functions defined in the script, and etc. 
+
+Along with it comes the constant `script`, which is an automatically made instance of the `Script` class. There's also `scriptReference` (also a constant) which refers to the current script being executed.
+
+One useful method of the class is `kill`, which kills the current program.
+```js
+script.kill()
+```
+Nothing too fancy.

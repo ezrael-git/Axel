@@ -35,9 +35,9 @@ This is valid Axel code:
 ```js
 log "axel"
 console.log("is")
-function weird () {
+function weird () &
   log "weird"
-end
+}
 weird()
 ```
 Although, it's recommended to always use `fn` for declaring functions. This is because if you don't, Axel won't consider it a valid function, and hence you may not be able to use no-parentheses syntax when calling the function, along with some other problems.

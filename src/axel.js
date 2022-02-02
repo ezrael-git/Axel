@@ -54,9 +54,8 @@ class Axel {
   }
 
   process_macros (macros) {
-    for (macro of macros) {
-      eval(macro);
-    }
+    let newlined = macros.join('\n');
+    eval(newlined);
   }
 
   program (statements) {

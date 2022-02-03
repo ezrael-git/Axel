@@ -29,11 +29,11 @@ cls Script
   constructor (name) &
     @name = Path.basename(__filename)
     @functions = []
-    for(let i in scriptReference) {
-      if((typeof this[i]).toString()=="function"&&this[i].toString().indexOf("native")==-1){
+    for i in scriptReference {
+      if typeof this[i]).toString()=="function"&&this[i].toString().indexOf("native")==-1
         @functions.push(this[i].name)
-      }
-    }
+      #
+    #
   #
 
   kill () &

@@ -95,11 +95,11 @@ module.exports = class Parser {
       let condition = orig.replace("if ", "");
       this.emit(`if (${condition}) {`)
     }
-    else if (iden == "elf") {
+    else if (iden == "ef") {
       let condition = orig.replace("ef ", "");
       this.emit(`else if (${condition}) {`)
     }
-    else if (iden == "els") {
+    else if (iden == "es") {
       this.emit(`else {`)
     }
     else if (iden == "end") {

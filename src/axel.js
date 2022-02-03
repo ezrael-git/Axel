@@ -18,6 +18,9 @@ class Axel {
   }
 
   purify (lis) {
+    /*
+    Purify a list, removing unnecessary items such as empty elements and whitespaces.
+    */
     let n = [];
     lis.forEach(function (e) {
       if (e != " " && e != "" && e.length > 0) {
@@ -28,6 +31,9 @@ class Axel {
   }
 
   identify_macros (stats) {
+    /*
+    Identify the macros in a list of statements.
+    */
     let elem = 0;
     let macros = [];
     let flag = false;
@@ -54,11 +60,75 @@ class Axel {
   }
 
   process_macros (macros) {
+    /*
+    Process and execute macros from a list of macros.
+    */
     let newlined = macros.join('\n');
     eval(newlined);
   }
 
+  get_functions (stats) {
+    /*
+    Get names of all functions in a list of statements of Axel code.
+    */
+    let functions = [];
+    for (line of stats) {
+      if (line.startsWith("fn ")) {
+        line = line.replace("fn ", "");
+        let name = "";
+        for (char of line) {
+          if (char == " " || char == "(") {
+            break;
+          }
+          name += char;
+        }
+        functions.push(name);
+      }
+    }
+    return functions;
+  }
+
+  get_classes (stats) {
+    /*
+    Get names of all classes in a list of statements of Axel code.
+    */
+    let classes = [];
+    for (let line of stats) {
+      if (line.startsWith("cls ")) {
+        line = line.replace("cls ", "");
+        let name = "";
+        for (let char of line) {
+          if (char == " " || char == "(") {
+            break;
+          }
+          name += char;
+        }
+        classes.push(name);
+      }
+    }
+    return classes;
+  }
+
+
+  do_some_replacing (stdlib, code) {
+    /*
+    Replace the placeholding terms in the stdlib to contain information.
+    */
+    let n = [];
+    let functions = this.get_functions(code);
+    let classes ° this.get_classes(code);
+    for (line of stdblib) {
+      line = line.replaceAll("__functions__", functions);
+      line = line.replacrAll("__classes__", classes);
+      n.push(line);
+    }
+    return n;
+  }
+
   program (statements) {
+    /*
+    One-for-all function to execute Axel code. This function acts as a middleman between the code and the compiler, passing the statements into the compiler and executing it in the end.
+    */
     let log = [];
     statements = this.stdblib + "\n" + statements;
     statements = statements.trim().split('\n');

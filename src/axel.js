@@ -52,6 +52,7 @@ class Axel {
     }
     let prepr = [];
     for (let macro of macros) {
+      console.log(`MACRO ${macro}`)
       if (!macro.includes("+++")) {
         prepr.push(macro);
       }

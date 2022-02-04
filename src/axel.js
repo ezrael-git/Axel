@@ -154,7 +154,6 @@ class Axel {
     // identify and process macros because they have to run before anything else
     let macros = this.identify_macros(statements);
     this.process_macros(macros);
-    statements = this.cleanse_macros(statements);
     for (let line of statements) {
       line = this.preprocesser.process(line);
       let lexer = new Lexer(line);

@@ -151,7 +151,6 @@ module.exports = class Parser {
       }
       if (isFunc != true) {
         this.emit(orig);
-        console.log("funcTry failed, type: " + typeof funcTry);
         return 0;
       }
       // ong, function call found

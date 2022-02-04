@@ -28,12 +28,8 @@ imm scriptReference = this
 cls Script
   constructor (name) &
     @name = Path.basename(__filename)
-    @functions = []
-    for i of scriptReference
-      if typeof this[i]).toString()=="function"&&this[i].toString().indexOf("native")==-1
-        @functions.push(this[i].name)
-      #
-    #
+    @functions = __functions__
+    @classes = __classes__
   #
 
   kill () &

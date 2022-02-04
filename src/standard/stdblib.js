@@ -9,7 +9,8 @@ fn log (expr)
 end
 
 fn include (path)
-  return require(path)
+  let r = require(path);
+  return r;
 end
 
 fn compile (statements)

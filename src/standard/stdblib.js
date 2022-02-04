@@ -28,8 +28,8 @@ imm scriptReference = this
 cls Script
   constructor (name) &
     @name = Path.basename(__filename)
-    @functions = __functions__
-    @classes = __classes__
+    @functions = []
+    @classes = []
   #
 
   kill () &

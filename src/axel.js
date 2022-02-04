@@ -52,7 +52,7 @@ class Axel {
     }
     let prepr = [];
     for (let macro of macros) {
-      if (macro != "+++") {
+      if (!macro.includes("+++")) {
         prepr.push(macro);
       }
     }
@@ -142,8 +142,7 @@ class Axel {
       this.parser.parse(lex,line);
     }
     this.emitter.add(this.parser.emitted);
-    console.log("Parser: " + this.parser.emitted);
-    console.log("Emitter:");
+    console.log("Axel:");
     this.emitter.eval();
   }
 

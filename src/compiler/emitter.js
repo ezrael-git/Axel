@@ -14,6 +14,8 @@ module.exports = class Emitter {
     // runtime variables
     let emit = this.parsed;
     let retlog = this.retlog;
+    console.log("PARSER:");
+    console.log(emit);
 
     let retcode = eval(this.parsed);
     this.retlog.push(retcode);

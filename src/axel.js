@@ -116,7 +116,7 @@ class Axel {
     */
     let n = [];
     let functions = this.get_functions(code);
-    let classes ° this.get_classes(code);
+    let classes = this.get_classes(code);
     for (line of stdblib) {
       line = line.replaceAll("__functions__", functions);
       line = line.replacrAll("__classes__", classes);

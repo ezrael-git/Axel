@@ -71,7 +71,7 @@ class Axel {
     */
     let compiled_stats = [];
     let flag = true;
-    for (stat of stats) {
+    for (let stat of stats) {
       if (stats.includes("+++")) {
         if (flag == true) {
           flag = false;

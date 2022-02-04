@@ -52,7 +52,6 @@ class Axel {
     }
     let prepr = [];
     for (let macro of macros) {
-      console.log(`MACRO ${macro}`)
       prepr.push(macro.replaceAll("+++", ""));
     }
     return prepr;
@@ -64,6 +63,27 @@ class Axel {
     */
     let newlined = macros.join('\n');
     eval(newlined);
+  }
+
+  cleanse_macros (stats) {
+    /*
+    Remove all macros from a list of statements.
+    */
+    let compiled_stats = [];
+    let flag = true;
+    for (stat of stats) {
+      if (stats.includes("+++")) {
+        if (flag == true) {
+          flag = false;
+        } else {
+          flag = true;
+        }
+      }
+      if (flag == true) {
+        compiled_stats.push(stat);
+      }
+    }
+    return compiled_stats;
   }
 
   get_functions (stats) {
@@ -134,6 +154,7 @@ class Axel {
     // identify and process macros because they have to run before anything else
     let macros = this.identify_macros(statements);
     this.process_macros(macros);
+    statements = this.cleanse_macros(statements);
     for (let line of statements) {
       line = this.preprocesser.process(line);
       let lexer = new Lexer(line);

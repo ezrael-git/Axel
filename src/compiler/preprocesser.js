@@ -144,6 +144,7 @@ module.exports = class Preprocessor {
   }
 
   process (code) {
-    return this.literal_replace(code);
+    let l = this.literal_replace(code);
+    return l;
   }
 }

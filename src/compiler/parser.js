@@ -141,6 +141,14 @@ module.exports = class Parser {
       let name = this.next();
       this.emit(`class ${name} {`);
     }
+    else if (iden == "call") {
+      let name = this.next();
+      let args = orig.replace("call " + name, "").replace("(", "").replace(")", "");
+      if (args.length == 0) {
+        args = " ";
+      }
+      this.emit(`${name}(args)`);
+    }
     else if (this.cur.length > 1) {
       let funcNameRaw = iden.replaceAll("(", "").replaceAll(")", "");
       let isFunc = false;

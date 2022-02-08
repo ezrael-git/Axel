@@ -85,46 +85,19 @@ module.exports = class Preprocessor {
     return compiled_stats;
   }
 
-  get_functions (stats) {
-    /*
-    Get names of all functions in a list of statements of Axel code.
-    */
-    let functions = [];
-    for (line of stats) {
-      if (line.startsWith("fn ")) {
-        line = line.replace("fn ", "");
-        let name = "";
-        for (char of line) {
-          if (char == " " || char == "(") {
-            break;
-          }
-          name += char;
-        }
-        functions.push(name);
-      }
-    }
-    return functions;
-  }
 
-  get_classes (stats) {
+  get (dec_syntax, stats) {
     /*
-    Get names of all classes in a list of statements of Axel code.
+    Get names of all `obj`s in a list of statements of Axel code.
+    The `obj`s to get are defined by the `dec_syntax` argument. For example, if you need all functions in an Axel program you can do `get("fn", statements)`
     */
-    let classes = [];
+    let objs = [];
     for (let line of stats) {
-      if (line.startsWith("cls ")) {
-        line = line.replace("cls ", "");
-        let name = "";
-        for (let char of line) {
-          if (char == " " || char == "(") {
-            break;
-          }
-          name += char;
-        }
-        classes.push(name);
+      if (line.startsWith(dec_syntax)) {
+        classes.push(line.split(' ')[1]);
       }
     }
-    return classes;
+    return objs;
   }
 
 
@@ -145,7 +118,8 @@ module.exports = class Preprocessor {
 
   collect_garbage (stats) {
     /*
-    Clean all unused variables, functions and classes.
+    Clean all unused variables, functions and classes, before compile-time.
+    This slightly improves compiling speed, as the compiler doesn't have to deal with useless let/imm/fn/cls declarations.
     */
     let fmtd = [];
     for (let stat of stats) {

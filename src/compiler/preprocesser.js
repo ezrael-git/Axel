@@ -128,7 +128,7 @@ module.exports = class Preprocessor {
   }
 
 
-  do_some_replacing (stdlib, code) {
+  replace_placeholders (stdlib, code) {
     /*
     Replace the placeholding terms in the stdlib to contain information.
     */
@@ -137,10 +137,32 @@ module.exports = class Preprocessor {
     let classes = this.get_classes(code);
     for (line of stdblib) {
       line = line.replaceAll("__functions__", functions);
-      line = line.replacrAll("__classes__", classes);
+      line = line.replaceAll("__classes__", classes);
       n.push(line);
     }
     return n;
+  }
+
+  collect_garbage (stats) {
+    /*
+    Clean all unused variables, functions and classes.
+    */
+    let fmtd = [];
+    for (let stat of stats) {
+
+      if (stat.includes("def") || stat.includes("imm") || stat.includes("fn") || stat.includes("cls")) {
+        let ob_name = stat.split(' ')[1];
+        for (let stat_ of stats) {
+          if (stat_.includes(ob_name)) {
+            fmtd.push(stat);
+          }
+        }
+      } else {
+        fmtd.push(stat);
+      }
+
+    }
+    return fmtd;
   }
 
   process (code) {

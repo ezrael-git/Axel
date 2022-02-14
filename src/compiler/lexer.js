@@ -5,151 +5,74 @@ const Error = require("../exception/bundle.js");
 
 
 class Lexer {
-  constructor (source) {
-    this.source = source;
-    this.lexed = source;
+  constructor () {
+    this.source = undefined;
+    this.lexed = undefined;
+    this.line = 0;
     this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
-    this.digits = "0123456789".split('');
-    this.let_dig = this.letters.concat(this.digits);
-    this.blocking = ["+", "-", " ", "(", ")", "/"];
-    this.quotes = ['"', "'"];
+    this.digits = "0123456789"
 
-    this.curPos = -1;
    
   }
 
-  // type manipulation
-
-  _rem (arr, item) {
-    let n = [];
-    arr.forEach(function (a) {
-      if (a != item) {
-        n.push(a);
-      }
-    });
-    return n;
-  };
-
-  _split (str, tokens) {
-    let tempChar = "@@@@@#$_&"; // We can use the first token as a temporary join character
-    tokens.forEach(function (t) {
-      str = str.replaceAll(t, tempChar+t+tempChar);
-    });
-
-    let result = str.split(tempChar);
-    return result;
+  get_src (from=0, to) {
+    let h = this.source.trim().split('\n');
+    return h[from:to];
   }
 
-  // processing
+  isFunctionCall (tks) {
+    let flag = false;
+    if (this.get_src(0,this.line).includes("fn " + tks[0])) {
+      flag = true;
+    }
+    return flag;
+  }
 
-  type_format (splt) {
-    let tokens = [];
-    for (let piece of splt) {
-      if (piece[0] == undefined) {
-        continue
+  isVarRef (tks) {
+    let flag = false;
+    if (this.get_src(0,this.line).includes("imm " + tks[0]) || this.get_src(0,this.line).includes("def " + tks[0])) {
+      flag = true;
+    }
+    return flag;
+  }
+
+
+  type_format (tks) {
+    let typed = [];
+    for (let tk of tks) {
+
+      if (tk.startsWith("'") && tk.endsWith("'") || tk.startsWith('"') && tk.endsWith('"')) {
+        typed.push(new String(tk));
       }
-
-      // check for Text
-      if (piece.startsWith('"') && piece.endsWith('"') || piece.startsWith("'") && piece.endsWith("'")) {
-        tokens.push(new Type.Text(piece));
+      else if (digits.includes(tk[0]) && digits.includes(tk[tk.length - 1])) {
+        typed.push(new Integer(tk));
       }
-
-      // check for Digit
-      else if (this.digits.includes(piece[0])) {
-        tokens.push(new Type.Digit(piece));
+      else if (keywords.includes(tk)) {
+        typed.push(new Keyword(tk));
       }
-
-      // check for List
-      else if (piece.startsWith("[")) {
-        tokens.push(new Type.List(piece));
+      else if (operators.includes(tk)) {
+        typed.push(new Operator(tk));
       }
-
-      // check for Dict
-      else if (piece.startsWith("{")) {
-        tokens.push(new Type.Dict(piece));
-      }
-
-      // check for Sign
-      else if (Type.Sign.signs.includes(piece)) {
-        tokens.push(new Type.Sign(piece));
-      }
-
-      // check for Identifier
-      else if (this.letters.includes(piece[0].toUpperCase())) {
-        tokens.push(new Type.Identifier(piece));
-      }
-
-      // check for parentheses
-      else if (["(", ")"].includes(piece)) {
-        tokens.push(piece);
-      }
-
-
       else {
-        // assume is string lmao
-        console.log("ok so uhhh we don't know how to handle this one " + piece);
-        tokens.push(new Type.Text(piece));
+        typed.push(new Identifier(tk));
       }
 
-
-
-
-
-    }; // for loop's brace
-    return tokens;
-  }
-
-  remove_emp (lis) {
-    let n = [];
-    lis.forEach(function (e) {
-      if (e != " " && e != "" && e.length > 0 && e[0] != undefined) {
-        n.push(e.replaceAll(" ", ""));
-      }
-    });
-    return n;
-  }
-
-  remove (lis, item) {
-    let n = [];
-    lis.forEach(function (e) {
-      if (e != item) {
-        n.push(e);
-      }
-    });
-    return n;
+    }
   }
 
 
-  // lexing
+  lex (source) {
 
-  lex () {
-
-    let tokens = [];
-
-    let spltrs = [" ", ",", "[", "]", "(", ")", "log", "fn", "def", "imm", "if", "elf", "els", "cls"].concat(Iden);
-    let src = this._split(this.source, spltrs);
-    src = this.remove_emp(src);
-    src = this.remove(this.remove(src, "("), ")");
-
+    let src = source.split(' ');
+    src = this.type_format(src);
 
     this.lexed = src;
+    this.source = source;
+    this.line += 1;
     return this.lexed;
 
-
-    
-
-
   }
   
-  next () {
-    this.curPos += 1;
-    return this.lexed.split('')[this.curPos];
-  }
-  
-  prev () {
-    this.curPos -= 1;
-    return this.lexed.split('')[this.curPos];
-  }
  
  
 }

@@ -1,119 +1,6 @@
 module.exports = class Preprocessor {
-  constructor (options) {
-    this.op = options;
-  }
-
-  literal_replace (a) {
-    let rep = {
-      "@": "this.",
-      "&": "{",
-      "#": "}"
-    }
-    for (let k in rep) {
-      let v = rep[k];
-      let starting = false;
-      for (let char of a) {
-        if (["'", '"'].includes(char) && starting == false) {
-          starting = true;
-        }
-        else if (["'", '"'].includes(char) && starting == true) {
-          starting = false;
-        }
-        else if (char == k && starting == false) {
-          a = a.split("");
-          a[a.indexOf(char)] = v;
-          a = a.join("");
-        }
-      }
-    }
-    return a;
-  }
-
-  identify_macros (stats) {
-    /*
-    Identify the macros in a list of statements.
-    */
-    let elem = 0;
-    let macros = [];
-    let flag = false;
-    for (let line of stats) {
-      elem += 1;
-      if (line.includes("+++")) {
-        if (flag == false) {
-          flag = true;
-        } else {
-          flag = false;
-        }
-      }
-      if (flag == true) {
-        macros.push(line);
-      }
-    }
-    let prepr = [];
-    for (let macro of macros) {
-      prepr.push(macro.replaceAll("+++", ""));
-    }
-    return prepr;
-  }
-
-  process_macros (macros) {
-    /*
-    Process and execute macros from a list of macros.
-    */
-    let newlined = macros.join('\n');
-    eval(newlined);
-  }
-
-  cleanse_macros (stats) {
-    /*
-    Remove all macros from a list of statements.
-    */
-    let compiled_stats = [];
-    let flag = true;
-    for (let stat of stats) {
-      if (stats.includes("+++")) {
-        if (flag == true) {
-          flag = false;
-        } else {
-          flag = true;
-        }
-      }
-      if (flag == true) {
-        compiled_stats.push(stat);
-      }
-    }
-    return compiled_stats;
-  }
-
-
-  get (dec_syntax, stats) {
-    /*
-    Get names of all `obj`s in a list of statements of Axel code.
-    The `obj`s to get are defined by the `dec_syntax` argument. For example, if you need all functions in an Axel program you can do `get("fn", statements)`
-    */
-    let objs = [];
-    for (let line of stats) {
-      if (line.startsWith(dec_syntax)) {
-        classes.push(line.split(' ')[1]);
-      }
-    }
-    return objs;
-  }
-
-
-  replace_placeholders (stdlib, code) {
-    /*
-    Replace the placeholding terms in the stdlib to contain information.
-    */
-    let n = [];
-    let functions = this.get_functions(code);
-    let classes = this.get_classes(code);
-    for (line of stdblib) {
-      line = line.replaceAll("__functions__", functions);
-      line = line.replaceAll("__classes__", classes);
-      n.push(line);
-    }
-    return n;
+  constructor (options={"collect_garbage":true, "remove_comments":true, "host":true}) {
+    this.options = options;
   }
 
   collect_garbage (stats) {
@@ -139,7 +26,84 @@ module.exports = class Preprocessor {
     return fmtd;
   }
 
+  remove_comments (stats) {
+    let fmtd = [];
+    for (let stat of stats) {
+      if (!stat.startsWith("!")) {
+        fmtd.push(stat);
+      }
+    }
+    return fmtd;
+  }
+
+  scan_variables (stats) {
+    let objs = {};
+    for (let stat of stats) {
+      if (stat.startsWith("def") || stat.startsWith("imm")) {
+        let name = stat.split(' ')[1];
+        let value = stat.replace("def " + name, "").replace("imm " + name, "").replace(" = ", "");
+        objs[name] = value;
+      }
+    }
+    return objs;
+  }
+
+  scan_functions (stats) {
+    let objs = [];
+    let flag = false;
+    for (let stat of stats) {
+      if (stat.startsWith("fn")) {
+        objs.push(stat);
+        flag = true;
+      }
+      else if (flag == true) {
+        objs.push(stat);
+      }
+      if (stat == "end") {
+        objs.push(stat);
+        flag = false;
+      }
+    }
+    return objs;
+  }
+
+
+  host (stats) {
+    let manipulated = [];
+    let vars = this.scan_variables(stats);
+    let functions = this.scan_functions(stats);
+    for (let name of vars) {
+      let value = vars[name];
+      manipulated.push(`let ${name} = ${value}`);
+    }
+    for (let line of functions) {
+      manipulated.push(line);
+    }
+    for (let stat of stats) {
+      if (!stat.startsWith("def") && !stat.startsWith("imm") && !stat.startsWith("fn")) {
+        manipulated.push(stat);
+      }
+    }
+    return manipulated;
+  }
+
+
   process (code) {
-    return this.literal_replace(code);
+    /*
+    Interface
+    */
+    let op = this.options;
+    let fm = code;
+    if (op["collect_garbage"] == true) {
+      fm = this.collect_garbage(fm);
+    }
+    if (op["remove_comments"] == true) {
+      fm = this.remove_comments(fm);
+    }
+    if (op["host"] == true) {
+      fm = this.host(fm);
+    }
+
+    return fm;
   }
 }

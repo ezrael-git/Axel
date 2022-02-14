@@ -41,23 +41,10 @@ module.exports = class Parser {
     return st;
   }
 
-  clean_whitespace (on) {
-    // remove all whitespace from the start of on
-    let it = 0;
-    while (on.startsWith(" ")) {
-      it += 1;
-      on = this.removeStrAt(on, it, "");
-    }
-
-    // do the same for the end
-    it = 0;
-    while (on.endsWith(" ")) {
-      it += 1;
-      on = this.removeStrAt(on, it, "");
-    }
-
-    return on;
+  input_all (src, name, value) {
+    
   }
+
 
   // iterating tools
 
@@ -66,8 +53,8 @@ module.exports = class Parser {
     this.curPos = 0;
   }
 
-  addLine (tks) {
-    this.parsed += tks.join("");
+  addLine (line) {
+    this.parsed += line
     this.parsedLine += 1;
   }
 
@@ -81,16 +68,12 @@ module.exports = class Parser {
 
   
   
-  parse (tks, orig="") { // general note: tks stands for tokens
-    this.addLine(tks);
+  parse (tks, orig="") {
+    this.addLine(orig);
     this.ref(tks)
-    let iden = this.next();
-    console.log("Received Tokens: " + tks);
-    console.log("IDEN " + iden);
+    let stat = this.next();
 
 
-    // as a general rule, all lines must begin with an Identifier token
-    // so we can use that to help us parse
     if (iden == "if") {
       let condition = orig.replace("if ", "");
       this.emit(`if (${condition}) {`)

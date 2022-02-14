@@ -50,6 +50,9 @@ class Lexer {
       else if (keywords.includes(tk)) {
         typed.push(new Keyword(tk));
       }
+      else if (operators.includes(tk)) {
+        typed.push(new Operator(tk));
+      }
       else {
         typed.push(new Identifier(tk));
       }

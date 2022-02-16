@@ -1,9 +1,5 @@
 // parser.js
 
-const Keyword = require("../data/keyword.js");
-const Iden = require("../data/identifier.js");
-const Type = require("../type/bundle.js");
-const Exception = require("../exception/bundle.js");
 
 
 
@@ -65,6 +61,11 @@ module.exports = class Parser {
     return n;
   }
 
+  generate_ast (tks) {
+    let program = {}
+    let 
+  }
+
 
   
   
@@ -73,85 +74,9 @@ module.exports = class Parser {
     this.ref(tks)
     let stat = this.next();
 
+    
 
-    if (iden == "if") {
-      let condition = orig.replace("if ", "");
-      this.emit(`if (${condition}) {`)
-    }
-    else if (iden == "ef") {
-      let condition = orig.replace("ef ", "");
-      this.emit(`else if (${condition}) {`)
-    }
-    else if (iden == "es") {
-      this.emit(`else {`)
-    }
-    else if (iden == "end") {
-      this.emit("}");
-    }
-    else if (iden == "def") {
-      let name = this.next();
-      let eq = this.next();
-      let value = orig.replace("def ", "").replace(name, "").replace(eq, "");
-      this.emit(`let ${name} = ${value}`);
-    }
-    else if (iden == "imm") {
-      let name = this.next();
-      let eq = this.next();
-      let value = orig.replace("imm ", "").replace(name, "").replace(eq, "");
-      this.emit(`const ${name} = ${value}`);
-    }
-    else if (iden == "fn") {
-      let name = this.next();
-      let it = "";
-      let args = [];
-      if (orig.includes("(")) {
-        let arglist = orig.replaceAll("(", "").replaceAll(")", "").replace("fn ", "").replace(name, "").split(",");
-        this.emit(`function ${name} (${arglist.join(",").replaceAll(" ", "")}) {`);
-      } else if (orig.split(" ").length > 2) {
-        let arglist = orig.replace("fn " + name, "").replaceAll(" ", "").split(",");
-        this.emit(`function ${name} (${arglist}) {`);
-      }
-      else {
-        this.emit(`function ${name} () {`);
-      }
-    }
 
-    else if (iden == "for") {
-      let condition = orig.replace("for ", "");
-      this.emit(`for (${condition}) {`);
-    }
-    else if (iden == "cls") {
-      let name = this.next();
-      this.emit(`class ${name} {`);
-    }
-    else if (this.cur.length > 1) {
-      let funcNameRaw = iden.replaceAll("(", "").replaceAll(")", "");
-      let isFunc = false;
-      for (let line of this.parsed.split("\n")) {
-        if (line.includes("fn" + funcNameRaw)) {
-          isFunc = true;
-        }
-      }
-      if (isFunc != true) {
-        this.emit(orig);
-        return 0;
-      }
-      // ong, function call found
-      let saved = "";
-      for (let c of orig.split('')) {
-        if (c == " " || c == "(") {
-          break;
-        }
-        saved += c;
-      }
-      let funcName = saved;
-      let funcArgs = orig.replaceAll(funcName + "(", "").replaceAll(funcName + " ", "").replaceAll(")", "").replaceAll(" ", "").split(",");
-      console.log("FNFA " + funcName + " " + funcArgs);
-      this.emit(`${funcName}(${funcArgs})`)
-    }
-    else {
-      this.emit(orig);
-    }
   }
 
 

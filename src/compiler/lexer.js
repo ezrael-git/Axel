@@ -76,7 +76,7 @@ class Lexer {
       else if (declarating_keywords.includes(tk)) {
         add("declaration",tk);
       }
-      else if (["+", "-", "/", "*"].includes(tk)) {
+      else if (["+", "-", "/", "*", "="].includes(tk)) {
         add("operator",tk);
       }
       else if (this.isVarRef(tk) == true || this.isFuncRef(tk) == true) {

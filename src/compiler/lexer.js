@@ -26,7 +26,7 @@ class Lexer {
 
   get_src (fro=0, to) {
     let h = this.source.trim().split('\n');
-    return h.slice(fro,to);
+    return String(h.slice(fro,to));
   }
 
   isFuncRef (name) {
@@ -82,7 +82,7 @@ class Lexer {
       else if (this.isVarRef(tk) == true || this.isFuncRef(tk) == true) {
         add("identifier",tk);
       }
-      else if (typed[tk_pos-1].type == "declaration") {
+      else if (tk_pos != 0 && typed[tk_pos-1].type == "declaration") {
         add("identifier",tk);
       }
       else if (this.isFuncCall(tk) == true) {

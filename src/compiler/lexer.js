@@ -1,11 +1,12 @@
 // lexer.py
+let declarating_keywords = ["imm", "def", "fn"]
 
 class Token {
   constructor (type, value, position) {
     this.type = type;
     this.value = value;
     this.position = position;
-    if (!["string", "integer", "identifier", "fn", "return"].includes(type)) {
+    if (!["string", "integer", "identifier", "declaration", "operator"].includes(type)) {
       throw new Error("Wrong type: " + type);
     }
   }
@@ -28,12 +29,15 @@ class Lexer {
     return h[from:to];
   }
 
-  isFunctionCall (tks) {
+  isFuncRef (tks) {
     let flag = false;
     if (this.get_src(0,this.line).includes("fn " + tks[0])) {
       flag = true;
     }
     return flag;
+  }
+
+  isFuncCall (tks) {
   }
 
   isVarRef (tks) {
@@ -47,22 +51,35 @@ class Lexer {
 
   type_format (tks) {
     let typed = [];
+    let tk_pos = -1;
+
+    function add(type,value) {
+      typed.push(new Token(type,value,tk_pos));
+    }
+
     for (let tk of tks) {
+      tk_pos += 1
 
       if (tk.startsWith("'") && tk.endsWith("'") || tk.startsWith('"') && tk.endsWith('"')) {
-        typed.push(new String(tk));
+        add("string",tk);
       }
       else if (digits.includes(tk[0]) && digits.includes(tk[tk.length - 1])) {
-        typed.push(new Integer(tk));
+        add("integer",tk);
       }
-      else if (keywords.includes(tk)) {
-        typed.push(new Keyword(tk));
+      else if (declarating_keywords.includes(tk)) {
+        add("declaration",tk);
       }
-      else if (operators.includes(tk)) {
-        typed.push(new Operator(tk));
+      else if (["+", "-", "/", "*"].includes(tk)) {
+        add("operator",tk);
+      }
+      else if (this.isVarRef(tk) == true || this.isFuncRef(tk) == true) {
+        add("identifier",tk);
+      }
+      else if (this.isFuncCall(tk) == true) {
+        add("call",tk);
       }
       else {
-        typed.push(new Identifier(tk));
+        throw new Error("Unknown token: " + tk);
       }
 
     }
@@ -71,7 +88,7 @@ class Lexer {
 
   lex (source) {
 
-    let src = source.split(' ');
+    let src = this.type_format(source.split(' '));
 
     this.lexed = src;
     this.source = source;

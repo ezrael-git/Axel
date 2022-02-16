@@ -82,6 +82,9 @@ class Lexer {
       else if (this.isVarRef(tk) == true || this.isFuncRef(tk) == true) {
         add("identifier",tk);
       }
+      else if (typed[tk_pos-1].type == "declaration") {
+        add("identifier",tk);
+      }
       else if (this.isFuncCall(tk) == true) {
         add("call",tk);
       }
@@ -94,11 +97,11 @@ class Lexer {
 
 
   lex (source) {
+    this.source = source;
 
     let src = this.type_format(source.split(' '));
 
     this.lexed = src;
-    this.source = source;
     this.line += 1;
     return this.lexed;
 

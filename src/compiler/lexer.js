@@ -1,5 +1,16 @@
 // lexer.py
 
+class Token {
+  constructor (type, value, position) {
+    this.type = type;
+    this.value = value;
+    this.position = position;
+    if (!["string", "integer", "identifier", "fn", "return"].includes(type)) {
+      throw new Error("Wrong type: " + type);
+    }
+  }
+}
+
 
 class Lexer {
   constructor () {

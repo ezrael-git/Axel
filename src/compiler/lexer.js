@@ -15,7 +15,7 @@ class Token {
 
 class Lexer {
   constructor () {
-    this.source = undefined;
+    this.source = "";
     this.lexed = undefined;
     this.line = 0;
     this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
@@ -26,7 +26,7 @@ class Lexer {
 
   get_src (fro=0, to) {
     let h = this.source.trim().split('\n');
-    return h.splice(fro,to);
+    return h.slice(fro,to);
   }
 
   isFuncRef (name) {
@@ -93,11 +93,12 @@ class Lexer {
       }
 
     }
+    return typed;
   }
 
 
   lex (source) {
-    this.source = source;
+    this.source += source + "\n";
 
     let src = this.type_format(source.split(' '));
 

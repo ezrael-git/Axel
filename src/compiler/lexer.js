@@ -1,7 +1,4 @@
 // lexer.py
-const Iden = require("../data/identifier.js");
-const Type = require("../type/bundle.js");
-const Error = require("../exception/bundle.js");
 
 
 class Lexer {
@@ -64,7 +61,6 @@ class Lexer {
   lex (source) {
 
     let src = source.split(' ');
-    src = this.type_format(src);
 
     this.lexed = src;
     this.source = source;

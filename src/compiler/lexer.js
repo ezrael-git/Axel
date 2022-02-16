@@ -24,25 +24,32 @@ class Lexer {
    
   }
 
-  get_src (from=0, to) {
+  get_src (fro=0, to) {
     let h = this.source.trim().split('\n');
-    return h[from:to];
+    return h.splice(fro,to);
   }
 
-  isFuncRef (tks) {
+  isFuncRef (name) {
     let flag = false;
-    if (this.get_src(0,this.line).includes("fn " + tks[0])) {
+    if (this.get_src(0,this.line).includes("fn " + name)) {
       flag = true;
     }
     return flag;
   }
 
-  isFuncCall (tks) {
+  isFuncCall (call) {
+    if (this.isFuncRef(call.replace("call:", "")) == false) {
+      return false;
+    }
+    else if (call.includes("call")) {
+      return false;
+    }
+    return true;
   }
 
-  isVarRef (tks) {
+  isVarRef (name) {
     let flag = false;
-    if (this.get_src(0,this.line).includes("imm " + tks[0]) || this.get_src(0,this.line).includes("def " + tks[0])) {
+    if (this.get_src(0,this.line).includes("imm " + name) || this.get_src(0,this.line).includes("def " + name)) {
       flag = true;
     }
     return flag;
@@ -63,7 +70,7 @@ class Lexer {
       if (tk.startsWith("'") && tk.endsWith("'") || tk.startsWith('"') && tk.endsWith('"')) {
         add("string",tk);
       }
-      else if (digits.includes(tk[0]) && digits.includes(tk[tk.length - 1])) {
+      else if (this.digits.includes(tk[0]) && this.digits.includes(tk[tk.length - 1])) {
         add("integer",tk);
       }
       else if (declarating_keywords.includes(tk)) {

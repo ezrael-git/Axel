@@ -9,6 +9,7 @@ class Axel {
 
   constructor () {
     this.preprocesser = new Preprocesser();
+    this.lexer = new Lexer();
     this.parser = new Parser();
     this.emitter = new Emitter();
 
@@ -35,14 +36,10 @@ class Axel {
     /*
     One-for-all function to execute Axel code. This function acts as a middleman between the code and the compiler, passing the statements into the compiler and executing it in the end.
     */
-    let log = [];
-    statements = this.stdblib + "\n" + statements;
     statements = statements.trim().split('\n');
 
     for (let line of statements) {
-      line = this.preprocesser.process(line);
-      let lexer = new Lexer(line);
-      let lex = lexer.lex();
+      let lex = lexer.lex(line);
       this.parser.parse(lex,line);
     }
     this.emitter.add(this.parser.emitted);

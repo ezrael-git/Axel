@@ -1,5 +1,6 @@
 // lexer.py
-let declarating_keywords = ["imm", "def", "fn"]
+const Keyword = require("../data/keyword.js");
+
 
 class Token {
   constructor (type, value, position) {
@@ -73,10 +74,10 @@ class Lexer {
       else if (this.digits.includes(tk[0]) && this.digits.includes(tk[tk.length - 1])) {
         add("integer",tk);
       }
-      else if (declarating_keywords.includes(tk)) {
+      else if (Keyword.declarating.includes(tk)) {
         add("declaration",tk);
       }
-      else if (["+", "-", "/", "*", "="].includes(tk)) {
+      else if (Keyword.operators.includes(tk)) {
         add("operator",tk);
       }
       else if (this.isVarRef(tk) == true || this.isFuncRef(tk) == true) {

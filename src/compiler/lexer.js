@@ -7,7 +7,7 @@ class Token {
     this.type = type;
     this.value = value;
     this.position = position;
-    if (!["string", "integer", "identifier", "declaration", "operator"].includes(type)) {
+    if (!["string", "integer", "identifier", "declaration", "operator", "call"].includes(type)) {
       throw new Error("Wrong type: " + type);
     }
   }
@@ -42,7 +42,7 @@ class Lexer {
     if (this.isFuncRef(call.replace("call:", "")) == false) {
       return false;
     }
-    else if (call.includes("call")) {
+    else if (!call.includes("call:")) {
       return false;
     }
     return true;

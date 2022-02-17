@@ -72,7 +72,36 @@ module.exports = class Parser {
   parse (tks, orig="") {
     this.addLine(orig);
     this.ref(tks)
-    let stat = this.next();
+    let stat = this.next().value;
+    
+    if (stat == "def") {
+      this.emit(`${orig.replace("def", "let")}`);
+    }
+    else if (stat == "imm") {
+      this.emit(`${orig.replace("imm", "const")}`);
+    }
+    else if (stat == "fn") {
+      let nameRaw = orig.replace("fn ", "");
+      let name = "";
+      for (let char of nameRaw) {
+        if (char == " " || char == "(") {
+          break
+        }
+        name += char;
+      }
+
+      let args = orig.replace("fn " + name, "").replaceAll("(", "").replaceAll(")", "");
+      if (args.length < 1) {
+        args = " ";
+      }
+      this.emit(`function ${name} (${args}) {`)
+    }
+    else if (stat == "end") {
+      this.emit("}");
+    }
+    else {
+      this.emit(orig);
+    }
 
     
 

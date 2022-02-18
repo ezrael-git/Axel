@@ -49,6 +49,25 @@ module.exports = class Preprocessor {
     let fm = code;
     fm = this.remove_comments(fm);
     fm = this.host(fm);
+    let line = -1;
+    for (let stat of code) {
+      line += 1;
+      let topush = "";
+      let iterated = "";
+      // detect function calls
+      if (stat.includes("call:")) {
+        for (let char of stat) {
+          iterated += char;
+          if (iterated + char == "call:") {
+            break;
+          }
+        }
+        stat = stat.replace(iterated, "");
+        let funcName = stat.split("&")[0];
+        let args = stat.split("&")[1];
+        code[line] = `${funcName}(${args})`;
+      }
+    }
 
     return fm;
   }

@@ -87,7 +87,7 @@ module.exports = class Preprocessor {
         let args = stat.split("&")[1];
         console.log("FUNCNAME " + funcName)
         console.log("ARGS " + args)
-        code[line] = `${funcName}(${args})`;
+        fm[line] = `${funcName}(${args})`;
       }
     }
 

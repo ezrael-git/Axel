@@ -77,7 +77,7 @@ module.exports = class Preprocessor {
     for (let name in vars) {
       let value = vars[name];
       manipulated.push(`let ${name} = ${value}`);
-      for (let brName of blank_refs) {
+      for (let brName in blank_refs) {
         if (name == brName) {
           manipulated.push(blank_refs[brName].replace("@=>"));
         }

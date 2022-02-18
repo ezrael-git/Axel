@@ -56,9 +56,9 @@ module.exports = class Preprocessor {
           if (char == " " || char == ")") {
             break;
           }
-          name += char;
+          varName += char;
         }
-        objs[name] = stat;
+        objs[varName] = stat;
       }
     }
     return objs;

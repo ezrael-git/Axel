@@ -75,7 +75,7 @@ module.exports = class Preprocessor {
       if (stat.includes("call:")) {
         for (let char of stat) {
           iterated += char;
-          if (iterated + char == "call:") {
+          if (iterated == "call:") {
             break;
           }
         }

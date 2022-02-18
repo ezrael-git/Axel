@@ -85,7 +85,7 @@ module.exports = class Preprocessor {
       }
     }
     for (let stat of stats) {
-      if (!stat.startsWith("def") && !stat.startsWith("imm") && !stat.startsWith("import")) {
+      if (!stat.startsWith("def") && !stat.startsWith("imm") && !stat.startsWith("import") && !stat.includes("@=>")) {
         manipulated.push(stat);
       }
     }

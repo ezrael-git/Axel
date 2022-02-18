@@ -73,15 +73,20 @@ module.exports = class Preprocessor {
       let iterated = "";
       // detect and manipulate function calls
       if (stat.includes("call:")) {
+        console.log(stat);
         for (let char of stat) {
           iterated += char;
           if (iterated == "call:") {
             break;
           }
         }
+        console.log("ITERATED " + iterated);
         stat = stat.replace(iterated, "");
+        console.log("NEW STAT " + stat);
         let funcName = stat.split("&")[0];
         let args = stat.split("&")[1];
+        console.log("FUNCNAME " + funcName)
+        console.log("ARGS " + args)
         code[line] = `${funcName}(${args})`;
       }
     }

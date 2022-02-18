@@ -25,16 +25,33 @@ module.exports = class Preprocessor {
     return objs;
   }
 
+  scan_imports (stats) {
+    let objs = {}
+    for (let stat of stats) {
+      if (stat.startsWith("import")) {
+        let filename = stat.split(' ')[1];
+        let pkgname = stat.split('as')[1];
+        objs[filename] = pkgname;
+      }
+    }
+    return objs;
+  }
+
 
   host (stats) {
     let manipulated = [];
     let vars = this.scan_variables(stats);
+    let imports = this.scan_imports(stats);
+    for (let filename in imports) {
+      let pkgname = imports[filename];
+      manipulated.push(`const ${pkgname} = require('${filename}')`)
+    }
     for (let name in vars) {
       let value = vars[name];
       manipulated.push(`let ${name} = ${value}`);
     }
     for (let stat of stats) {
-      if (!stat.startsWith("def") && !stat.startsWith("imm")) {
+      if (!stat.startsWith("def") && !stat.startsWith("imm") && !stat.startswith("import")) {
         manipulated.push(stat);
       }
     }
@@ -54,7 +71,7 @@ module.exports = class Preprocessor {
       line += 1;
       let topush = "";
       let iterated = "";
-      // detect function calls
+      // detect and manipulate function calls
       if (stat.includes("call:")) {
         for (let char of stat) {
           iterated += char;

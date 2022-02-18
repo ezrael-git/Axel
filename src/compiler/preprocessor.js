@@ -41,6 +41,7 @@ module.exports = class Preprocessor {
     let objs = {};
     let line = -1;
     for (let stat of stats) {
+      let stat_copy = stat
       line += 1;
       if (stat.includes("@=>")) {
         let iterated = "";
@@ -58,7 +59,7 @@ module.exports = class Preprocessor {
           }
           varName += char;
         }
-        objs[varName] = stat;
+        objs[varName] = stat_copy;
       }
     }
     return objs;

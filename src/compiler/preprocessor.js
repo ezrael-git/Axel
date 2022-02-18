@@ -37,11 +37,39 @@ module.exports = class Preprocessor {
     return objs;
   }
 
+  scan_blank_references (stats) {
+    let objs = {};
+    let line = -1;
+    for (let stat of stats) {
+      line += 1;
+      if (stat.includes("@=>")) {
+        let iterated = "";
+        for (let char of stat) {
+          iterated += char;
+          if (iterated.includes("@=>")) {
+            stat = stat.replace(iterated, "");
+            break;
+          }
+        }
+        let varName = "";
+        for (let char of stat) {
+          if (char == " " || char == ")") {
+            break;
+          }
+          name += char;
+        }
+        objs[name] = stat;
+      }
+    }
+    return objs;
+  }
+
 
   host (stats) {
     let manipulated = [];
     let vars = this.scan_variables(stats);
     let imports = this.scan_imports(stats);
+    let blank_refs = this.scan_blank_references(stats);
     for (let filename in imports) {
       let pkgname = imports[filename];
       manipulated.push(`const ${pkgname} = require('${filename}')`)
@@ -49,6 +77,11 @@ module.exports = class Preprocessor {
     for (let name in vars) {
       let value = vars[name];
       manipulated.push(`let ${name} = ${value}`);
+      for (let brName of blank_refs) {
+        if (name == brName) {
+          manipulated.push(blank_refs[brName].replace("@=>"));
+        }
+      }
     }
     for (let stat of stats) {
       if (!stat.startsWith("def") && !stat.startsWith("imm") && !stat.startsWith("import")) {
@@ -89,6 +122,7 @@ module.exports = class Preprocessor {
         console.log("ARGS " + args)
         fm[line] = `${funcName}(${args})`;
       }
+
     }
 
     return fm;

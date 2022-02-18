@@ -51,7 +51,7 @@ module.exports = class Preprocessor {
       manipulated.push(`let ${name} = ${value}`);
     }
     for (let stat of stats) {
-      if (!stat.startsWith("def") && !stat.startsWith("imm") && !stat.startswith("import")) {
+      if (!stat.startsWith("def") && !stat.startsWith("imm") && !stat.startsWith("import")) {
         manipulated.push(stat);
       }
     }

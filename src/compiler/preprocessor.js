@@ -154,11 +154,9 @@ module.exports = class Preprocessor {
 
     line = -1;
     for (let stat of fm) {
-      console.log("STAT BEFORE " + stat)
       line += 1;
       fm[line] = stat.replaceAll("@", "this.").replaceAll("$def", "def");
-      fm[line] = this.cleanse_whitespace(stat);
-      console.log("AFTER " + fm[line])
+      fm[line] = this.cleanse_whitespace(fm[line]);
     }
 
     return fm;

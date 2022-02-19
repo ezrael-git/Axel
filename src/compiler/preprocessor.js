@@ -155,7 +155,7 @@ module.exports = class Preprocessor {
     line = -1;
     for (let stat of fm) {
       line += 1;
-      fm[line] = stat.replaceAll("@", "this.");
+      fm[line] = stat.replaceAll("@", "this.").replaceAll("$def", "def");
       fm[line] = this.cleanse_whitespace(stat);
     }
 

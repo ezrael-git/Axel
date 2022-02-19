@@ -110,7 +110,7 @@ module.exports = class Preprocessor {
         console.log(stat);
         for (let char of stat) {
           iterated += char;
-          if (iterated == "call:") {
+          if (iterated.endsWith("call:")) {
             break;
           }
         }

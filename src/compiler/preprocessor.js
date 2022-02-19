@@ -123,9 +123,7 @@ module.exports = class Preprocessor {
         console.log("FUNCNAME " + funcName)
         console.log("ARGS " + args)
         let call = `${funcName}(${args})`;
-        let temp = stat_copy.split('call:' + funcName);
-        let before, after = temp[0], temp[1];
-        fm[line] = `${before}${call}${after}`;
+        fm[line] = stat_copy.replace('call:' + funcName, call);
       }
 
     }

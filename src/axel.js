@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const Preprocesser = require("./compiler/preprocesser.js");
+const Preprocessor = require("./compiler/preprocessor.js");
 const Lexer = require("./compiler/lexer.js");
 const Parser = require("./compiler/parser.js");
 const Emitter = require("./compiler/emitter.js");
@@ -8,7 +8,7 @@ const Emitter = require("./compiler/emitter.js");
 class Axel {
 
   constructor () {
-    this.preprocesser = new Preprocesser();
+    this.preprocessor = new Preprocessor();
     this.lexer = new Lexer();
     this.parser = new Parser();
     this.emitter = new Emitter();
@@ -36,7 +36,7 @@ class Axel {
     /*
     One-for-all function to execute Axel code. This function acts as a middleman between the code and the compiler, passing the statements into the compiler and executing it in the end.
     */
-    statements = statements.trim().split('\n');
+    statements = this.preprocessor.process(statements.trim().split('\n'));
 
     for (let line of statements) {
       let lex = lexer.lex(line);

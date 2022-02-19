@@ -1,5 +1,7 @@
 module.exports = class Preprocessor {
   constructor () {
+    this.variables = [];
+    this.imports = [];
   }
 
 
@@ -22,6 +24,7 @@ module.exports = class Preprocessor {
         objs[name] = value;
       }
     }
+    this.variables = objs;
     return objs;
   }
 
@@ -34,6 +37,7 @@ module.exports = class Preprocessor {
         objs[filename] = pkgname;
       }
     }
+    this.imports = objs;
     return objs;
   }
 
@@ -62,6 +66,7 @@ module.exports = class Preprocessor {
         objs[varName] = stat_copy;
       }
     }
+    
     return objs;
   }
 

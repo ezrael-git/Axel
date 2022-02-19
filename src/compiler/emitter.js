@@ -1,9 +1,10 @@
 // executor / collector / emitter
 
 module.exports = class Emitter {
-  constructor (in_it="") {
+  constructor (script={}) {
     this.parsed = "";
     this.retlog = [];
+    this.script = script;
   }
 
   add (n) {
@@ -14,8 +15,7 @@ module.exports = class Emitter {
     // runtime variables
     let emit = this.parsed;
     let retlog = this.retlog;
-    console.log("PARSER:");
-    console.log(emit);
+    let script = this.script;
 
     let retcode = eval(this.parsed);
     this.retlog.push(retcode);

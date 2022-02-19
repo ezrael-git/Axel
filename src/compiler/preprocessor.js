@@ -100,6 +100,9 @@ module.exports = class Preprocessor {
     let fm = code;
     fm = this.remove_comments(fm);
     fm = this.host(fm);
+    console.log("AFTER HOISTING")
+    console.log(fm)
+    console.log("-----")
     let line = -1;
     for (let stat of code) {
       line += 1;

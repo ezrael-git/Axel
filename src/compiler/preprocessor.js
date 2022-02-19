@@ -126,6 +126,7 @@ module.exports = class Preprocessor {
       let iterated = "";
       // detect and manipulate function calls
       if (stat.includes("call:")) {
+        console.log("contains call: " + stat);
         const stat_copy = stat;
         for (let char of stat) {
           iterated += char;
@@ -139,7 +140,9 @@ module.exports = class Preprocessor {
         let args = stat.split("&")[1];
 
         let call = `${funcName}(${args})`;
+        console.log("BEFORE " + fm[line])
         fm[line] = stat_copy.replace('call:' + funcName + '&' + args, call);
+        console.log("AFTER " + fm[line]);
         fm = this.cleanse_calls(fm);
         console.log("IN TGE END " + this.isEnd(fm));
       }

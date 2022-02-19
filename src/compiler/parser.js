@@ -79,6 +79,9 @@ module.exports = class Parser {
     else if (stat == "imm") {
       this.emit(`${orig.replace("imm", "const")}`);
     }
+    else if (stat == "log") {
+      this.emit(`console.log(${orig.replace("log ", "")})`)
+    }
     else if (stat == "fn") {
       let nameRaw = orig.replace("fn ", "");
       let name = "";

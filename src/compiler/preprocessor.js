@@ -135,8 +135,12 @@ module.exports = class Preprocessor {
         fm[line] = stat_copy.replace('call:' + funcName + '&' + args, call);
         fm = this.cleanse_calls(fm);
       }
+    }
 
-
+    line = -1;
+    for (let stat of fm) {
+      line += 1;
+      fm[line] = stat.replaceAll("@", "this.");
     }
 
     return fm;

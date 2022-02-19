@@ -47,6 +47,8 @@ class Axel {
       this.parser.parse(lex,line);
     }
     this.emitter.add(this.parser.emitted);
+    this.emitter.script["variables"] = this.preprocessor.variables;
+    this.emitter.script["imports"] = this.preprocessor.imports;
     console.log("Axel:");
     this.emitter.eval();
   }

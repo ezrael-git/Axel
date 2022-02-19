@@ -102,6 +102,13 @@ module.exports = class Preprocessor {
     return manipulated;
   }
 
+  isEnd (stats) {
+    if (stats.includes("end")) {
+      return true;
+    }
+    return false;
+  }
+
 
   process (code) {
     /*
@@ -109,7 +116,9 @@ module.exports = class Preprocessor {
     */
     let fm = code;
     fm = this.remove_comments(fm);
+    console.log("AFTER REMCOM " + this.isEnd(fm))
     fm = this.host(fm);
+    console.log("AFTER HOST " + this.isEnd(fm));
     let line = -1;
     for (let stat of code) {
       line += 1;
@@ -132,7 +141,9 @@ module.exports = class Preprocessor {
         let call = `${funcName}(${args})`;
         fm[line] = stat_copy.replace('call:' + funcName + '&' + args, call);
         fm = this.cleanse_calls(fm);
+        console.log("IN TGE END " + this.isEnd(fm));
       }
+
 
     }
 

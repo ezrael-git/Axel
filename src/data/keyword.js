@@ -14,7 +14,7 @@ function merge (one,two) {
 let bundle = {
   declarating: declarating,
   operators: operators,
-  all: merge(declarating,operators).push("return")
+  all: merge(declarating,operators).push("return").push("end")
 
 }
 

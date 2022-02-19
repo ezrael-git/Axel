@@ -121,7 +121,7 @@ module.exports = class Preprocessor {
 
         let call = `${funcName}(${args})`;
         fm[line] = stat_copy.replace('call:' + funcName + '&' + args, call);
-        console.log("Line " + fm[line]);
+        console.log("Line " + line + " " + fm[line]);
       }
 
     }

@@ -7,7 +7,7 @@ class Token {
     this.type = type;
     this.value = value;
     this.position = position;
-    if (!["string", "integer", "identifier", "declaration", "operator", "call"].includes(type)) {
+    if (!["string", "integer", "identifier", "declaration", "operator", "call", undefined].includes(type)) {
       throw new Error("Wrong type: " + type);
     }
   }

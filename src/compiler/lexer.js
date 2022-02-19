@@ -108,7 +108,7 @@ class Lexer {
       line += 1;
       typed.push(new Token(undefined,sr,line));
     }
-    src = line;
+    src = typed;
 
     this.lexed = src;
     this.line += 1;

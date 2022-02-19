@@ -100,9 +100,6 @@ module.exports = class Preprocessor {
     let fm = code;
     fm = this.remove_comments(fm);
     fm = this.host(fm);
-    console.log("AFTER HOISTING")
-    console.log(fm)
-    console.log("-----")
     let line = -1;
     for (let stat of code) {
       line += 1;
@@ -111,22 +108,20 @@ module.exports = class Preprocessor {
       // detect and manipulate function calls
       if (stat.includes("call:")) {
         const stat_copy = stat;
-        console.log(stat);
         for (let char of stat) {
           iterated += char;
           if (iterated.endsWith("call:")) {
             break;
           }
         }
-        console.log("ITERATED " + iterated);
         stat = stat.replace(iterated, "");
-        console.log("NEW STAT " + stat);
+
         let funcName = stat.split("&")[0];
         let args = stat.split("&")[1];
-        console.log("FUNCNAME " + funcName)
-        console.log("ARGS " + args)
+
         let call = `${funcName}(${args})`;
         fm[line] = stat_copy.replace('call:' + funcName + '&' + args, call);
+        console.log("Line " + fm[line]);
       }
 
     }

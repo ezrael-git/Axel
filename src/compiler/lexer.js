@@ -101,7 +101,14 @@ class Lexer {
   lex (source) {
     this.source += source + "\n";
 
-    let src = this.type_format(source.split(' '));
+    let src = source.split(' ');
+    let typed = [];
+    let line = -1;
+    for (let sr of src) {
+      line += 1;
+      typed.push(new Token(undefined,sr,line));
+    }
+    src = line;
 
     this.lexed = src;
     this.line += 1;

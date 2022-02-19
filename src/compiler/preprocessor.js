@@ -76,7 +76,7 @@ module.exports = class Preprocessor {
   }
 
 
-  host (stats) {
+  hoist (stats) {
     let manipulated = [];
     let vars = this.scan_variables(stats);
     let imports = this.scan_imports(stats);
@@ -102,12 +102,6 @@ module.exports = class Preprocessor {
     return manipulated;
   }
 
-  isEnd (stats) {
-    if (stats.includes("end")) {
-      return true;
-    }
-    return false;
-  }
 
 
   process (code) {
@@ -116,17 +110,15 @@ module.exports = class Preprocessor {
     */
     let fm = code;
     fm = this.remove_comments(fm);
-    console.log("AFTER REMCOM " + this.isEnd(fm))
-    fm = this.host(fm);
-    console.log("AFTER HOST " + this.isEnd(fm));
+    fm = this.hoist(fm);
+
     let line = -1;
     for (let stat of fm) {
       line += 1;
-      let topush = "";
       let iterated = "";
       // detect and manipulate function calls
       if (stat.includes("call:")) {
-        console.log("contains call: " + stat);
+        
         const stat_copy = stat;
         for (let char of stat) {
           iterated += char;
@@ -140,11 +132,8 @@ module.exports = class Preprocessor {
         let args = stat.split("&")[1];
 
         let call = `${funcName}(${args})`;
-        console.log("BEFORE " + fm[line])
         fm[line] = stat_copy.replace('call:' + funcName + '&' + args, call);
-        console.log("AFTER " + fm[line]);
         fm = this.cleanse_calls(fm);
-        console.log("IN TGE END " + this.isEnd(fm));
       }
 
 

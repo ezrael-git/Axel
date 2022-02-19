@@ -63,7 +63,6 @@ module.exports = class Parser {
 
   generate_ast (tks) {
     let program = {}
-    let 
   }
 
 

@@ -83,7 +83,8 @@ module.exports = class Parser {
       this.emit(`console.log(${orig.replace("log ", "")})`)
     }
     else if (stat == "fn:") {
-      let nameRaw = orig.replace("fn: ", "");
+      stat = stat.replace("fn: ", "fn:");
+      let nameRaw = orig.replace("fn:", "");
       let name = "";
       for (let char of nameRaw) {
         if (char == " " || char == "(") {
@@ -92,7 +93,7 @@ module.exports = class Parser {
         name += char;
       }
 
-      let args = orig.replace("fn " + name, "").replaceAll("(", "").replaceAll(")", "");
+      let args = orig.replace("fn:" + name, "").replaceAll("(", "").replaceAll(")", "");
       if (args.length < 1) {
         args = " ";
       }

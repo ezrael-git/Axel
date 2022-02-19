@@ -1,7 +1,10 @@
+let declarating = ["imm", "def", "fn"];
+let operators = ["+", "-", "/", "*", "="];
+
 let bundle = {
-  declarating: ["imm", "def", "fn"],
-  operators: ["+", "-", "/", "*", "="],
-  all: bundle.declarating + bundle.operators + ["return"]
+  declarating: declarating,
+  operators: operators,
+  all: declarating + operators + ["return"]
 
 }
 

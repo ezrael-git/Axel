@@ -16,9 +16,10 @@ module.exports = class Preprocessor {
   scan_variables (stats) {
     let objs = {};
     for (let stat of stats) {
+      stat = stat.replace("def: ", "def:").replace("imm: ", "");
       if (stat.startsWith("def") || stat.startsWith("imm")) {
         let name = stat.split(' ')[1];
-        let value = stat.replace("def: " + name, "").replace("imm: " + name, "").replace(" = ", "");
+        let value = stat.replace("def:" + name, "").replace("imm:" + name, "").replace(" = ", "");
         objs[name] = value;
       }
     }

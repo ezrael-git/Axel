@@ -35,12 +35,12 @@ class Axel {
 
   program (statements) {
     /*
-    One-for-all function to execute Axel code. This function acts as a middleman between the code and the compiler, passing the statements into the compiler and executing it in the end.
+    One-for-all interface to execute Axel code. This function acts as a middleman between the code and the compiler, passing the statements into the compiler and executing it in the end.
     */
     statements = this.preprocessor.process(statements.trim().split('\n'));
 
     for (let line of statements) {
-      let lex = lexer.lex(line);
+      let lex = this.lexer.lex(line);
       this.parser.parse(lex,line);
     }
     this.emitter.add(this.parser.emitted);

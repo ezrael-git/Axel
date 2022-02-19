@@ -50,7 +50,7 @@ module.exports = class Parser {
   }
 
   addLine (line) {
-    this.parsed += line
+    this.parsed.push(line);
     this.parsedLine += 1;
   }
 
@@ -101,6 +101,14 @@ module.exports = class Parser {
     }
     else if (stat == "end") {
       this.emit("}");
+    }
+    else if (stat == "cls") {
+      this.emit(`class ${orig.replace("class ", "")} {`);
+    }
+    else if (stat == "meth") {
+      let name = this.next();
+      let args = this.orig.replace("meth " + name, "").replace("(", "").replace(")", "");
+      this.emit(`${name} (${args}) {`);
     }
     else {
       this.emit(orig);

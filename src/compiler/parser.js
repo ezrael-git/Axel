@@ -102,7 +102,7 @@ module.exports = class Parser {
     else if (stat == "end") {
       this.emit("}");
     }
-    else if (stat == "cls") {
+    else if (stat == "class") {
       this.emit(`class ${orig.replace("class ", "")} {`);
     }
     else if (stat == "meth") {

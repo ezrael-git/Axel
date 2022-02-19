@@ -76,6 +76,21 @@ module.exports = class Preprocessor {
   }
 
 
+  removeStrAt (st, pos, new_char) {
+    st = st.split('')
+    st[pos] = new_char
+    st = st.join('')
+    return st;
+  }
+
+  cleanse_whitespace (stat) {
+    while (stat.startsWith(" ")) {
+      stat = this.removeStrAt(stat,0,"");
+    }
+    return stat;
+  }
+
+
   hoist (stats) {
     let manipulated = [];
     let vars = this.scan_variables(stats);
@@ -141,6 +156,7 @@ module.exports = class Preprocessor {
     for (let stat of fm) {
       line += 1;
       fm[line] = stat.replaceAll("@", "this.");
+      fm[line] = this.cleanse_whitespace(stat);
     }
 
     return fm;

@@ -73,17 +73,17 @@ module.exports = class Parser {
     this.ref(tks)
     let stat = this.next().value;
     
-    if (stat == "def") {
-      this.emit(`${orig.replace("def", "let")}`);
+    if (stat == "def:") {
+      this.emit(`${orig.replace("def:", "let")}`);
     }
-    else if (stat == "imm") {
-      this.emit(`${orig.replace("imm", "const")}`);
+    else if (stat == "imm:") {
+      this.emit(`${orig.replace("imm:", "const")}`);
     }
     else if (stat == "log") {
       this.emit(`console.log(${orig.replace("log ", "")})`)
     }
-    else if (stat == "fn") {
-      let nameRaw = orig.replace("fn ", "");
+    else if (stat == "fn:") {
+      let nameRaw = orig.replace("fn: ", "");
       let name = "";
       for (let char of nameRaw) {
         if (char == " " || char == "(") {

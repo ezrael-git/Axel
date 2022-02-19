@@ -37,6 +37,13 @@ module.exports = class Parser {
     return st;
   }
 
+  cleanse_whitespace (stat) {
+    while (stat.startsWith(" ")) {
+      stat = this.removeStrAt(stat,0,"");
+    }
+    return stat;
+  }
+
   input_all (src, name, value) {
     
   }
@@ -72,6 +79,7 @@ module.exports = class Parser {
     this.addLine(orig);
     this.ref(tks)
     let stat = this.next().value;
+    stat = this.cleanse_whitespace(stat);
     console.log("parser stat " + stat);
     
     if (stat == "def") {

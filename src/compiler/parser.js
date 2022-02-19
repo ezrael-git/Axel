@@ -72,7 +72,7 @@ module.exports = class Parser {
     this.addLine(orig);
     this.ref(tks)
     let stat = this.next().value;
-    console.log(stat);
+    console.log("parser stat " + stat);
     
     if (stat == "def") {
       this.emit(`${orig.replace("def", "let")}`);
@@ -99,7 +99,7 @@ module.exports = class Parser {
       }
       this.emit(`function ${name} (${args}) {`)
     }
-    else if (stat.includes("end")) {
+    else if (stat == "end") {
       this.emit("}");
     }
     else {

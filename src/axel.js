@@ -38,6 +38,9 @@ class Axel {
     One-for-all interface to execute Axel code. This function acts as a middleman between the code and the compiler, passing the statements into the compiler and executing it in the end.
     */
     statements = this.preprocessor.process(statements.trim().split('\n'));
+    console.log("Preprocessor:")
+    console.log(statements)
+    console.log("Prepr end")
 
     for (let line of statements) {
       let lex = this.lexer.lex(line);

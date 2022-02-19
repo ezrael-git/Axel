@@ -1,6 +1,9 @@
-module.exports = {
+let bundle = {
   declarating: ["imm", "def", "fn"],
   operators: ["+", "-", "/", "*", "="],
-  all: declarating + operators + ["return"]
+  all: bundle.declarating + bundle.operators + ["return"]
 
 }
+
+
+module.exports = bundle;

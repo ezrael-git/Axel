@@ -65,6 +65,16 @@ module.exports = class Preprocessor {
     return objs;
   }
 
+  cleanse_calls (stats) {
+    let man = [];
+    for (let stat of stats) {
+      if (!stat.includes("call:")) {
+        man.push(stat);
+      }
+    }
+    return man;
+  }
+
 
   host (stats) {
     let manipulated = [];
@@ -121,7 +131,7 @@ module.exports = class Preprocessor {
 
         let call = `${funcName}(${args})`;
         fm[line] = stat_copy.replace('call:' + funcName + '&' + args, call);
-        console.log("Line " + line + " " + fm[line]);
+        fm = this.cleanse_calls(fm);
       }
 
     }

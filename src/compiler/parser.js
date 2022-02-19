@@ -115,7 +115,7 @@ module.exports = class Parser {
     }
     else if (stat == "meth") {
       let name = this.next();
-      let args = this.orig.replace("meth " + name, "").replace("(", "").replace(")", "");
+      let args = orig.replace("meth " + name, "").replace("(", "").replace(")", "");
       this.emit(`${name} (${args}) {`);
     }
     else {

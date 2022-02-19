@@ -18,7 +18,7 @@ module.exports = class Preprocessor {
     for (let stat of stats) {
       if (stat.startsWith("def") || stat.startsWith("imm")) {
         let name = stat.split(' ')[1];
-        let value = stat.replace("def " + name, "").replace("imm " + name, "").replace(" = ", "");
+        let value = stat.replace("def: " + name, "").replace("imm: " + name, "").replace(" = ", "");
         objs[name] = value;
       }
     }

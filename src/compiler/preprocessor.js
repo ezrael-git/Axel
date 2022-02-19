@@ -120,7 +120,7 @@ module.exports = class Preprocessor {
     fm = this.host(fm);
     console.log("AFTER HOST " + this.isEnd(fm));
     let line = -1;
-    for (let stat of code) {
+    for (let stat of fm) {
       line += 1;
       let topush = "";
       let iterated = "";

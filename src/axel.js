@@ -12,10 +12,11 @@ class Axel {
     this.lexer = new Lexer();
     this.parser = new Parser();
     this.emitter = new Emitter();
-
+    /*
     this.stdblib = fs.readFileSync("./standard/stdblib.js",
     {encoding:'utf8', flag:'r'}
     );
+    */
   }
 
   purify (lis) {

@@ -109,6 +109,17 @@ module.exports = class Preprocessor {
     return fm;
   }
 
+  filter (stats) {
+    let man = [];
+    for (let stat of stats) {
+      let nn = this.cleanse_whitespace(stat);
+      if (!nn.startsWith("private ")) {
+        man.push(stat);
+      }
+    }
+    return man;
+  }
+
 
 
   process (code) {
@@ -127,6 +138,7 @@ module.exports = class Preprocessor {
       fm[line] = stat.replaceAll("@", "this.").replaceAll("$def", "def");
       fm[line] = this.cleanse_whitespace(fm[line]);
     }
+    fm = this.filter(fm);
 
     return fm;
   }

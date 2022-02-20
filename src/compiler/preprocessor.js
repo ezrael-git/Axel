@@ -70,6 +70,21 @@ module.exports = class Preprocessor {
     return objs;
   }
 
+  scan_unholy_calls (stats) {
+    let functions = [];
+    for (let stat of stats) {
+      if (stat.startsWith("fn ") || stat.includes("meth")) {
+        functions.push(stat.split(' ')[1].replace("(", ""));
+      }
+
+      for (let func of functions) {
+        if (stat.includes(func + "(")) {
+          throw new Error("Functions should be called with the call: keyword");
+        }
+      }
+    }
+  }
+
   cleanse_calls (stats) {
     let man = [];
     for (let stat of stats) {
@@ -131,6 +146,7 @@ module.exports = class Preprocessor {
     let fm = code;
     fm = this.remove_comments(fm);
     fm = this.hoist(fm);
+    this.scan_unholy_calls(fm);
 
     let line = -1;
     for (let stat of fm) {

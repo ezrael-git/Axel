@@ -98,6 +98,25 @@ module.exports = class Scanner {
     return objs;
   }
 
+  scan_private_methods (stats) {
+    let objs = [];
+    let line = -1;
+
+    for (let stat of stats) {
+      line += 1;
+      stat = this.cleanse_whitespace(stat);
+      if (stat.startsWith("private ")) {
+        let path = this.namespace(stats, line);
+        let className = this.getNamespace("recent", path);
+        let methName = stat.split(' ')[1];
+        objs.push(className + ":" + methName);
+        
+      }
+    }
+    return objs;
+  }
+
+
   scan_unholy_calls (stats) {
     let functions = [];
     let line = 0;

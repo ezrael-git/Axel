@@ -1,4 +1,4 @@
-let declarating = ["imm", "def", "fn"];
+let declarating = ["imm", "def", "fn", "meth", "class"];
 let operators = ["+", "-", "/", "*", "="];
 let other = ["end", "return", "private"];
 

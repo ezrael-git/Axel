@@ -8,6 +8,21 @@ module.exports = class Scanner {
     this.functions = [];
   }
 
+  removeStrAt (st, pos, new_char) {
+    st = st.split('')
+    st[pos] = new_char
+    st = st.join('')
+    return st;
+  }
+
+
+  cleanse_whitespace (stat) {
+    while (stat.startsWith(" ")) {
+      stat = this.removeStrAt(stat,0,"");
+    }
+    return stat;
+  }
+
   scan_variables (stats) {
     let objs = {};
     for (let stat of stats) {
@@ -91,6 +106,7 @@ module.exports = class Scanner {
   }
 
   namespace (stats, line) {
+    stats = this.cleanse_whitespace(stats);
     let cur_namespace = "main"
 
     function add (path) {

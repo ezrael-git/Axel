@@ -112,7 +112,7 @@ module.exports = class Preprocessor {
     this.scanner.scan_unholy_calls(fm);
     fm = this.handle_calls(fm);
 
-    line = -1;
+    let line = -1;
     for (let stat of fm) {
       line += 1;
       fm[line] = stat.replaceAll("@", "this.").replaceAll("$def", "def");

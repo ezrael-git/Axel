@@ -147,4 +147,22 @@ module.exports = class Scanner {
 
   }
 
+  getNamespace(thing, ns) {
+    if (thing == "array") {
+      return ns.split('/');
+    }
+
+    else if (thing == "recent") {
+      return ns.split('/')[ns.length - 1]
+    }
+
+    else if (thing == "oldest") {
+      return ns.split('/')[1];
+    }
+
+    else {
+      throw new Error("Unknown thing: " + thing);
+    }
+  }
+
 }

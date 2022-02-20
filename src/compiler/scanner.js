@@ -1,4 +1,5 @@
 // scanner.js
+const Keywords = require("../data/keyword.js");
 
 
 module.exports = class Scanner {
@@ -129,7 +130,15 @@ module.exports = class Scanner {
 
       for (let func of functions) {
         if (stat.includes(func + "(") && !stat.includes("new ")) {
-          throw SyntaxError(`Functions should be called with the call: keyword\nIn line ${line}: ${stat}`);
+          let flag = true;
+          for (let keyword of Keywords.declarating) {
+            if (stat.includes(keyword)) {
+              flag = false;
+            }
+          }
+          if (flag == true) {
+            throw SyntaxError(`Functions should be called with the call: keyword\nIn line ${line}: ${stat}`);
+          }
         }
       }
     }

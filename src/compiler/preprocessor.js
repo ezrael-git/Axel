@@ -80,7 +80,7 @@ module.exports = class Preprocessor {
       }
 
       for (let func of functions) {
-        if (stat.includes(func + "(")) {
+        if (stat.includes(func + "(") && !stat.includes("new ")) {
           throw SyntaxError(`Functions should be called with the call: keyword\nIn line ${line}: ${stat}`);
         }
       }

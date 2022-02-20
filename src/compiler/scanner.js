@@ -107,7 +107,8 @@ module.exports = class Scanner {
       stat = this.cleanse_whitespace(stat);
       if (stat.startsWith("private ")) {
         let path = this.namespace(stats, line);
-        let className = this.getNamespace("recent", path).replace("class:", "");
+        console.log("PATH " + path);
+        let className = path.split('/')[path.length-1].replace("class:", "");
         let methName = stat.split(' ')[1];
         objs.push(className + ":" + methName);
         

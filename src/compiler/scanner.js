@@ -106,7 +106,6 @@ module.exports = class Scanner {
   }
 
   namespace (stats, line) {
-    stats = this.cleanse_whitespace(stats);
     let cur_namespace = "main"
 
     function add (path) {
@@ -122,6 +121,7 @@ module.exports = class Scanner {
     let iterated = -1;
     for (let stat of stats) {
       iterated += 1;
+      stat = this.cleanse_whitespace(stat);
       if (line == iterated) {
         return cur_namespace;
       }

@@ -108,7 +108,7 @@ module.exports = class Scanner {
       if (stat.startsWith("private ")) {
         let path = this.namespace(stats, line);
         console.log("PATH " + path);
-        let className = path.split('/')[path.length-1].replace("class:", "");
+        let className = path.split('/')[1].replace("class:", "");
         let methName = stat.split(' ')[1];
         objs.push(className + ":" + methName);
         

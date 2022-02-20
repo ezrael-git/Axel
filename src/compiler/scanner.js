@@ -49,6 +49,26 @@ module.exports = class Scanner {
     return objs;
   }
 
+  scan_functions (stats) {
+    let objs = {}
+    let iterated [];
+    let line = -1;
+
+    for (let stat of stats) {
+      iterated.push(stat);
+      line += 1;
+      stat = this.cleanse_whitespace(stat);
+      if (stat.startsWith("fn") || stat.startsWith("meth")) {
+        let name = stat.split(' ')[1]
+        objs[name] = [ line, this.namespace(stats, line) ] // syntax: funcname : [line, path]
+      }
+
+    }
+
+    this.functions = objs;
+    return objs;
+  }
+
   scan_blank_references (stats) {
     let objs = {};
     let line = -1;
@@ -94,6 +114,7 @@ module.exports = class Scanner {
       }
     }
   }
+
 
   find (stats, code) {
     let line = -1;

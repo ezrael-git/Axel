@@ -72,14 +72,16 @@ module.exports = class Preprocessor {
 
   scan_unholy_calls (stats) {
     let functions = [];
+    let line = 0;
     for (let stat of stats) {
+      line += 1;
       if (stat.startsWith("fn ") || stat.includes("meth")) {
         functions.push(stat.split(' ')[1].replace("(", ""));
       }
 
       for (let func of functions) {
         if (stat.includes(func + "(")) {
-          throw new Error("Functions should be called with the call: keyword");
+          throw SyntaxError(`Functions should be called with the call: keyword\nIn line ${line}: ${stat}`);
         }
       }
     }

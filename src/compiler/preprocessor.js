@@ -73,6 +73,12 @@ module.exports = class Preprocessor {
 
   handle_calls (fm) {
     let line = -1;
+    let priv_meths = this.scanner.scan_private_methods(fm);
+    for (let meth of priv_meths) {
+      line += 1;
+      priv_meths[line] = meth.replace(":", ".");
+    }
+    line = -1;
     for (let stat of fm) {
       line += 1;
       let iterated = "";
@@ -89,6 +95,9 @@ module.exports = class Preprocessor {
         stat = stat.replace(iterated, "");
 
         let funcName = stat.split("&")[0];
+        if (priv_meths.includes(funcName)) {
+          throw new Error(`Cannot access private method ${funcName} at\n${stat}`);
+        }
         let args = stat.split("&")[1];
 
         let call = `${funcName}(${args})`;

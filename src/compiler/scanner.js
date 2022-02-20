@@ -51,7 +51,7 @@ module.exports = class Scanner {
 
   scan_functions (stats) {
     let objs = {}
-    let iterated [];
+    let iterated = [];
     let line = -1;
 
     for (let stat of stats) {

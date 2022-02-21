@@ -50,7 +50,9 @@ class Axel {
     this.emitter.script["variables"] = this.preprocessor.variables;
     this.emitter.script["imports"] = this.preprocessor.imports;
     console.log("Axel:");
-    this.emitter.eval();
+    let retcode = this.emitter.eval();
+
+    return retcode;
   }
 
 }

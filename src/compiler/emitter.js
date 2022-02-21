@@ -22,5 +22,7 @@ module.exports = class Emitter {
 
     console.log("Axel main.js at 0");
     console.log("return: " + retcode);
+
+    return retcode
   }
 }

@@ -1,0 +1,14 @@
+import ../axel.js as Axel
+import ./axjs.ax as Axjs
+
+class Engine
+  meth constructor ()
+    @axel = new Axel()
+    @axjs = new Axjs()
+  end
+
+  meth from_js (code)
+    return call:@axel.program& code
+  end
+
+end

@@ -1,0 +1,40 @@
+import https as https
+
+class Request 
+  meth constructor (url, headers)
+    @url = url
+    @headers = headers
+  end
+end
+
+class Response
+  meth constructor (request, data, status)
+    @request = request
+    @data = data
+    @status = status
+  end
+end
+
+class HTTPS
+  meth constructor ()
+    @record = []
+  end
+
+  meth get (url)
+    https.get(url, res => {
+      $def data = [];
+      $def status = res.statusCode
+      
+      res.on('data', chunk => {
+        data.push(chunk)
+      });
+
+      res.on('end', () => {
+        $imm parsedData = JSON.parse(Buffer.concat(data).toString())
+        $def request = new Request(url, [])
+        $def response = new Response(request, parsedData, status)
+        return response
+      })
+    })
+  end 
+end

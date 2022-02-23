@@ -212,7 +212,7 @@ module.exports = class Scanner {
     for (let stat of stats) {
       iterated += 1;
       stat = this.cleanse_whitespace(stat);
-      if (line == iterated) {
+      if (line == iterated + 1) {
         return cur_namespace;
       }
       if (stat.startsWith("class")) {

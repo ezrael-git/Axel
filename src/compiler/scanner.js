@@ -99,6 +99,26 @@ module.exports = class Scanner {
     return objs;
   }
 
+  scan_instances (stats, class) {
+    let instances = []
+    for (let stat of stats) {
+      if (stat.includes("new " + class) && stat.includes("def") || stat.includes("new " + class) && stat.includes("imm")) {
+        instances.push(stat.split(' ')[1])
+      }
+    }
+    return instances
+  }
+
+  scan_classes (stats) {
+    let classes = []
+    for (let stat of stats) {
+      if (stat.startsWith("class ")) {
+        classes.push(stat.split(' ')[1])
+      }
+    }
+    return classes
+  }
+
   scan_private_methods (stats) {
     let objs = [];
     let line = -1;
@@ -122,13 +142,18 @@ module.exports = class Scanner {
   scan_unholy_calls (stats) {
     let functions = [];
     let line = 0;
+    let functions = this.scan_functions(stats)
+    let priv_meths = this.scan_private_methods(stats)
+    let variables = this.scan_variables(stats)
+    let classes = this.scan_classes(stats)
+    let cls_inst = {}
+    for (let cls of classes) {
+      cls_inst[cls] = this.scan_instances(stats, cls)
+    }
     for (let stat of stats) {
       line += 1;
-      if (stat.startsWith("fn ") || stat.includes("meth")) {
-        functions.push(stat.split(' ')[1].replace("(", ""));
-      }
 
-      for (let func of functions) {
+      for (let func in functions) {
         if (stat.includes(func + "(") && !stat.includes("new ")) {
           let flag = true;
           for (let keyword of Keywords.declarating) {
@@ -141,8 +166,18 @@ module.exports = class Scanner {
           }
         }
       }
-    }
-  }
+
+      for (let cls in cls_inst) {
+        let instances = cls_inst[cls]
+        for (let priv of priv_meths) {
+          if (stat.includes(`call:${instance}.${priv.split('.')[1]}`) && this.namespace(stats, line).includes("")) {
+            throw SyntaxError("Cannot access private methods")
+          }
+        }
+      }
+
+    } // outer for loop
+  } // method end
 
 
   find (stats, code) {

@@ -195,6 +195,8 @@ module.exports = class Scanner {
 
   namespace (stats, line) {
     let cur_namespace = "main"
+    console.log("THIS.NAMESPACE LINE " + line)
+    console.log("AND STATS LENGTH " + stats.length)
 
     function add (path) {
       cur_namespace += "/" + path

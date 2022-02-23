@@ -170,6 +170,7 @@ module.exports = class Scanner {
         let instances = cls_inst[cls]
         for (let priv of priv_meths) {
           for (let instance of instances) {
+            console.log(`${cls} / ${instance} : ${priv}`)
             if (stat.includes(`call:${instance}.${priv.split('.')[1]}`) && this.namespace(stats, line).includes("class:" + cls)) {
               throw SyntaxError(`Cannot access private methods\nIn line ${line}: ${stat}`)
             }

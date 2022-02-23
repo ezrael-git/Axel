@@ -99,10 +99,10 @@ module.exports = class Scanner {
     return objs;
   }
 
-  scan_instances (stats, class) {
+  scan_instances (stats, cls) {
     let instances = []
     for (let stat of stats) {
-      if (stat.includes("new " + class) && stat.includes("def") || stat.includes("new " + class) && stat.includes("imm")) {
+      if (stat.includes("new " + cls) && stat.includes("def") || stat.includes("new " + cls) && stat.includes("imm")) {
         instances.push(stat.split(' ')[1])
       }
     }

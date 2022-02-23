@@ -140,7 +140,6 @@ module.exports = class Scanner {
 
 
   scan_unholy_calls (stats) {
-    let functions = [];
     let line = 0;
     let functions = this.scan_functions(stats)
     let priv_meths = this.scan_private_methods(stats)

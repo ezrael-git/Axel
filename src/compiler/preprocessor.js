@@ -47,25 +47,14 @@ module.exports = class Preprocessor {
 
   hoist (stats) {
     let manipulated = [];
-    let vars = this.scanner.scan_variables(stats);
-    let imports = this.scanner.scan_imports(stats);
-    let blank_refs = this.scanner.scan_blank_references(stats);
+    let imports = this.scanner.scan_imports(stats)
     for (let filename in imports) {
-      let pkgname = imports[filename];
-      manipulated.push(`const ${pkgname} = require('${filename}')`)
-    }
-    for (let name in vars) {
-      let value = vars[name];
-      manipulated.push(`let ${name} = ${value}`);
-      for (let brName in blank_refs) {
-        if (name == brName) {
-          manipulated.push(blank_refs[brName].replace("@=>", ""));
-        }
-      }
+      let pkgname = imports[filename]
+      manipulated.push(`const ${pkgname} = require("${filename}")`)
     }
     for (let stat of stats) {
-      if (!stat.startsWith("def") && !stat.startsWith("imm") && !stat.startsWith("import") && !stat.includes("@=>")) {
-        manipulated.push(stat);
+      if (!stat.startsWith("import")) {
+        manipulated.push(stat)
       }
     }
     return manipulated;

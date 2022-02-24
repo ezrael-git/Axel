@@ -170,8 +170,6 @@ module.exports = class Scanner {
         let instances = cls_inst[cls]
         for (let instance of instances) {
           for (let priv of priv_meths) {
-            console.log(`${cls} / ${instance} : ${priv}`)
-            console.log(`LOOKING FOR "call:${instance}.${priv.split(':')[1]}" IN STAT ${stat} AND NAMESPACE ${this.namespace(stats, line)}`)
             if (stat.includes(`call:${instance}.${priv.split(':')[1]}`) && !this.namespace(stats, line).includes("class:" + cls)) {
               throw SyntaxError(`Cannot access private methods\nIn line ${line}: ${stat}`)
             }
@@ -195,8 +193,6 @@ module.exports = class Scanner {
 
   namespace (stats, line) {
     let cur_namespace = "main"
-    console.log("THIS.NAMESPACE LINE " + line)
-    console.log("AND STATS LENGTH " + stats.length)
 
     function add (path) {
       cur_namespace += "/" + path

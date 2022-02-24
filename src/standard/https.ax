@@ -20,21 +20,51 @@ class HTTPS
     @record = []
   end
 
-  meth get (url)
-    https.get(url, res => {
-      $def data = [];
-      $def status = res.statusCode
+  private request
+  meth request (options)
+    /*
+    Perform a request issued to the url.
+    Interface.
+    Arguments {
+      - options <Object> {
+        - url <string>
+        - method <string>
+        - headers <Object>
+        - auth <Object> : basic auth
+      }
+    }
+    */
+    https.request(options, res => {
+      def data = [];
+      def status = res.statusCode
       
       res.on('data', chunk => {
         data.push(chunk)
       });
 
       res.on('end', () => {
-        $imm parsedData = JSON.parse(Buffer.concat(data).toString())
-        $def request = new Request(url, [])
-        $def response = new Response(request, parsedData, status)
+        imm parsedData = JSON.parse(Buffer.concat(data).toString())
+        def request = new Request(url, [])
+        def response = new Response(request, parsedData, status)
         return response
       })
     })
-  end 
+  end
+
+  meth get (options)
+    options["method"] = "GET"
+    def response = @request(options)
+    return response
+  end
+
+  meth put (options)
+    options["method"] = "PUT"
+    return @request(options)
+  end
+
+  meth delete (options)
+    options["method"] = "DELETE"
+    return @request(options)
+  end
+  
 end

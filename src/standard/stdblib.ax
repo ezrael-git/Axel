@@ -19,7 +19,7 @@ class StdbLib
   meth load (filename)
     def data = fs.readFileSync(filename.replace(".ax", "") + ".ax", "utf8")
     
-    statements = @preprocessor.process(data.trim().split('\n'));
+    def statements = @preprocessor.process(data.trim().split('\n'));
 
     for (let line of statements) {
       def lex = @lexer.lex(line);

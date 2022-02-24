@@ -101,6 +101,15 @@ module.exports = class Parser {
       }
 
       let args = orig.replace("fn " + name, "").replaceAll("(", "").replaceAll(")", "");
+      // Check for type annotations and if there are, remove them
+      let it = ""
+      for (let char of args) {
+        it += char
+        if (it.endsWith("->")) {
+          break
+        }
+      }
+      args = it.replace("->", "")
       if (args.length < 1) {
         args = " ";
       }

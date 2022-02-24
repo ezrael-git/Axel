@@ -17,7 +17,7 @@ class StdbLib
   end
 
   meth load (filename)
-    def data = fs.readFileSync(filename.replace(".ax", "") + ".ax")
+    def data = fs.readFileSync(filename.replace(".ax", "") + ".ax", "utf8")
     
     statements = @preprocessor.process(data.trim().split('\n'));
 

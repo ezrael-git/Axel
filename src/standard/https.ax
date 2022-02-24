@@ -1,3 +1,5 @@
+-- built-in library providing a simple interface to making HTTPS requests
+
 import https as https
 
 class Request 

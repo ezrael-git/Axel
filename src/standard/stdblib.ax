@@ -8,7 +8,7 @@ import ../compiler/emitter.js as Emitter
 import fs as fs
 
 class StdbLib
-  fn constructor
+  meth constructor
     @scanner = new Scanner()
     @preprocessor = new Preprocessor(stdblib=false)
     @lexer = new Lexer()
@@ -16,7 +16,7 @@ class StdbLib
     @emitter = new Emitter()
   end
 
-  fn load (filename)
+  meth load (filename)
     def data = fs.readFileSync(filename.replace(".ax", "") + ".ax")
     
     statements = @preprocessor.process(data.trim().split('\n'));

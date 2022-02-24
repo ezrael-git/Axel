@@ -1,10 +1,11 @@
 const Scanner = require("./scanner.js");
 
 module.exports = class Preprocessor {
-  constructor () {
+  constructor (stdblib=true) {
     this.variables = [];
     this.imports = [];
     this.scanner = new Scanner();
+    this.stdblib = stdblib;
   }
 
 
@@ -109,13 +110,29 @@ module.exports = class Preprocessor {
     return man;
   }
 
+  load_stdblib (stats) {
+    let data = fs.readFileSync("../standard/stdblib.ax");
+    data = data.trim().split('\n')
+    let man = [];
+    for (let dat of data) {
+      man.push(dat)
+    }
+    for (let stat of stats) {
+      man.push(stat)
+    }
+    return man
+  }
+
 
 
   process (code) {
     /*
     Interface
     */
-    let fm = code;
+    let fm = code
+    if (this.stdblib == true) {
+      fm = this.load_stdblib(fm);
+    }
     fm = this.remove_comments(fm);
     fm = this.hoist(fm);
     this.scanner.scan_unholy_calls(fm);

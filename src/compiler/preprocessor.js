@@ -112,7 +112,8 @@ module.exports = class Preprocessor {
   }
 
   load_stdblib (stats) {
-    let data = fs.readFileSync("./standard/stdblib.ax");
+    let data = fs.readFileSync("./standard/stdblib.ax", 'utf8');
+    console.log(data)
     data = data.trim().split('\n')
     let man = [];
     for (let dat of data) {

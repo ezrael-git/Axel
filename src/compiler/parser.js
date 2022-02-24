@@ -80,8 +80,7 @@ module.exports = class Parser {
     this.ref(tks)
     let stat = this.next().value;
     stat = this.cleanse_whitespace(stat);
-    console.log("parser stat " + stat);
-    
+
     if (stat == "def") {
       this.emit(`${orig.replace("def", "let")}`);
     }

@@ -10,7 +10,7 @@ import fs as fs
 class StdbLib
   fn constructor
     @scanner = new Scanner()
-    @preprocessor = new Preprocessor()
+    @preprocessor = new Preprocessor(stdblib=false)
     @lexer = new Lexer()
     @parser = new Parser()
     @emitter = new Emitter()

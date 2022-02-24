@@ -1,4 +1,5 @@
 const Scanner = require("./scanner.js");
+const fs = require("fs");
 
 module.exports = class Preprocessor {
   constructor (stdblib=true) {

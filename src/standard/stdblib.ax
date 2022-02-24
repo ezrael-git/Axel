@@ -1,0 +1,37 @@
+-- standard builtin library
+
+import ../compiler/scanner.js as Scanner
+import ../compiler/preprocessor.js as Preprocessor
+import ../compiler/lexer.js as Lexer
+import ../compiler/parser.js as Parser
+import ../compiler/emitter.js as Emitter
+import fs as fs
+
+class StdbLib
+  fn constructor
+    @scanner = new Scanner()
+    @preprocessor = new Preprocessor()
+    @lexer = new Lexer()
+    @parser = new Parser()
+    @emitter = new Emitter()
+  end
+
+  fn load (filename)
+    def data = fs.readFileSync(filename.replace(".ax", "") + ".ax")
+    
+    statements = @preprocessor.process(data.trim().split('\n'));
+
+    for (let line of statements) {
+      def lex = @lexer.lex(line);
+      @parser.parse(lex,line);
+    }
+    @emitter.add(@parser.emitted);
+    @emitter.script["variables"] += @preprocessor.variables;
+    @emitter.script["imports"] += @preprocessor.imports;
+    let retcode = @emitter.eval();
+
+    return retcode;
+  end
+end
+
+def stdblib = new StdbLib()

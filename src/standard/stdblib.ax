@@ -10,7 +10,7 @@ import fs as fs
 class StdbLib
   meth constructor
     @scanner = new Scanner()
-    @preprocessor = new Preprocessor(stdblib=false)
+    @preprocessor = new Preprocessor(false)
     @lexer = new Lexer()
     @parser = new Parser()
     @emitter = new Emitter()

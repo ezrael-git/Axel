@@ -1,8 +1,13 @@
 // executor / collector / emitter
+let fs = require("fs");
 
 module.exports = class Emitter {
-  constructor (script={}) {
+  constructor (script={}, stdblib=true) {
     this.parsed = "";
+    if (stdblib == true) {
+      let data = fs.readFileSync("../standard/stdblib.ax");
+      this.parsed = data
+    }
     this.retlog = [];
     this.script = script;
   }

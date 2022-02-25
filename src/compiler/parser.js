@@ -82,11 +82,11 @@ module.exports = class Parser {
     stat = this.cleanse_whitespace(stat);
 
     if (stat == "def") {
-      let fmtd = orig.replace(orig.split(' ')[1], orig.split(' ')[1].replace("?", "AX_SPEC_CHAR_QUESTION_MARK")).replace("def", "let")
+      let fmtd = orig.replace("def", "let");
       this.emit(`${fmtd}`);
     }
     else if (stat == "imm") {
-      let fmtd = orig.replace(orig.split(' ')[1], orig.split(' ')[1].replace("?", "AX_SPEC_CHAR_QUESTION_MARK")).replace("imm", "const")
+      let fmtd = orig.replace("imm", "const");
       this.emit(`${fmtd}`);
     }
     else if (stat == "log") {

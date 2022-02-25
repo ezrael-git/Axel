@@ -1,14 +1,21 @@
-import ../axel.js as Axel
-import ./axjs.ax as Axjs
+-- For translating Axel code to JavaScript and vice versa, and other cool compiler things.
+
+import ../compiler/preprocessor.js as Preprocessor
+import ../compiler/lexer.js as Lexer
+import ../compiler/parser.js as Parser
+
 
 class Engine
   meth constructor ()
-    @axel = new Axel()
-    @axjs = new Axjs()
+    @preprocessor = new Preprocessor()
+    @lexer = new Lexer()
+    @parser = new Parser()
   end
 
-  meth from_js (code)
-    return call:@axel.program& code
+  meth to_js ()
+  end
+
+  meth to_ax ()
   end
 
 end

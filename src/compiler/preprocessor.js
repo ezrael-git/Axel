@@ -103,10 +103,14 @@ module.exports = class Preprocessor {
   filter (stats) {
     let man = [];
     let variables = this.scanner.scan_variables(stats);
+    let functions = this.scanner.scan_functions(stats);
     for (let stat of stats) {
       let nn = this.cleanse_whitespace(stat);
       if (!nn.startsWith("private ")) {
         for (let name in variables) {
+          stat = stat.replace(name, name.replace("?", "AX_SPEC_CHAR_QUESTION_MARK"))
+        }
+        for (let name in functions) {
           stat = stat.replace(name, name.replace("?", "AX_SPEC_CHAR_QUESTION_MARK"))
         }
         man.push(stat);

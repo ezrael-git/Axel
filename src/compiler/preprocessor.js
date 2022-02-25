@@ -113,6 +113,8 @@ module.exports = class Preprocessor {
         for (let name in functions) {
           stat = stat.replace(name, name.replace("?", "AX_SPEC_CHAR_QUESTION_MARK"))
         }
+        stat = stat.replaceAll("do", "{");
+        stat = stat.replaceAll("end", "}");
         man.push(stat);
       }
     }

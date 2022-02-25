@@ -20,11 +20,11 @@ class Response
   end
 
   meth successful? ()
-    if (@status == 200) {
+    if @status == 200
       return true
-    } else {
+    end else
       return false
-    }
+    end
   end
 
 end
@@ -48,21 +48,21 @@ class HTTPS
       }
     }
     */
-    https.request(options, res => {
+    https.request(options, res => do
       def data = [];
       def status = res.statusCode
       
-      res.on('data', chunk => {
+      res.on('data', chunk => do
         data.push(chunk)
-      });
+      end);
 
-      res.on('end', () => {
+      res.on('end', () => do
         imm parsedData = JSON.parse(Buffer.concat(data).toString())
         def request = new Request(url, options["headers"])
         def response = new Response(request, parsedData, status)
         return response
-      })
-    })
+      end)
+    end)
   end
 
   meth get (options)

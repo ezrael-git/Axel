@@ -34,4 +34,14 @@ class StdbLib
   end
 end
 
+class Struct
+  meth constructor (code)
+    @code = code
+  end
+
+  run ()
+    return eval(@code)
+  end
+end
+
 def stdblib = new StdbLib()

@@ -102,7 +102,7 @@ module.exports = class Preprocessor {
 
   filter (stats) {
     let man = [];
-    let variables = this.scanner.scan_variables(fm);
+    let variables = this.scanner.scan_variables(stats);
     for (let stat of stats) {
       let nn = this.cleanse_whitespace(stat);
       if (!nn.startsWith("private ")) {

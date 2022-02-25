@@ -128,6 +128,17 @@ module.exports = class Parser {
       let args = orig.replace("meth " + name, "").replace("(", "").replace(")", "");
       this.emit(`${name} (${args}) {`);
     }
+    else if (stat == "if") {
+      let condition = orig.replace("if ", "");
+      this.emit(`if (${condition}) {`)
+    }
+    else if (stat == "elif") {
+      let condition = orig.replace("elif ", "");
+      this.emit(`else if (${condition}) {`)
+    }
+    else if (stat == "else") {
+      this.emit(`else`)
+    }
     else {
       this.emit(orig);
     }

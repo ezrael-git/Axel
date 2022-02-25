@@ -19,7 +19,7 @@ class Response
     @status = status
   end
 
-  meth isSuccessful? ()
+  meth successful? ()
     if (@status == 200) {
       return true
     } else {

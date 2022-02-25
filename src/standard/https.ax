@@ -3,18 +3,30 @@
 import https as https
 
 class Request 
-  meth constructor (url, headers)
+
+  meth constructor (url, headers=undefined)
     @url = url
     @headers = headers
   end
+
 end
 
 class Response
+
   meth constructor (request, data, status)
     @request = request
     @data = data
     @status = status
   end
+
+  meth isSuccessful? ()
+    if (@status == 200) {
+      return true
+    } else {
+      return false
+    }
+  end
+
 end
 
 class HTTPS
@@ -46,7 +58,7 @@ class HTTPS
 
       res.on('end', () => {
         imm parsedData = JSON.parse(Buffer.concat(data).toString())
-        def request = new Request(url, [])
+        def request = new Request(url, options["headers"])
         def response = new Response(request, parsedData, status)
         return response
       })
@@ -68,5 +80,6 @@ class HTTPS
     options["method"] = "DELETE"
     return @request(options)
   end
+
   
 end

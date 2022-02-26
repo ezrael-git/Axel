@@ -27,6 +27,7 @@ class StdbLib
       @parser.parse(lex,line);
     }
     imm emit = @parser.emitted
+    /*
     def new_name = filename.replace(".ax", "") + ".js"
     new_name = new_name.split("/")
     new_name = new_name[new_name.length - 1]
@@ -36,6 +37,8 @@ class StdbLib
     log fs.readFileSync(new_name, 'utf8')
     log "after readfile"
     imm retcode = require("../standard/" + new_name)
+    */
+    imm retcode = eval(emit)
 
     return retcode;
   end

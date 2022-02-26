@@ -40,7 +40,7 @@ class Struct
     @code = code
   end
 
-  run ()
+  meth run ()
     return eval(@code)
   end
 end

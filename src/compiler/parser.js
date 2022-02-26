@@ -135,6 +135,10 @@ module.exports = class Parser {
     }
     else if (stat == "meth") {
       let name = this.next().value;
+      if (name == "initialize") {
+        name = "constructor";
+        orig = orig.replace("initialize", "constructor");
+      }
       let args = orig.replace("meth " + name, "").replace("(", "").replace(")", "");
       this.emit(`${name} (${args}) {`);
     }

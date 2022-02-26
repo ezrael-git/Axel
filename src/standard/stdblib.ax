@@ -35,7 +35,7 @@ class StdbLib
     log "after writefile"
     log fs.readFileSync(new_name, 'utf8')
     log "after readfile"
-    imm retcode = require("./compiler/" + new_name)
+    imm retcode = require("./standard/" + new_name)
 
     return retcode;
   end

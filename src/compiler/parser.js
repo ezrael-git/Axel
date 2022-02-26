@@ -44,12 +44,22 @@ module.exports = class Parser {
     return stat;
   }
 
-  input_all (src, name, value) {
-    
+  refresh () {
+    /*
+    Return the parser to its natural, default state.
+    */
+    this.parsed = [];
+    this.parsedLine = 0;
+    this.cur = [];
+    this.curPos = 0;
+    this.vars = {"initialized":true};
+    this.emitted = "";
+    return true;
   }
 
 
   // iterating tools
+
 
   ref (n=undefined) { // refresh the cur and curPos
     this.cur = n;

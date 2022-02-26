@@ -48,7 +48,7 @@ class HTTPS
       }
     }
     */
-    https.request(options, res => do
+    call:https.request&options, res => do
       def data = [];
       def status = res.statusCode
       
@@ -62,7 +62,7 @@ class HTTPS
         def response = new Response(request, parsedData, status)
         return response
       end)
-    end)
+    end
   end
 
   meth get (options)

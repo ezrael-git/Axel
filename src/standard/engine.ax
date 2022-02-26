@@ -6,7 +6,7 @@ import ../compiler/parser.js as Parser
 
 
 class Engine
-  meth constructor ()
+  meth initialize ()
     @preprocessor = new Preprocessor()
     @lexer = new Lexer()
     @parser = new Parser()

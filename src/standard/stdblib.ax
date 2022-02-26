@@ -22,10 +22,10 @@ class StdbLib
     
     def statements = @preprocessor.process(data.trim().split('\n'));
 
-    for (let line of statements) {
+    for (let line of statements) do
       def lex = @lexer.lex(line);
       @parser.parse(lex,line);
-    }
+    end
     imm emit = @parser.emitted
     /*
     def new_name = filename.replace(".ax", "") + ".js"

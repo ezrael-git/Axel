@@ -12,7 +12,17 @@ class Engine
     @parser = new Parser()
   end
 
-  meth to_js ()
+  meth to_js (statements)
+    statements = call:@preprocessor.process & statements.trim().split('\n')
+
+    for (let line of statements) do
+      def lex = call:@lexer.lex & line
+      call:@parser.parse & lex,line
+    end
+    
+    imm copy = @parser.emitted
+    call:@parser.refresh &
+    return copy
   end
 
   meth to_ax ()

@@ -73,12 +73,12 @@ class HTTPS
 
   meth put (options)
     options["method"] = "PUT"
-    return @request(options)
+    return call:@request & options
   end
 
   meth delete (options)
     options["method"] = "DELETE"
-    return @request(options)
+    return call:@request & options
   end
 
   

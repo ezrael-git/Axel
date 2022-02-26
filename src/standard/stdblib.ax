@@ -32,6 +32,9 @@ class StdbLib
     new_name = new_name[new_name.length - 1]
     log new_name
     fs.writeFileSync(new_name, emit)
+    log "after writefile"
+    log fs.readFileSync(new_name, 'utf8')
+    log "after readfile"
     imm retcode = require("./" + new_name)
     fs.unlinkSync("./" + new_name)
 

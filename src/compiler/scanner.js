@@ -233,7 +233,7 @@ module.exports = class Scanner {
 
   }
 
-  getNamespace(thing, ns) {
+  getNamespace (thing, ns) {
     if (thing == "array") {
       return ns.split('/');
     }
@@ -249,6 +249,26 @@ module.exports = class Scanner {
     else {
       throw new Error("Unknown thing: " + thing);
     }
+  }
+
+  replace (str, combination, after) {
+    inString = false;
+    iterated = ``
+    for (let char of str) {
+      iterated += char
+      if (char == "'" || char == '"') {
+        if (inString == true) {
+          inString = false;
+        } else {
+          inString = true;
+        }
+      }
+
+      if (iterated.endsWith(combination) && inString == false) {
+        iterated = iterated.replace(combination, after)
+      }
+    }
+    return iterated;
   }
 
 }

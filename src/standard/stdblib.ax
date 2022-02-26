@@ -25,10 +25,11 @@ class StdbLib
       def lex = @lexer.lex(line);
       @parser.parse(lex,line);
     }
-    @emitter.add(@parser.emitted);
-    @emitter.script["variables"] += @preprocessor.variables;
-    @emitter.script["imports"] += @preprocessor.imports;
-    let retcode = @emitter.eval();
+    imm data = @parser.emitted
+    def new_name = filename.replace(".ax", "") + ".js"
+    fs.writeFileSync(new_name, data)
+    imm retcode = require(newname)
+    fs.unlinkSync(new_name)
 
     return retcode;
   end

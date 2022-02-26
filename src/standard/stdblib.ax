@@ -28,7 +28,7 @@ class StdbLib
     imm emit = @parser.emitted
     def new_name = filename.replace(".ax", "") + ".js"
     fs.writeFileSync(new_name, emit)
-    imm retcode = require(newname)
+    imm retcode = require(new_name)
     fs.unlinkSync(new_name)
 
     return retcode;

@@ -71,16 +71,17 @@ module.exports = class Preprocessor {
     let variables = this.scanner.scan_variables(stats);
     let functions = this.scanner.scan_functions(stats);
     for (let stat of stats) {
-      let nn = this.cleanse_whitespace(stat);
-      if (!nn.startsWith("private ")) {
+      stat = this.cleanse_whitespace(stat);
+      if (!stat.startsWith("private ")) {
         for (let name in variables) {
           stat = stat.replace(name, name.replace("?", "AX_SPEC_CHAR_QUESTION_MARK"))
         }
         for (let name in functions) {
           stat = stat.replace(name, name.replace("?", "AX_SPEC_CHAR_QUESTION_MARK"))
         }
-        stat = stat.replaceAll("do", "{");
-        stat = stat.replaceAll("end", "}");
+        stat = this.scanner.replaceAll(stat, "do", "{");
+        stat = this.scanner.replaceAll(stat, "end", "}");
+        stat = this.scanner.replaceAll(stat, "@", "this.");
         man.push(stat);
       }
     }
@@ -115,12 +116,6 @@ module.exports = class Preprocessor {
     this.scanner.scan_unholy_calls(fm);
     fm = this.handle_calls(fm);
 
-    let line = -1;
-    for (let stat of fm) {
-      line += 1;
-      fm[line] = stat.replaceAll("@", "this.").replaceAll("$def", "def");
-      fm[line] = this.cleanse_whitespace(fm[line]);
-    }
     fm = this.filter(fm);
 
     return fm;

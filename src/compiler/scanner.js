@@ -150,27 +150,12 @@ module.exports = class Scanner {
       cls_inst[cls] = this.scan_instances(stats, cls)
     }
     for (let stat of stats) {
-      line += 1;
-
-      for (let func in functions) {
-        if (stat.includes(func + "(") && !stat.includes("new ")) {
-          let flag = true;
-          for (let keyword of Keywords.declarating) {
-            if (stat.includes(keyword)) {
-              flag = false;
-            }
-          }
-          if (flag == true) {
-            throw SyntaxError(`Functions should be called with the call: keyword\nIn line ${line}: ${stat}`);
-          }
-        }
-      }
 
       for (let cls in cls_inst) {
         let instances = cls_inst[cls]
         for (let instance of instances) {
           for (let priv of priv_meths) {
-            if (stat.includes(`call:${instance}.${priv.split(':')[1]}`) && !this.namespace(stats, line).includes("class:" + cls)) {
+            if (stat.includes(`${instance}.${priv.split(':')[1]}`) && !this.namespace(stats, line).includes("class:" + cls)) {
               throw SyntaxError(`Cannot access private methods\nIn line ${line}: ${stat}`)
             }
           }

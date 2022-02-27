@@ -70,30 +70,16 @@ module.exports = class Preprocessor {
       priv_meths[line] = meth.replace(":", ".");
     }
     line = -1;
+    let functions = this.scanner.scan_functions(fm)
     for (let stat of fm) {
       line += 1;
       let iterated = "";
-      // detect and manipulate function calls
-      if (stat.includes("call:")) {
-        
-        const stat_copy = stat;
-        for (let char of stat) {
-          iterated += char;
-          if (iterated.endsWith("call:")) {
-            break;
-          }
+      // detect and manipulate function calls without parentheses
+      for (let func in functions) {
+        if (stat.replaceAll(" ", "").includes(func) + "&") {
+          let name 
+          fm[line] = 
         }
-        stat = stat.replace(iterated, "");
-
-        let funcName = stat.split("&")[0];
-        if (priv_meths.includes(funcName)) {
-          throw new Error(`Cannot access private method ${funcName} at\n${stat}`);
-        }
-        let args = stat.split("&")[1];
-
-        let call = `${funcName}(${args})`;
-        fm[line] = stat_copy.replace('call:' + funcName + '&' + args, call);
-        fm = this.cleanse_calls(fm);
       }
     }
 

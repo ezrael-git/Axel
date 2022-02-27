@@ -243,4 +243,33 @@ module.exports = class Scanner {
 
   }
 
+  contains (str, combination) {
+    let inString = false;
+    let cont = false;
+    let it = "";
+    for (let c of str) {
+      it += c;
+      if (c == "'" || c == '"') {
+        if (inString == true) {
+          inString = false;
+        } else {
+          inString = true;
+        }
+      }
+
+      if (it.endsWith(combination) && inString == false) {
+        cont = true;
+        return cont;
+      }
+    }
+    return cont;
+  }
+
+  replaceAll (str, combination, after) {
+    while (this.contains(str, combination)) {
+      str = this.replace(str, combination, after);
+    }
+    return str;
+  }
+
 }

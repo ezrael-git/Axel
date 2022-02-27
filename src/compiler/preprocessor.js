@@ -63,26 +63,6 @@ module.exports = class Preprocessor {
   }
 
   handle_calls (fm) {
-    let line = -1;
-    let priv_meths = this.scanner.scan_private_methods(fm);
-    for (let meth of priv_meths) {
-      line += 1;
-      priv_meths[line] = meth.replace(":", ".");
-    }
-    line = -1;
-    let functions = this.scanner.scan_functions(fm)
-    for (let stat of fm) {
-      line += 1;
-      let iterated = "";
-      // detect and manipulate function calls without parentheses
-      for (let func in functions) {
-        if (stat.replaceAll(" ", "").includes(func) + "&") {
-          let name 
-          fm[line] = 
-        }
-      }
-    }
-
     return fm;
   }
 

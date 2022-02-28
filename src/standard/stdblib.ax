@@ -26,6 +26,7 @@ class StdbLib
       @parser.parse(lex,line)
     end
     imm emit = @parser.emitted
+    log "EMIT " + emit
 
     def new_name = filename.replace(".ax", "") + ".js"
     new_name = new_name.split("/")

@@ -28,9 +28,10 @@ class StdbLib
     end
     imm emit = @parser.emitted
 
-    def new_name = filename.replace(".ax", "") + ".js"
+    def new_name = filename.replaceAll(".ax", ".js")
     new_name = new_name.split("/")
     new_name = new_name[new_name.length - 1]
+    log "NEW NAME " + new_name
     fs.writeFileSync(new_name, emit)
     imm retcode = require("./" + String(new_name))
 

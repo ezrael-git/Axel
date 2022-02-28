@@ -166,6 +166,40 @@ module.exports = class Scanner {
     } // outer for loop
   } // method end
 
+  scan_exports (stats) {
+    let exports = [];
+    let line = 0;
+    for (let stat of stats) {
+      line += 1;
+      if (this.namespace(stats, line).includes("module")) {
+        exports.push(stat);
+      }
+      else if (stat.startsWith("import ")) {
+        exports.push(stat);
+      }
+    }
+  
+    return exports;
+  }
+
+  scan_block (stats, line) {
+    let nm = this.namespace(stats, line);
+    let members = [];
+    let curPos = 0;
+    for (let stat of stats[line:]) {
+      curPos += 1;
+      if (this.namespace(stats[line:], curPos).includes(nm)) {
+        members.push(stat);
+      }
+      else {
+        break;
+      }
+    }
+    return members;
+  }
+
+
+
 
   find (stats, code) {
     let line = -1;
@@ -295,22 +329,6 @@ module.exports = class Scanner {
       str = this.replace(str, combination, after);
     }
     return str;
-  }
-
-  scan_exports (stats) {
-    let exports = [];
-    let line = 0;
-    for (let stat of stats) {
-      line += 1;
-      if (this.namespace(stats, line).includes("module")) {
-        exports.push(stat);
-      }
-      else if (stat.startsWith("import ")) {
-        exports.push(stat);
-      }
-    }
-  
-    return exports;
   }
 
 

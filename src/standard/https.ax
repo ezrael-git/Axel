@@ -48,7 +48,7 @@ class HTTPS
       }
     }
     */
-    call:https.request&options, res => do
+    https.request(options, res => do
       def data = [];
       def status = res.statusCode
       
@@ -73,12 +73,12 @@ class HTTPS
 
   meth put (options)
     options["method"] = "PUT"
-    return call:@request & options
+    return @request(options)
   end
 
   meth delete (options)
     options["method"] = "DELETE"
-    return call:@request & options
+    return @request(options)
   end
 
   

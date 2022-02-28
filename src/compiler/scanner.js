@@ -299,15 +299,18 @@ module.exports = class Scanner {
 
   scan_exports (stats) {
     let exports = [];
-    line = 0
+    line = 0;
     for (let stat of stats) {
-      line += 1
+      line += 1;
       if (this.namespace(stats, line).includes("module")) {
-        exports.push(stat)
+        exports.push(stat);
+      }
+      else if (stat.startsWith("import ")) {
+        exports.push(stat);
       }
     }
   
-    return exports
+    return exports;
   }
 
 

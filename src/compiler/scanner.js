@@ -150,6 +150,7 @@ module.exports = class Scanner {
       cls_inst[cls] = this.scan_instances(stats, cls)
     }
     for (let stat of stats) {
+      stat += 1;
 
       for (let cls in cls_inst) {
         let instances = cls_inst[cls]

@@ -70,9 +70,16 @@ module.exports = class Preprocessor {
     let man = [];
     let variables = this.scanner.scan_variables(stats);
     let functions = this.scanner.scan_functions(stats);
+    let md = false;
     for (let stat of stats) {
       stat = this.cleanse_whitespace(stat);
       if (!stat.startsWith("private ")) {
+        if (stat.startsWith("module ")) {
+          md = true;
+        }
+        if (md == true && stat == "}") {
+          continue;
+        }
         for (let name in variables) {
           stat = stat.replace(name, name.replace("?", "AX_SPEC_CHAR_QUESTION_MARK"))
         }

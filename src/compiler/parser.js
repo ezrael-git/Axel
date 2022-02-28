@@ -153,6 +153,10 @@ module.exports = class Parser {
     else if (stat == "else") {
       this.emit(`else`)
     }
+    else if (stat == "module") {
+      let name = orig.split(' ')[1];
+      this.emit(`module.exports = class ${name} {`)
+    }
     else {
       this.emit(orig);
     }

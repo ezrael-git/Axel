@@ -127,8 +127,7 @@ module.exports = class Scanner {
       line += 1;
       stat = this.cleanse_whitespace(stat);
       if (stat.startsWith("private ")) {
-        let path = this.namespace(stats, line);
-        console.log("PATH " + path);
+        let path = this.namespace(stats, line)
         let className = path.split('/')[1].replace("class:", "");
         let methName = stat.split(' ')[1];
         objs.push(className + ":" + methName);
@@ -156,7 +155,7 @@ module.exports = class Scanner {
         let instances = cls_inst[cls]
         for (let instance of instances) {
           for (let priv of priv_meths) {
-            console.log(`this.namespace(stats, line): ${stat} || ${line} \n ${this.namespace(stats, line)}`)
+            // console.log(`this.namespace(stats, line): ${stat} || ${line} \n ${this.namespace(stats, line)}`)
             if (stat.includes(`${instance}.${priv.split(':')[1]}`) && !this.namespace(stats, line).includes("class:" + cls)) {
               throw SyntaxError(`Cannot access private methods\nIn line ${line}: ${stat}`)
             }

@@ -18,12 +18,12 @@ class StdbLib
 
   meth load (filename)
     def data = fs.readFileSync(filename.replace(".ax", "") + ".ax", "utf8")
-    
-    def statements = @preprocessor.process(data.trim().split('\n'));
+    def statements = data.trim().split('\n')
+    statements = @preprocessor.process(statements)
 
     for (let line of statements) do
-      def lex = @lexer.lex(line);
-      @parser.parse(lex,line);
+      def lex = @lexer.lex(line)
+      @parser.parse(lex,line)
     end
     imm emit = @parser.emitted
 
@@ -33,7 +33,7 @@ class StdbLib
     fs.writeFileSync(new_name, emit)
     imm retcode = require("./" + String(new_name))
 
-    return retcode;
+    return retcode
   end
 end
 

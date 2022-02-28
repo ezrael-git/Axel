@@ -255,7 +255,7 @@ module.exports = class Scanner {
     return type;
   }
 
-  replace (str, combination, after) {
+  replace (str, comb, after) {
     const temp1 = str.replace(`'${comb}'`, '****').replace(`"${comb}"`, '****');
     const temp2 = temp1.replace(comb, after);
     return temp2.replace('****', `'${comb}'`);

@@ -2,83 +2,85 @@
 
 import https as https
 
-class Request 
-
-  meth constructor (url, headers=undefined)
-    @url = url
-    @headers = headers
-  end
-
-end
-
-class Response
-
-  meth constructor (request, data, status)
-    @request = request
-    @data = data
-    @status = status
-  end
-
-  meth successful? ()
-    if @status == 200
-      return true
-    end else
-      return false
-    end
-  end
-
-end
-
-class HTTPS
-  meth constructor ()
-    @record = []
-  end
-
-  meth request (options)
-    /*
-    Perform a request issued to the url.
-    Interface.
-    Arguments {
-      - options <Object> {
-        - url <string>
-        - method <string>
-        - headers <Object>
-        - auth <Object> : basic auth
-      }
-    }
-    */
-    https.request(options, res => do
-      def data = [];
-      def status = res.statusCode
-      
-      res.on('data', chunk => do
-        data.push(chunk)
-      end);
-
-      res.on('end', () => do
-        imm parsedData = JSON.parse(Buffer.concat(data).toString())
-        def request = new Request(url, options["headers"])
-        def response = new Response(request, parsedData, status)
-        return response
-      end)
-    end
-  end
-
-  meth get (options)
-    options["method"] = "GET"
-    def response = @request(options)
-    return response
-  end
-
-  meth put (options)
-    options["method"] = "PUT"
-    return @request(options)
-  end
-
-  meth delete (options)
-    options["method"] = "DELETE"
-    return @request(options)
-  end
-
+module
+  class Request 
   
+    meth constructor (url, headers=undefined)
+      @url = url
+      @headers = headers
+    end
+  
+  end
+  
+  class Response
+  
+    meth constructor (request, data, status)
+      @request = request
+      @data = data
+      @status = status
+    end
+  
+    meth successful? ()
+      if @status == 200
+        return true
+      end else
+        return false
+      end
+    end
+  
+  end
+  
+  class HTTPS
+    meth constructor ()
+      @record = []
+    end
+  
+    meth request (options)
+      /*
+      Perform a request issued to the url.
+      Interface.
+      Arguments {
+        - options <Object> {
+          - url <string>
+          - method <string>
+          - headers <Object>
+          - auth <Object> : basic auth
+        }
+      }
+      */
+      https.request(options, res => do
+        def data = [];
+        def status = res.statusCode
+        
+        res.on('data', chunk => do
+          data.push(chunk)
+        end);
+  
+        res.on('end', () => do
+          imm parsedData = JSON.parse(Buffer.concat(data).toString())
+          def request = new Request(url, options["headers"])
+          def response = new Response(request, parsedData, status)
+          return response
+        end)
+      end
+    end
+  
+    meth get (options)
+      options["method"] = "GET"
+      def response = @request(options)
+      return response
+    end
+  
+    meth put (options)
+      options["method"] = "PUT"
+      return @request(options)
+    end
+  
+    meth delete (options)
+      options["method"] = "DELETE"
+      return @request(options)
+    end
+  
+    
+  end
 end

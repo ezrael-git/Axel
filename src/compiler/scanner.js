@@ -212,6 +212,11 @@ module.exports = class Scanner {
         add("method:" + name);
       }
 
+      else if (stat.startsWith("module")) {
+        let name = stat.split(' ')[1];
+        add("module:" + name);
+      }
+
       else if (stat == "end") {
         subtract();
       }

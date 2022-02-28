@@ -292,5 +292,18 @@ module.exports = class Scanner {
     return str;
   }
 
+  scan_exports (stats) {
+    let exports = [];
+    line = 0
+    for (let stat of stats) {
+      line += 1
+      if (this.namespace(stats, line).includes("module")) {
+        exports.push(stat)
+      }
+    }
+  
+    return exports
+  }
+
 
 }

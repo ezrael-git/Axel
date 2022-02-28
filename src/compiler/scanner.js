@@ -236,6 +236,25 @@ module.exports = class Scanner {
     }
   }
 
+  getType (stats, obj) {
+    let type = "";
+    for (let stat of stats) {
+      if (stat.includes(obj)) {
+        if (stat.startsWith("def" || "imm")) {
+          type = "variable"
+        } else if (this.contains(stat, "fn " + obj)) {
+          type = "function"
+        } else if (this.contains(stat, "class " + obj)) {
+          type = "class"
+        } else {
+          type = undefined;
+        }
+      }
+    }
+
+    return type;
+  }
+
   replace (str, combination, after) {
     const temp1 = str.replace(`'${comb}'`, '****').replace(`"${comb}"`, '****');
     const temp2 = temp1.replace(comb, after);
@@ -271,5 +290,6 @@ module.exports = class Scanner {
     }
     return str;
   }
+
 
 }

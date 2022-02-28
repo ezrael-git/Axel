@@ -19,6 +19,7 @@ class StdbLib
   meth load (filename)
     def data = fs.readFileSync(filename.replace(".ax", "") + ".ax", "utf8")
     def statements = data.trim().split('\n')
+    log statements
     statements = @preprocessor.process(statements)
 
     for (let line of statements) do
@@ -26,7 +27,6 @@ class StdbLib
       @parser.parse(lex,line)
     end
     imm emit = @parser.emitted
-    log "EMIT " + emit
 
     def new_name = filename.replace(".ax", "") + ".js"
     new_name = new_name.split("/")

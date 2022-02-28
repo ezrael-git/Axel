@@ -34,7 +34,6 @@ class HTTPS
     @record = []
   end
 
-  private request
   meth request (options)
     /*
     Perform a request issued to the url.

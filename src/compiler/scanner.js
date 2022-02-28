@@ -299,7 +299,7 @@ module.exports = class Scanner {
 
   scan_exports (stats) {
     let exports = [];
-    line = 0;
+    let line = 0;
     for (let stat of stats) {
       line += 1;
       if (this.namespace(stats, line).includes("module")) {

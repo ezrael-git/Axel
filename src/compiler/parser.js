@@ -1,6 +1,7 @@
 // parser.js
 // generate AST
 
+const Node = require("./node.js");
 
 
 
@@ -79,92 +80,39 @@ module.exports = class Parser {
     return n;
   }
 
-  generate_ast (tks) {
-    let program = {}
+
+
+  gateway (code) {
+    let ast = [];
+    for (let line in code) {
+      let tokens = code[line];
+      let result = this.parse(tokens,line);
+      ast.push(result);
+    }
+    return ast;
   }
-
-
   
   
   parse (tks, orig="") {
     this.addLine(orig);
     this.ref(tks)
-    let stat = this.next().value;
-    stat = this.cleanse_whitespace(stat);
+    let node = [];
 
-    if (stat == "def") {
-      let fmtd = orig.replace("def", "let");
-      this.emit(`${fmtd}`);
-    }
-    else if (stat == "imm") {
-      let fmtd = orig.replace("imm", "const");
-      this.emit(`${fmtd}`);
-    }
-    else if (stat == "log") {
-      this.emit(`console.log(${orig.replace("log ", "")})`)
-    }
-    else if (stat == "fn") {
-      let nameRaw = orig.replace("fn ", "");
-      let name = "";
-      for (let char of nameRaw) {
-        if (char == " " || char == "(") {
-          break
-        }
-        name += char;
+    while (true) {
+      let token = this.cleanse_whitespace(this.next())
+      let tv = token.value;
+      if (this.curPos - 1 == this.cur.length) {
+        break;
       }
 
-      let args = orig.replace("fn " + name, "").replaceAll("(", "").replaceAll(")", "");
-      // Check for type annotations and if there are, remove them
-      let it = ""
-      for (let char of args) {
-        it += char
-        if (it.endsWith("->")) {
-          break
-        }
+      if (tv.startsWith("'") && tv.endsWith("'") || tv.startsWith('"') && tv.endsWith('"')) {
+        node.push(new Node.StringNode(tv, token.line));
       }
-      args = it.replace("->", "")
-      if (args.length < 1) {
-        args = " ";
+      else if () {
       }
-      this.emit(`function ${name} (${args}) {`)
-    }
-    else if (stat == "end") {
-      this.emit("}");
-    }
-    else if (stat == "class") {
-      this.emit(`class ${orig.replace("class ", "")} {`);
-    }
-    else if (stat == "meth") {
-      let name = this.next().value;
-      if (name == "initialize") {
-        name = "constructor";
-        orig = orig.replace("initialize", "constructor");
-      }
-      let args = orig.replace("meth " + name, "").replace("(", "").replace(")", "");
-      this.emit(`${name} (${args}) {`);
-    }
-    else if (stat == "if") {
-      let condition = orig.replace("if ", "");
-      this.emit(`if (${condition}) {`)
-    }
-    else if (stat == "elif") {
-      let condition = orig.replace("elif ", "");
-      this.emit(`else if (${condition}) {`)
-    }
-    else if (stat == "else") {
-      this.emit(`else`)
-    }
-    else if (stat == "module") {
-      let name = orig.split(' ')[1];
-      this.emit(`module.exports = class ${name} {`)
-    }
-    else {
-      this.emit(orig);
     }
 
-    
-
-
+    return node;
   }
 
 

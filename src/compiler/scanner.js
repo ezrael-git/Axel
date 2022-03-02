@@ -185,10 +185,10 @@ module.exports = class Scanner {
   scan_block (stats, line) {
     let nm = this.namespace(stats, line);
     let members = [];
-    let curPos = 0;
+    let curLine = 0;
     for (let stat of stats.slice(line,stats.length)) {
-      curPos += 1;
-      if (this.namespace(stats.slice(line,stats.length), curPos).includes(nm)) {
+      curLine += 1;
+      if (this.namespace(stats.slice(line,stats.length), curLine).includes(nm)) {
         members.push(stat);
       }
       else {
@@ -224,11 +224,11 @@ module.exports = class Scanner {
       cur_namespace = temp;
     }
 
-    let iterated = -1;
+    let on_line = 0;
     for (let stat of stats) {
-      iterated += 1;
+      on_line += 1;
       stat = this.cleanse_whitespace(stat);
-      if (line == iterated + 1) {
+      if (line == on_line) {
         return cur_namespace;
       }
       if (stat.startsWith("class")) {

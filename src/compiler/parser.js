@@ -2,6 +2,7 @@
 // generate AST
 
 const Node = require("./node.js");
+const Scanner = require("./scanner.js");
 
 
 
@@ -16,6 +17,7 @@ module.exports = class Parser {
     
     this.vars = {"initialized": true}
     this.emitted = ""; // actual parsed lines
+    this.scanner = new Scanner();
     
   }
 
@@ -81,10 +83,14 @@ module.exports = class Parser {
   }
 
 
-
   gateway (code) {
     let ast = [];
+    let line = 0;
+    let pos = -1;
     for (let line in code) {
+      line += 1;
+      pos += 1;
+
       let tokens = code[line];
       let result = this.parse(tokens,line);
       ast.push(result);
@@ -108,8 +114,10 @@ module.exports = class Parser {
       if (tv.startsWith("'") && tv.endsWith("'") || tv.startsWith('"') && tv.endsWith('"')) {
         node.push(new Node.StringNode(tv, token.line));
       }
+      /*
       else if () {
       }
+      */
     }
 
     return node;

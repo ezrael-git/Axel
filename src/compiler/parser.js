@@ -1,7 +1,7 @@
 // parser.js
 // generate AST
 
-const Node = require("./node.js");
+const Node = require("./nodes.js");
 const Scanner = require("./scanner.js");
 
 

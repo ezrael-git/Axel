@@ -188,7 +188,7 @@ module.exports = class Scanner {
     let curPos = 0;
     for (let stat of stats[line:]) {
       curPos += 1;
-      if (this.namespace(stats[line:], curPos).includes(nm)) {
+      if (this.namespace(stats[line:stats.length], curPos).includes(nm)) {
         members.push(stat);
       }
       else {

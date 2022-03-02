@@ -50,6 +50,6 @@ class CallNode {
   constructor (node, arg_nodes, line_node) {
     this.node_to_call = node;
     this.arg_nodes = arg_nodes;
-    this.line_node = line_node:
+    this.line_node = line_node;
   }
 }

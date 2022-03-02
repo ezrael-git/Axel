@@ -82,6 +82,40 @@ module.exports = class Parser {
     return n;
   }
 
+  gatherBlocks (stats) {
+    let main = [];
+    let block_references = [];
+    let line_number = 0;
+    let elem_number = -1;
+    for (let stat of stats) {
+      line_number += 1;
+      elem_number += 1;
+      if (this.scanner.includes(stat, "{")) {
+        block_references.push(line_number);
+        continue;
+      }
+      if (this.scanner.namespace(stats, line_number) == "main") {
+        main.push({line_number : stat});
+      }
+    }
+
+    // now that we have a basic estimate of how the main program looks like, we can add further detail to our data
+    addAfterLine (number, item) {
+      main.splice(number - 1, 0, item);
+    }
+
+    let reference_number = 0;
+    for (let reference of block_references) {
+      reference_number += 1;
+      let block_code = this.scanner.scan_block(stats, reference);
+      for (let line of block_code) {
+        let block_line_number = this.scanner.find(line, {block_start:reference});
+        let to_push = {block_line_number : line}
+        addAfterLine(block_line_number, to_push);
+      }
+    }
+  }
+
 
   gateway (code) {
     let ast = [];
@@ -91,9 +125,7 @@ module.exports = class Parser {
       line += 1;
       pos += 1;
 
-      let tokens = code[line];
-      let result = this.parse(tokens,line);
-      ast.push(result);
+      
     }
     return ast;
   }

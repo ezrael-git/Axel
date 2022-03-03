@@ -1,17 +1,16 @@
 // lexer.py
-const Keyword = require("../data/keyword.js");
+const Scanner = require("./scanner.js");
+let TT_LPAREN = "("
+let TT_RPAREN = ")"
+let TT_FN = "fn"
+let TT_DEF = "def"
+let TT_IMM = "imm"
+let TT_EQ = "="
+let TT_PLUS = "+"
+let TT_MINUS = "-"
+let TT_MULTIPLY = "*"
+let TT_DIVIDE = "/"
 
-
-class Token {
-  constructor (type, value, position) {
-    this.type = type;
-    this.value = value;
-    this.position = position;
-    if (!["string", "integer", "identifier", "declaration", "operator", "call", undefined].includes(type)) {
-      throw new Error("Wrong type: " + type);
-    }
-  }
-}
 
 
 class Lexer {
@@ -25,94 +24,37 @@ class Lexer {
    
   }
 
-  get_src (fro=0, to) {
-    let h = this.source.trim().split('\n');
-    return String(h.slice(fro,to));
+  peek (pos, chars=1) {
+    return this.source.slice(pos, chars);
   }
 
-  isFuncRef (name) {
-    let flag = false;
-    if (this.get_src(0,this.line).includes("fn " + name)) {
-      flag = true;
-    }
-    return flag;
-  }
-
-  isFuncCall (call) {
-    if (this.isFuncRef(call.replace("call:", "")) == false) {
-      return false;
-    }
-    else if (!call.includes("call:")) {
-      return false;
-    }
-    return true;
-  }
-
-  isVarRef (name) {
-    let flag = false;
-    if (this.get_src(0,this.line).includes("imm " + name) || this.get_src(0,this.line).includes("def " + name)) {
-      flag = true;
-    }
-    return flag;
-  }
-
-
-  type_format (tks) {
-    let typed = [];
-    let tk_pos = -1;
-
-    function add(type,value) {
-      typed.push(new Token(type,value,tk_pos));
-    }
-
-    for (let tk of tks) {
-      tk_pos += 1
-
-      if (tk.startsWith("'") && tk.endsWith("'") || tk.startsWith('"') && tk.endsWith('"')) {
-        add("string",tk);
-      }
-      else if (this.digits.includes(tk[0]) && this.digits.includes(tk[tk.length - 1])) {
-        add("integer",tk);
-      }
-      else if (Keyword.declarating.includes(tk)) {
-        add("declaration",tk);
-      }
-      else if (Keyword.operators.includes(tk)) {
-        add("operator",tk);
-      }
-      else if (this.isVarRef(tk) == true || this.isFuncRef(tk) == true) {
-        add("identifier",tk);
-      }
-      else if (tk_pos != 0 && typed[tk_pos-1].type == "declaration") {
-        add("identifier",tk);
-      }
-      else if (this.isFuncCall(tk) == true) {
-        add("call",tk);
-      }
-      else {
-        throw new Error("Unknown token: " + tk);
-      }
-
-    }
-    return typed;
+  back (pos, chars=1) {
+    return this.source[pos - chars];
   }
 
 
   lex (source) {
-    this.source += source + "\n";
+    this.source = source;
 
-    let src = source.split(' ');
-    let typed = [];
-    let line = -1;
-    for (let sr of src) {
-      line += 1;
-      typed.push(new Token(undefined,sr,line));
+    let lexed = [];
+
+    function add (type, tk) {
+      lexed.push({type:type, pos:pos, tk:tk})
     }
-    src = typed;
 
-    this.lexed = src;
-    this.line += 1;
-    return this.lexed;
+    let it = "";
+    let pos = -1;
+    for (let char of source) {
+      it += char;
+      pos += 1;
+
+      if (it.endsWith(TT_LPAREN)) {
+        add("LPAREN", TT_LPAREN);
+      }
+      else if (it.endsWith()) {
+      }
+
+    }
 
   }
   

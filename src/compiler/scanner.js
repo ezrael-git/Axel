@@ -201,14 +201,35 @@ module.exports = class Scanner {
 
 
 
-  find (stats, code) {
-    let line = -1;
+  find (stats, code, details={}) {
+    let line = 0;
+    function get_key(dic,k,ed) {
+      if (dic[k] == undefined) {
+        return ed
+      }
+      return dic[k]
+    }
     for (let stat of stats) {
       line += 1;
       if (stat == code) {
-        return line;
+        if (details["block_reference"] != undefined) {
+          let block_reference = details["block_reference"];
+          if (line > block_reference) {
+            let block_end = details["block_end"];
+            if (block_end != undefined) {
+              if (line < block_end) {
+                return line;
+              }
+            } else {
+              return line;
+            }
+          }
+        } else {
+          return line;
+        }
       }
     }
+    return undefined;
   }
 
   namespace (stats, line) {

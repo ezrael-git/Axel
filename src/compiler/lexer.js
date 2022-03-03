@@ -20,6 +20,7 @@ class Lexer {
     this.line = 0;
     this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     this.digits = "0123456789"
+    this.scanner = new Scanner()
 
    
   }
@@ -37,6 +38,7 @@ class Lexer {
     this.source = source;
 
     let lexed = [];
+    let sc = this.scanner;
 
     function add (type, tk) {
       lexed.push({type:type, pos:pos, tk:tk})
@@ -44,14 +46,19 @@ class Lexer {
 
     let it = "";
     let pos = -1;
+    let inString = false;
+    let changingString = "";
     for (let char of source) {
       it += char;
       pos += 1;
 
-      if (it.endsWith(TT_LPAREN)) {
+      if (it.endsWith(TT_LPAREN) && sc.inQuotes(source,pos) == false) {
         add("LPAREN", TT_LPAREN);
       }
-      else if (it.endsWith()) {
+      // beginning of string
+      else if (it.endsWith("'") && sc.inQuotes(source,pos) == true || it.endsWith('"') && sc.inQuotes(source,pos) == true) {
+        inString = true;
+        changingString = it[it.length - 1]
       }
 
     }

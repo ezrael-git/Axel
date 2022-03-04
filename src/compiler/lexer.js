@@ -95,7 +95,7 @@ class Lexer {
       else if (it.endsWith(TT_EQ)) {
         add("EQUALITY", TT_EQ);
       }
-      else if (it.endsWith(TT_FN) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
+      else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {
         add("FUNCTION", TT_FN);
         let identifier = sc.getUntil(source,pos+1," ");
         add("IDENTIFIER", identifier.string);

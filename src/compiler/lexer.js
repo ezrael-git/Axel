@@ -132,7 +132,7 @@ class Lexer {
         }
         // skip
         else {
-          skipped.push(it:char);
+          skipped.push({it:char});
         }
       }
 

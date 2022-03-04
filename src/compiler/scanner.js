@@ -237,10 +237,10 @@ module.exports = class Scanner {
     let start = 0;
     let end = 0;
     let it = "";
-    for (let char of str) {
-      it += char;
+    for (let c of str) {
+      it += c;
       curPos += 1;
-      if (it.slice(0,it.length-combination.length) == combination) {
+      if (it.slice(it.length-combination.length,it.length) == combination) {
         end = curPos;
         start = curPos - combination.length
         return {start:start,end:end,combination:combination}

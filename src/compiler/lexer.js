@@ -62,7 +62,7 @@ class Lexer {
     }
 
     function lastToken () {
-      return lexed[lexed.length -1]
+      return lexed[lexed.length - 1]
     }
 
     let it = "";
@@ -125,7 +125,7 @@ class Lexer {
       }
       else {
         // identifiers
-        if (lastToken().type == "FUNCTION" || lastToken().type == "DEFINE" || lastToken().type == "IMMUTABLE") {
+        if (lastToken() != undefined && lastToken().type == "FUNCTION" || lastToken().type == "DEFINE" || lastToken().type == "IMMUTABLE") {
           let identifier = sc.getUntil(source,pos," ")
           add("IDENTIFIER", pos, identifier.curPos, identifier.string);
           pos = identifier.curPos;

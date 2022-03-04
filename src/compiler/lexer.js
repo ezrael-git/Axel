@@ -61,15 +61,20 @@ class Lexer {
       lexed.push({type:type, starts:starts, ends:ends, tk:tk.replaceAll(" ", "")})
     }
 
+    function lastToken () {
+      return lexed[lexed.length -1]
+    }
+
     let it = "";
     let pos = -1;
-    while (pos != source.length + 1) {
+    while (pos != source.length + 1 && source[pos] != undefined) {
       pos += 1;
       let char = source[pos];
       it += char;
 
 
-      // handle parentheses
+      // handle...
+      // parentheses
       if (it.endsWith(TT_LPAREN) && sc.inQuotes(source,pos) == false || it.endsWith(TT_RPAREN) && sc.inQuotes(source,pos) == false) {
         if (it.endsWith(TT_LPAREN)) {
           add("LPAREN", pos, pos, TT_LPAREN);
@@ -90,49 +95,45 @@ class Lexer {
       else if (it.endsWith(TT_PLUS)) {
         add("PLUS", pos, pos, TT_PLUS);
       }
+      // subtraction operator
       else if (it.endsWith(TT_MINUS)) {
         add("MINUS", pos, pos, TT_MINUS);
       }
+      // multiplication operator
       else if (it.endsWith(TT_MULTIPLY)) {
         add("MULTIPLY", pos, pos, TT_MULTIPLY);
       }
+      // division operator
       else if (it.endsWith(TT_DIVIDE)) {
         add("DIVIDE", pos, pos, TT_DIVIDE);
       }
+      // equality / assignment operator
       else if (it.endsWith(TT_EQ)) {
         add("EQUALITY", pos, pos, TT_EQ);
       }
+      // fn keyword
       else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {
         add("FUNCTION", pos-1, pos, TT_FN);
-        let identifier = sc.getUntil(source,pos,"(");
-        add("IDENTIFIER", pos+1, identifier.curPos, identifier.string);
-        pos = identifier.curPos;
-        let args = source.slice(pos,source.length).split(',');
-        console.log("ARGS " + args)
-        console.log(pos)
-        console.log(source.length)
-        add("LPAREN", TT_LPAREN);
-        for (let arg of args.join(',').replaceAll(" ", "").split(',')) {
-          add("IDENTIFIER", arg);
-        }
-        add("RPAREN", TT_RPAREN);
-        console.log("COMB " + args.join(','));
-        pos = sc.findString(source,args.join(',')).end;
       }
+      // def keyword
       else if (it.endsWith(TT_DEF) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
-        add("DEFINE", TT_DEF);
-        let identifier = sc.getUntil(source,pos+1," ");
-        add("IDENTIFIER", identifier.string);
-        pos = identifier.curPos;
+        add("DEFINE", pos-2, pos, TT_DEF);
       }
+      // imm keyword
       else if (it.endsWith(TT_IMM) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
-        add("IMMUTABLE", TT_DEF);
-        let identifier = sc.getUntil(source,pos+1," ");
-        add("IDENTIFIER", identifier.string);
-        pos = identifier.curPos;
+        add("IMMUTABLE", pos-2, pos, TT_DEF);
       }
       else {
-        skipped.push({char:it});
+        // identifiers
+        if (lastToken().type == "FUNCTION" || lastToken().type == "DEFINE" || lastToken().type == "IMMUTABLE") {
+          let identifier = sc.getUntil(source,pos," ")
+          add("IDENTIFIER", pos, identifier.curPos, identifier.string);
+          pos = identifier.curPos;
+        }
+        // skip
+        else {
+          skipped.push(it:char);
+        }
       }
 
 

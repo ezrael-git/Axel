@@ -104,7 +104,7 @@ class Lexer {
       }
       else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {
         add("FUNCTION", TT_FN);
-        let identifier = sc.getUntil(source,pos+1," ");
+        let identifier = sc.getUntil(source,pos+1,"(");
         add("IDENTIFIER", identifier.string);
         pos = identifier.curPos;
         let args = source.slice(pos,source.length).split(',');

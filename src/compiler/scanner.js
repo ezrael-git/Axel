@@ -399,7 +399,7 @@ module.exports = class Scanner {
         if (charit != char && charit != sec) {
           it += charit
         } else {
-          return it;
+          return {string:it,curPos:curPos};
         }
       }
     }

@@ -85,12 +85,12 @@ class Lexer {
       else if (it.endsWith(TT_EQ)) {
         add("EQUALITY", TT_EQ);
       }
-      else if (it.endsWith(TT_FN) && this.back(pos) == " " && this.peek(pos) != " ") {
+      else if (it.endsWith(TT_FN) && !this.letters.includes(this.back(pos)) && this.peek(pos) != " ") {
         add("FUNCTION", TT_FN);
         let identifier = sc.getUntil(source,pos+2," ");
         add("IDENTIFIER", identifier.string);
         pos = identifier.curPos;
-        let args = source.replace(
+        let args = source.slice(pos,source.length);
       }
       
 

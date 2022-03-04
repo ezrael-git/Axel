@@ -57,8 +57,8 @@ class Lexer {
     let sc = this.scanner;
     let skipped = [];
 
-    function add (type, tk) {
-      lexed.push({type:type, pos:pos, tk:tk})
+    function add (type, starts, ends, tk) {
+      lexed.push({type:type, starts:starts, ends:ends, tk:tk.replaceAll(" ", "")})
     }
 
     let it = "";
@@ -72,9 +72,9 @@ class Lexer {
       // handle parentheses
       if (it.endsWith(TT_LPAREN) && sc.inQuotes(source,pos) == false || it.endsWith(TT_RPAREN) && sc.inQuotes(source,pos) == false) {
         if (it.endsWith(TT_LPAREN)) {
-          add("LPAREN", TT_LPAREN);
+          add("LPAREN", pos, pos, TT_LPAREN);
         } else {
-          add("RPAREN", TT_RPAREN);
+          add("RPAREN", pos, pos, TT_RPAREN);
         }
       }
       // beginning of string
@@ -83,29 +83,29 @@ class Lexer {
         changingString = it[it.length - 1]
         // get full string
         let fullString = sc.getUntil(source,pos,changingString);
-        add("STRING", fullString.string);
+        add("STRING", pos, fullString.curPos, fullString.string);
         pos = fullString.curPos;
       }
       // addition operator
       else if (it.endsWith(TT_PLUS)) {
-        add("PLUS", TT_PLUS);
+        add("PLUS", pos, pos, TT_PLUS);
       }
       else if (it.endsWith(TT_MINUS)) {
-        add("MINUS", TT_MINUS);
+        add("MINUS", pos, pos, TT_MINUS);
       }
       else if (it.endsWith(TT_MULTIPLY)) {
-        add("MULTIPLY", TT_MULTIPLY);
+        add("MULTIPLY", pos, pos, TT_MULTIPLY);
       }
       else if (it.endsWith(TT_DIVIDE)) {
-        add("DIVIDE", TT_DIVIDE);
+        add("DIVIDE", pos, pos, TT_DIVIDE);
       }
       else if (it.endsWith(TT_EQ)) {
-        add("EQUALITY", TT_EQ);
+        add("EQUALITY", pos, pos, TT_EQ);
       }
       else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {
-        add("FUNCTION", TT_FN);
-        let identifier = sc.getUntil(source,pos+1,"(");
-        add("IDENTIFIER", identifier.string);
+        add("FUNCTION", pos-1, pos, TT_FN);
+        let identifier = sc.getUntil(source,pos,"(");
+        add("IDENTIFIER", pos+1, identifier.curPos, identifier.string);
         pos = identifier.curPos;
         let args = source.slice(pos,source.length).split(',');
         console.log("ARGS " + args)

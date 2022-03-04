@@ -59,7 +59,8 @@ class Lexer {
       it += char;
 
       console.log(it)
-      console.log(this.letters.includes(this.back(pos)));
+      console.log(char)
+      console.log(!this.letters.includes(source[pos-2]));
       console.log(this.peek(pos) == " ");
 
       // handle parentheses

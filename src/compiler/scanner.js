@@ -389,15 +389,19 @@ module.exports = class Scanner {
     }
   }
 
-  getUntil (str, pos, char) {
-    let curPos = pos;
+  getUntil (str, pos, char,sec="hell") {
+    let curPos = -1;
+    pos += 1;
     let it = "";
-    for (let charit of str.split('').slice(pos, str.length)) {
+    for (let charit of str) {
       curPos += 1;
-      if (char == charit) {
-        return {curPos:curPos,char:charit,string:it}
+      if (curPos >= pos) {
+        if (charit != char && charit != sec) {
+          it += charit
+        } else {
+          return it;
+        }
       }
-      it += charit;
     }
   }
 

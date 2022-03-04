@@ -55,7 +55,7 @@ class Lexer {
 
       // handle parentheses
       if (it.endsWith(TT_LPAREN) && sc.inQuotes(source,pos) == false || it.endsWith(TT_RPAREN) && sc.inQuotes(source,pos) == false) {
-        if (tt.endsWith(TT_LPAREN)) {
+        if (it.endsWith(TT_LPAREN)) {
           add("LPAREN", TT_LPAREN);
         } else {
           add("RPAREN", TT_RPAREN);

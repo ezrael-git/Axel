@@ -85,19 +85,21 @@ class Lexer {
       else if (it.endsWith(TT_EQ)) {
         add("EQUALITY", TT_EQ);
       }
-      else if (it.endsWith(TT_FN) && !this.letters.includes(this.back(pos)) && this.peek(pos) != " ") {
+      else if (it.endsWith(TT_FN) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
         add("FUNCTION", TT_FN);
         let identifier = sc.getUntil(source,pos+2," ");
         add("IDENTIFIER", identifier.string);
         pos = identifier.curPos;
-        let args = source.slice(pos,source.length).replaceAll(" ", "").split(',');
+        let args = source.slice(pos,source.length).split(',');
         add("LPAREN", TT_LPAREN);
-        for (let arg of args) {
+        for (let arg of args.join(',').replaceAll(" ", "").split(',')) {
           add("IDENTIFIER", arg);
         }
         add("RPAREN", TT_RPAREN);
+        pos = sc.findString(source,args.join(',').end);
       }
-      
+      else if (it.endsWith(TT_DEF)) {
+      }
 
     }
 

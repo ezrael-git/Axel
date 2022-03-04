@@ -68,10 +68,6 @@ class Lexer {
       let char = source[pos];
       it += char;
 
-      console.log(it)
-      console.log(char)
-      console.log(!this.letters.includes(source[pos-2]));
-      console.log(this.peek(pos));
 
       // handle parentheses
       if (it.endsWith(TT_LPAREN) && sc.inQuotes(source,pos) == false || it.endsWith(TT_RPAREN) && sc.inQuotes(source,pos) == false) {
@@ -112,12 +108,16 @@ class Lexer {
         add("IDENTIFIER", identifier.string);
         pos = identifier.curPos;
         let args = source.slice(pos,source.length).split(',');
+        console.log("ARGS " + args)
+        console.log(pos)
+        console.log(source.length)
         add("LPAREN", TT_LPAREN);
         for (let arg of args.join(',').replaceAll(" ", "").split(',')) {
           add("IDENTIFIER", arg);
         }
         add("RPAREN", TT_RPAREN);
-        pos = sc.findString(source,args.join(',').end);
+        console.log("COMB " + args.join(','));
+        pos = sc.findString(source,args.join(',')).end;
       }
       else if (it.endsWith(TT_DEF) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
         add("DEFINE", TT_DEF);

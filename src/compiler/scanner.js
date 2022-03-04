@@ -372,7 +372,7 @@ module.exports = class Scanner {
     let curp = -1;
     let inQ = false;
     for (let char of str) {
-      it += 1;
+      curp += 1;
 
       if (char == "'" || char == '"') {
         if (inQ) {
@@ -382,7 +382,7 @@ module.exports = class Scanner {
         }
       }
 
-      if (it == pos) {
+      if (curp == pos) {
         return inQ
       }
 

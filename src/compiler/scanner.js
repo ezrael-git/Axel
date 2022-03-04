@@ -232,6 +232,21 @@ module.exports = class Scanner {
     return undefined;
   }
 
+  findString (str, combination) {
+    let curPos = -1;
+    let start = 0;
+    let end = 0;
+    let it = "";
+    for (let char of str) {
+      it += char;
+      curPos += 1;
+      if (it == combination) {
+        end = curPos;
+        start = 
+      }
+    }
+  }
+
   namespace (stats, line) {
     let cur_namespace = "main"
 

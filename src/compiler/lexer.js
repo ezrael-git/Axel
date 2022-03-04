@@ -40,6 +40,7 @@ class Lexer {
 
     let lexed = [];
     let sc = this.scanner;
+    let skipped = [];
 
     function add (type, tk) {
       lexed.push({type:type, pos:pos, tk:tk})
@@ -87,7 +88,7 @@ class Lexer {
       }
       else if (it.endsWith(TT_FN) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
         add("FUNCTION", TT_FN);
-        let identifier = sc.getUntil(source,pos+2," ");
+        let identifier = sc.getUntil(source,pos+1," ");
         add("IDENTIFIER", identifier.string);
         pos = identifier.curPos;
         let args = source.slice(pos,source.length).split(',');
@@ -98,10 +99,25 @@ class Lexer {
         add("RPAREN", TT_RPAREN);
         pos = sc.findString(source,args.join(',').end);
       }
-      else if (it.endsWith(TT_DEF)) {
+      else if (it.endsWith(TT_DEF) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
+        add("DEFINE", TT_DEF);
+        let identifier = sc.getUntil(source,pos+1," ");
+        add("IDENTIFIER", identifier.string);
+        pos = identifier.curPos;
+      }
+      else if (it.endsWith(TT_IMM) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
+        add("IMMUTABLE", TT_DEF);
+        let identifier = sc.getUntil(source,pos+1," ");
+        add("IDENTIFIER", identifier.string);
+        pos = identifier.curPos;
+      }
+      else {
+        skipped.push({char:it});
       }
 
+
     }
+    return {"lexed":lexed,"skipped":skipped}
 
   }
   

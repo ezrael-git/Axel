@@ -373,5 +373,17 @@ module.exports = class Scanner {
     }
   }
 
+  getUntil (str, pos, char) {
+    let curPos = pos;
+    let it = "";
+    for (let charit of str.split('').slice(pos, str.length)) {
+      curPos += 1;
+      if (char == charit) {
+        return {curPos:curPos,char:charit,string:it}
+      }
+      it += charit;
+    }
+  }
+
 
 }

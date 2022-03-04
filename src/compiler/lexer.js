@@ -48,17 +48,23 @@ class Lexer {
     let pos = -1;
     let inString = false;
     let changingString = "";
-    for (let char of source) {
-      it += char;
+    while (pos != source.length + 1) {
       pos += 1;
+      let char = source[pos];
+      it += char;
 
-      if (it.endsWith(TT_LPAREN) && sc.inQuotes(source,pos) == false) {
-        add("LPAREN", TT_LPAREN);
+      if (it.endsWith(TT_LPAREN) && sc.inQuotes(source,pos) == false || it.endsWith(TT_RPAREN) && sc.inQuotes(source,pos) == false) {
+        if (tt.endsWith(TT_LPAREN)) {
+          add("LPAREN", TT_LPAREN);
+        } else {
+          add("RPAREN", TT_RPAREN);
+        }
       }
       // beginning of string
       else if (it.endsWith("'") && sc.inQuotes(source,pos) == true || it.endsWith('"') && sc.inQuotes(source,pos) == true) {
         inString = true;
         changingString = it[it.length - 1]
+      
       }
 
     }

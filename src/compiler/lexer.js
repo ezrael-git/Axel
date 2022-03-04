@@ -90,7 +90,12 @@ class Lexer {
         let identifier = sc.getUntil(source,pos+2," ");
         add("IDENTIFIER", identifier.string);
         pos = identifier.curPos;
-        let args = source.slice(pos,source.length);
+        let args = source.slice(pos,source.length).replaceAll(" ", "").split(',');
+        add("LPAREN", TT_LPAREN);
+        for (let arg of args) {
+          add("IDENTIFIER", arg);
+        }
+        add("RPAREN", TT_RPAREN);
       }
       
 

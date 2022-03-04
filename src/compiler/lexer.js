@@ -21,8 +21,8 @@ class Lexer {
     this.line = 0;
     this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     this.lowercase = [];
-    for (let let of this.letters) {
-      this.lowercase.push(let.toLowerCase());
+    for (let lett of this.letters) {
+      this.lowercase.push(lett.toLowerCase());
     }
     this.letters = this.letters.concat(this.lowercase)
     this.digits = "0123456789"

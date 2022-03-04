@@ -53,6 +53,10 @@ class Lexer {
       let char = source[pos];
       it += char;
 
+      console.log(it)
+      console.log(this.letters.includes(this.back(pos)));
+      console.log(this.peek(pos) == " ");
+
       // handle parentheses
       if (it.endsWith(TT_LPAREN) && sc.inQuotes(source,pos) == false || it.endsWith(TT_RPAREN) && sc.inQuotes(source,pos) == false) {
         if (it.endsWith(TT_LPAREN)) {
@@ -86,9 +90,6 @@ class Lexer {
       else if (it.endsWith(TT_EQ)) {
         add("EQUALITY", TT_EQ);
       }
-      console.log(it)
-      console.log(this.letters.includes(this.back(pos)));
-      console.log(this.peek(pos) == " ");
       else if (it.endsWith(TT_FN) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
         add("FUNCTION", TT_FN);
         let identifier = sc.getUntil(source,pos+1," ");

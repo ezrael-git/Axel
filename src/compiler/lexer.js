@@ -20,6 +20,11 @@ class Lexer {
     this.lexed = undefined;
     this.line = 0;
     this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+    this.lowercase = [];
+    for (let let of this.letters) {
+      this.lowercase.push(let.toLowerCase());
+    }
+    this.letters = this.letters.concat(this.lowercase)
     this.digits = "0123456789"
     this.scanner = new Scanner()
 

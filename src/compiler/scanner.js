@@ -240,9 +240,10 @@ module.exports = class Scanner {
     for (let char of str) {
       it += char;
       curPos += 1;
-      if (it == combination) {
+      if (it.slice(0,it.length-combination.length) == combination) {
         end = curPos;
-        start = 
+        start = curPos - combination.length
+        return {start:start,end:end,combination:combination}
       }
     }
   }

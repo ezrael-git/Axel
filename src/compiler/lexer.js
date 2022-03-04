@@ -61,7 +61,7 @@ class Lexer {
       console.log(it)
       console.log(char)
       console.log(!this.letters.includes(source[pos-2]));
-      console.log(this.peek(pos) == " ");
+      console.log(this.peek(pos));
 
       // handle parentheses
       if (it.endsWith(TT_LPAREN) && sc.inQuotes(source,pos) == false || it.endsWith(TT_RPAREN) && sc.inQuotes(source,pos) == false) {

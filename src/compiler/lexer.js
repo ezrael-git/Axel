@@ -67,7 +67,7 @@ class Lexer {
 
     let it = "";
     let pos = -1;
-    while (pos != source.length + 1 && source[pos] != undefined) {
+    while (pos != source.length + 1) {
       pos += 1;
       let char = source[pos];
       it += char;

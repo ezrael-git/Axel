@@ -242,7 +242,7 @@ module.exports = class Scanner {
       curPos += 1;
       if (it.slice(it.length-combination.length,it.length) == combination) {
         end = curPos;
-        start = curPos - combination.length
+        start = curPos - combination.length + 1
         return {start:start,end:end,combination:combination}
       }
     }

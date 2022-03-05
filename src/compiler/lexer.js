@@ -98,6 +98,8 @@ class Lexer {
       let char = source[pos];
       it += char;
 
+      console.log(it.endsWith(TT_DEF) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ");
+
 
       // handle...
       // parentheses

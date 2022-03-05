@@ -31,7 +31,7 @@ class Lexer {
    
   }
 
-  function peek (pos, chars=1) {
+  peek (pos, chars=1) {
     return this.source.slice(pos+1,pos+chars+1)
   }
 

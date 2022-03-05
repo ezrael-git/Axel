@@ -153,11 +153,11 @@ class Lexer {
         add("FUNCTION", pos-1, pos, TT_FN);
       }
       // def keyword
-      else if (it.endsWith(TT_DEF) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
+      else if (it.endsWith(TT_DEF) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ") {
         add("DEFINE", pos-2, pos, TT_DEF);
       }
       // imm keyword
-      else if (it.endsWith(TT_IMM) && !this.letters.includes(this.back(pos)) && this.peek(pos) == " ") {
+      else if (it.endsWith(TT_IMM) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ") {
         add("IMMUTABLE", pos-2, pos, TT_DEF);
       }
       else {

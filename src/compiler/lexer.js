@@ -91,6 +91,16 @@ class Lexer {
       return lexed[lexed.length - 1]
     }
 
+    function wait(ms, cb=false) {
+      var waitDateOne = new Date();
+      while ((new Date()) - waitDateOne <= ms) {
+        //Nothing
+      }
+      if (cb) {
+        eval(cb);
+      }
+    }
+
     let it = "";
     let pos = -1;
     while (pos != source.length + 1) {
@@ -99,6 +109,7 @@ class Lexer {
       it += char;
 
       console.log(it.endsWith(TT_DEF) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ");
+      wait(5000);
 
 
       // handle...

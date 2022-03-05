@@ -26,7 +26,7 @@ class Lexer {
       this.lowercase.push(lett.toLowerCase());
     }
     this.letters = this.letters.concat(this.lowercase)
-    this.digits = "0123456789"
+    this.digits = "0123456789".split('');
     this.scanner = new Scanner()
 
    
@@ -140,6 +140,13 @@ class Lexer {
       // dot operator
       else if (it.endsWith(TT_DOT)) {
         add("DOT", pos, pos, TT_DOT);
+      }
+      // integers
+      else if (this.digits.includes(it[it.length - 1])) {
+        // get full integer
+        let full_integer = sc.getUntil(source,pos,"digits");
+        add("INTEGER", pos, full_integer.curPos, full_integer.string);
+        pos = fullString.curPos;
       }
       // fn keyword
       else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {

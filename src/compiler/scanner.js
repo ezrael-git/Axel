@@ -7,6 +7,13 @@ module.exports = class Scanner {
     this.variables = [];
     this.imports = [];
     this.functions = [];
+
+    this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+    this.lowercase = [];
+    for (let lett of this.letters) {
+      this.lowercase.push(lett.toLowerCase());
+    }
+    this.letters = this.letters.concat(this.lowercase)
   }
 
   removeStrAt (st, pos, new_char) {

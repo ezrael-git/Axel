@@ -1,6 +1,6 @@
 # Axel
 The Axel programming language. Compiles to JavaScript.
-Designed to be simple and flexible.
+Designed to be simple, flexible, and elegant, while being as fast as JavaScript.
 
 
 
@@ -22,26 +22,21 @@ Designed to be simple and flexible.
 ## Why?
 
 I was bored.
-Also I wanted a language mixing Ruby, JavaScript and Python's syntax.
+Also I wanted a language containing Ruby's syntax, Python's flexibility and JavaScript's speed.
 
-Axel is one of those languages that'll, well, just work. If you miss a closing brace, Axel won't throw much of a fit (most of the times). To put this into perspective, this is valid Axel code:
+Oh, and did I tell you that you can use JavaScript code in an Axel file? The `Ax2JS` standard library provides this functionality. For example:
 ```js
-log("hello world"
-```
+import standard.ax2js as Ax2JS
+fn say (sentence)
+  Ax2JS.from_js(`console.log(sentence)`)
+end
 
-Oh, and did I tell you that you can use JS along with Axel, in the same line?
-Axel takes what it needs and leaves the rest for the JavaScript compiler. If you use JS syntax, Axel won't throw an error. It'll just work.
-This is valid Axel code:
-```js
-log "axel"
-console.log("is")
-function weird () &
-  log "weird"
-}
-weird()
+say("Hello World!")
 ```
-Although, it's recommended to always use `fn` for declaring functions. This is because if you don't, it'll be practically invisible for the Axel compiler, and hence you may not be able to use no-parentheses syntax when calling the function, along with some other problems.
-
+The output:
+```
+>>> Hello World!
+```
 Let's get to the installation and the syntax.
 
 
@@ -51,7 +46,7 @@ Let's get to the installation and the syntax.
 2) clone the repo
 3) make a file named `main.js` and put this inside:
 ```js
-new require("./axel/axel.js").program(`
+new require("./axel/axel.js").compile(`
 
 your Axel code
 
@@ -62,7 +57,7 @@ your Axel code
 
 # Comments
 
-Comments are made using `//`. Multiline comments are made using `/* comment */`
+Comments are made using `--`. Multiline comments are made using `-( comment )-`
 
 
 # Data Types
@@ -83,7 +78,7 @@ Lists are a collection of objects, or items. You can define them using `[]` synt
 def fruits = ["peach", "orange"];
 ```
 
-Hashes, or dictionaries, can be made using curly braces (`{}`).
+Hashes, the equivalent of dictionaries in Python, can be made using curly braces (`{}`).
 ```js
 def headers = {"Authentication" : "Bearer"};
 ```
@@ -105,21 +100,22 @@ Tiny note: the parentheses after the function name isn't necessary, but it's rec
 Classes are made using the `cls` keyword.
 ```
 cls Person
-  constructor (name) &
-    @name = name;
-  #
+  initialize (name)
+    @name = name
+  end
 
-  fuck () &
-    log(@name + " has been fucked!");
-  #
-#
+  say (sentence)
+    log("#{@name} says '#{sentence}'")
+  end
+end
 ```
+We can insert an expression into a string using `#{expression}`, as shown above.
 
-The class can then be instantiated using the `new` keyword.
+The class can then be instantiated using the `new` static property, in this case:
 ```js
-arnold = new Person("Arnold")
-arnold.fuck()
-// >>> Arnold has been fucked!
+arnold = Person.new("Arnold")
+arnold.say("Hello, I'm Arnold!")
+-- >>> Arnold says 'Hello, I'm Arnold!'
 ```
 
 # Grammar

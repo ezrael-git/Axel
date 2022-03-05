@@ -429,6 +429,9 @@ module.exports = class Scanner {
         }
       }
     }
+    // another return statement because if the integers are at the last line then it doesn't return anything
+    // e.g. "def lol = 72"
+    return {integers:it,curPos:curPos};
   }
 
   getLetters (str, pos) {

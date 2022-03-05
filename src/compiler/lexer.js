@@ -53,7 +53,7 @@ class Lexer {
   }
 
   process (stats) {
-    */
+    /*
     Handy wrapper around Lexer.lex. Instead of passing one line at a time to the Lexer.lex method, this method allows you to pass multiple lines and then returns their tokens in an Object.
     Object format: { line : tokens }
 

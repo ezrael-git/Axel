@@ -31,18 +31,8 @@ class Lexer {
    
   }
 
-  peek (pos, chars=1) {
-    let it = "";
-    let curPos = -1;
-    for (let c of this.source) {
-      curPos += 1;
-      if (curPos > pos) {
-        it += c;
-        if (it.length == chars) {
-          return it;
-        }
-      }
-    }
+  function peek (pos, chars=1) {
+    return this.source.slice(pos+1,pos+chars+1)
   }
 
   back (pos, chars=1) {

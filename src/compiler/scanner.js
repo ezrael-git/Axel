@@ -415,7 +415,6 @@ module.exports = class Scanner {
 
   getIntegers (str, pos) {
     let curPos = -1;
-    pos += 1;
     let it = "";
     for (let charit of str) {
       curPos += 1;

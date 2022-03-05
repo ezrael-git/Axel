@@ -109,11 +109,9 @@ class Lexer {
       let char = source[pos];
       it += char;
 
-      console.log("endswith: " + it.endsWith(TT_DEF));
-      console.log("!includes: " + !this.letters.includes(source[pos-3]))
-      console.log("peek: " + this.peek(pos) == " ")
       console.log("pos: " + pos)
       console.log("char: " + char)
+      console.log("this digits " + this.digits.includes(it[it.length - 1]));
       wait(5000);
 
 
@@ -161,6 +159,7 @@ class Lexer {
       }
       // integers
       else if (this.digits.includes(it[it.length - 1])) {
+        console.log("digit: yes");
         // get full integer
         let full_integer = sc.getIntegers(source,pos);
         add("INTEGER", pos, full_integer.curPos, full_integer.integers);

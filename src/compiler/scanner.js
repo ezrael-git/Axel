@@ -14,6 +14,7 @@ module.exports = class Scanner {
       this.lowercase.push(lett.toLowerCase());
     }
     this.letters = this.letters.concat(this.lowercase)
+    this.digits = "0123456789".split('');
   }
 
   removeStrAt (st, pos, new_char) {
@@ -408,6 +409,36 @@ module.exports = class Scanner {
         } else {
           return {string:it,curPos:curPos};
         }
+      }
+    }
+  }
+
+  getIntegers (str, pos) {
+    let curPos = -1;
+    pos += 1;
+    let it = "";
+    for (let charit of str) {
+      curPos += 1;
+      if (this.digits.includes(charit) && curPos >= pos) {
+        it += charit;
+      }
+      else {
+        return {integers:it,curPos:curPos};
+      }
+    }
+  }
+
+  getLetters (str, pos) {
+    let curPos = -1;
+    pos += 1;
+    let it = "";
+    for (let charit of str) {
+      curPos += 1;
+      if (this.letters.includes(charit) && curPos >= pos) {
+        it += charit;
+      }
+      else {
+        return {letters:it,curPos:curPos};
       }
     }
   }

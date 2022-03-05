@@ -144,9 +144,9 @@ class Lexer {
       // integers
       else if (this.digits.includes(it[it.length - 1])) {
         // get full integer
-        let full_integer = sc.getUntil(source,pos,"digits");
-        add("INTEGER", pos, full_integer.curPos, full_integer.string);
-        pos = fullString.curPos;
+        let full_integer = sc.getIntegers(source,pos);
+        add("INTEGER", pos, full_integer.curPos, full_integer.integers);
+        pos = full_integer.curPos;
       }
       // fn keyword
       else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {

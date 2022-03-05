@@ -129,7 +129,7 @@ class Lexer {
       // beginning of string
       else if (it.endsWith("'") && sc.inQuotes(source,pos) == true || it.endsWith('"') && sc.inQuotes(source,pos) == true) {
         // get the exact quote used
-        changingString = it[it.length - 1]
+        let changingString = it[it.length - 1]
         // get full string
         let fullString = sc.getUntil(source,pos,changingString);
         add("STRING", pos, fullString.curPos, fullString.string);

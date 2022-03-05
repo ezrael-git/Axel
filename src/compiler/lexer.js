@@ -72,10 +72,10 @@ class Lexer {
 
   lex (source) {
     /*
-    Lexes a line of code, returning the tokens in an array.
+    Lexes a line of code, returning the tokens and skipped characters in an Object.
     
     Returns:
-      Array
+      Object
     */
     this.source = source;
 

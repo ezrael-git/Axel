@@ -137,10 +137,10 @@ class Lexer {
         console.log(pos);
         if (sc.inArgList(source,pos).flag == true) {
           let inArg = sc.inArgList(source,pos);
-          let args = source.slice(inArg.starting,inArg.ending).replaceAll(" ","").split(',');
+          let args = source.slice(inArg.starting + 1,inArg.ending).replaceAll(" ","").split(',');
           for (let arg of args) {
             let argDetails = sc.findString(source,arg);
-            add("IDENTIFIER", argDetails.starting, argDetails.ending, arg);
+            add("IDENTIFIER", argDetails.start, argDetails.end, arg);
           }
           pos = inArg.ending;
         }

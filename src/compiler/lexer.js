@@ -130,10 +130,21 @@ class Lexer {
             let identifier = sc.getUntil(source,pos," ")
             add("IDENTIFIER", pos, identifier.curPos, identifier.string);
             pos = identifier.curPos;
+            continue;
           }
           else {
             skipped.push({it:char});
+            continue;
           }
+        }
+        if (sc.inArgList(source,pos).flag == true) {
+          let inArg = sc.inArgList(source,pos);
+          let args = source.slice(inArg.starting,inArg.ending).replaceAll(" ","").split(',');
+          for (let arg of args) {
+            let argDetails = sc.findString(source,arg);
+            add("IDENTIFIER", argDetails.starting, argDetails.ending, arg);
+          }
+          pos = inArg.ending;
         }
         // skip
         else {

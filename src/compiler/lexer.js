@@ -108,7 +108,11 @@ class Lexer {
       let char = source[pos];
       it += char;
 
-      console.log(it.endsWith(TT_DEF) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ");
+      console.log(it.endsWith(TT_DEF));
+      console.log(!this.letters.includes(source[pos-3]))
+      console.log(this.peek(pos) == " ")
+      console.log(pos)
+      console.log(char)
       wait(5000);
 
 

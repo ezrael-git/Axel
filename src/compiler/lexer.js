@@ -132,10 +132,6 @@ class Lexer {
             pos = identifier.curPos;
             continue;
           }
-          else {
-            skipped.push({it:char});
-            continue;
-          }
         }
         console.log(sc.inArgList(source,pos));
         console.log(pos);

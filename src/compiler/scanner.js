@@ -406,35 +406,36 @@ module.exports = class Scanner {
   }
 
   inArgList (str, pos) {
-    let path = "main:"
-    let it = ""
-    let curp = -1;
-    let flag = false;
+    let it = "";
     let starting = 0;
     let ending = 0;
+    let curp = -1;
+    let func = false;
+    let func_cords = 0;
+    let flag = false;
     for (let c of str) {
-      it += c;
       curp += 1;
-      if (it.endsWith("fn ")) {
-        for (let c of str.slice(curp,str.length)) {
-          curp += 1;
-          if (c == "(") {
-            starting = curp;
-            for (let c of str.slice(curp,str.length)) {
-              curp += 1;
-              if (c == ")") {
-                ending = curp;
-                if (pos > starting && pos < ending) {
-                  flag = true;
-                  return flag;
-                }
-              }
-            }
-          }
+      it += c;
+      if (it.endsWith("fn") && !this.letters.includes(str[curp-2]) && func == false) {
+        func = true;
+        func_cords = curp - 1;
+      }
+      if (func == true && c == "(" && starting == 0) {
+        starting = curp;
+      }
+      if (func == true && c == ")" && ending == 0) {
+        ending = curp;
+      }
+      if (func == true && starting != 0 && ending != 0) {
+        if (pos > starting && pos < ending) {
+          return true;
+        }
+        else {
+          return false;
         }
       }
     }
-    return flag;
+    return false;
   }
 
 

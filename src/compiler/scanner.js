@@ -405,5 +405,37 @@ module.exports = class Scanner {
     }
   }
 
+  inArgList (str, pos) {
+    let path = "main:"
+    let it = ""
+    let curp = -1;
+    let flag = false;
+    let starting = 0;
+    let ending = 0;
+    for (let c of str) {
+      it += c;
+      curp += 1;
+      if (it.endsWith("fn ")) {
+        for (let c of str.slice(curp,str.length)) {
+          curp += 1;
+          if (c == "(") {
+            starting = curp;
+            for (let c of str.slice(curp,str.length)) {
+              curp += 1;
+              if (c == ")") {
+                ending = curp;
+                if (pos > starting && pos < ending) {
+                  flag = true;
+                  return flag;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return flag;
+  }
+
 
 }

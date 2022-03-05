@@ -33,15 +33,50 @@ class Lexer {
   }
 
   peek (pos, chars=1) {
+    /*
+    Get the next x characters in a line, x being the chars variable.
+
+    Returns:
+      String
+    */
     return this.source.slice(pos+1,pos+chars+1)
   }
 
   back (pos, chars=1) {
+    /*
+    Get the previous x characters in a line, x being the chars variable.
+
+    Returns:
+      String
+    */
     return this.source[pos - chars];
+  }
+
+  process (stats) {
+    */
+    Handy wrapper around Lexer.lex. Instead of passing one line at a time to the Lexer.lex method, this method allows you to pass multiple lines and then returns their tokens in an Object.
+    Object format: { line : tokens }
+
+    Returns:
+      Object
+    */
+    let collection = {};
+    let line = 0;
+    for (let stat of stats) {
+      line += 1;
+      collection[line] = this.lex(stat);
+    }
+    return collection;
   }
 
 
   lex (source) {
+    /*
+    Lexes a line of code, returning the tokens in an array.
+    
+    Returns:
+      Array
+    */
     this.source = source;
 
     let lexed = [];

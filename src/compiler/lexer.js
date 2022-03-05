@@ -170,8 +170,6 @@ class Lexer {
             continue;
           }
         }
-        console.log(sc.inArgList(source,pos));
-        console.log(pos);
         if (sc.inArgList(source,pos).flag == true) {
           let inArg = sc.inArgList(source,pos);
           let args = source.slice(inArg.starting + 1,inArg.ending).replaceAll(" ","").split(',');

@@ -418,7 +418,10 @@ module.exports = class Scanner {
     pos += 1;
     let it = "";
     for (let charit of str) {
+      console.log("charit; " + charit);
+      console.log("it: " + it);
       curPos += 1;
+      console.log("curpos: " + curPos);
       if (this.digits.includes(charit) && curPos >= pos) {
         it += charit;
       }

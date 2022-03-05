@@ -7,6 +7,7 @@ let TT_PLUS = "+"
 let TT_MINUS = "-"
 let TT_MULTIPLY = "*"
 let TT_DIVIDE = "/"
+let TT_DOT = "."
 
 let TT_FN = "fn"
 let TT_DEF = "def"
@@ -100,6 +101,10 @@ class Lexer {
       // equality / assignment operator
       else if (it.endsWith(TT_EQ)) {
         add("EQUALITY", pos, pos, TT_EQ);
+      }
+      // dot operator
+      else if (it.endsWith(TT_DOT)) {
+        add("DOT", pos, pos, TT_DOT);
       }
       // fn keyword
       else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {

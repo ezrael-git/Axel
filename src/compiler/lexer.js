@@ -142,7 +142,7 @@ class Lexer {
             let argDetails = sc.findString(source,arg);
             add("IDENTIFIER", argDetails.start, argDetails.end, arg);
           }
-          pos = inArg.ending;
+          pos = inArg.ending - 1;
         }
         // skip
         else {

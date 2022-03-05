@@ -435,14 +435,14 @@ module.exports = class Scanner {
       }
       if (func == true && starting != 0 && ending != 0) {
         if (pos > starting && pos < ending) {
-          return true;
+          return {"flag":true,"starting":starting,"ending":ending,"fn_cords":func_cords};
         }
         else {
-          return false;
+          return {"flag":false,"starting":starting,"ending":ending,"fn_cords":func_cords};
         }
       }
     }
-    return false;
+    return {"flag":false,"starting":starting,"ending":ending,"fn_cords":func_cords};
   }
 
 

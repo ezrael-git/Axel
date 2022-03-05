@@ -123,6 +123,6 @@ Detailed information about keywords and syntax is available in the `grammar.md` 
 
 # Support
 
-Have a question? Stop by at Axel-lang's Discord server (warning: it's pretty dead) 
+Have a question? Ask our community!
 
 - [Discord](https://discord.gg/xPhcZwGpSC)

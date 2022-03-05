@@ -8,7 +8,7 @@ import ../compiler/emitter.js as Emitter
 import fs as fs
 
 class StdbLib
-  meth constructor
+  fn constructor ()
     @scanner = new Scanner()
     @preprocessor = new Preprocessor(false)
     @lexer = new Lexer()
@@ -16,7 +16,7 @@ class StdbLib
     @emitter = new Emitter()
   end
 
-  meth load (filename)
+  fn load (filename)
     def data = fs.readFileSync(filename.replace(".ax", "") + ".ax", "utf8")
     def statements = data.trim().split('\n')
     statements = @scanner.scan_exports(statements)
@@ -34,13 +34,45 @@ class StdbLib
 end
 
 class Struct
-  meth constructor (code)
+  fn constructor (code)
     @code = code
   end
 
-  meth run ()
+  fn run ()
     return eval(@code)
   end
 end
 
+class Text
+  fn constructor (value)
+    @value = value
+  end
+
+  fn toString ()
+    return @value
+  end
+end
+
+class Integer
+  fn constructor (value)
+    @value = value
+  end
+
+  fn toString ()
+    return @value
+  end
+end
+
+class Boolean
+  fn constructor (value)
+    @value = value
+  end
+
+  fn toString ()
+    return @value
+  end
+end
+
 def stdblib = new StdbLib()
+def true = new Boolean("true")
+def false = new Boolean("false")

@@ -426,13 +426,13 @@ module.exports = class Scanner {
           it += charit;
         }
         else {
-          return {integers:it,curPos:curPos};
+          return {integers:it,start:pos,end:curPos-1};
         }
       }
     }
     // another return statement because if the integers are at the last line then it doesn't return anything
     // e.g. "def lol = 72"
-    return {integers:it,curPos:curPos};
+    return {integers:it,start:pos,end:curPos-1};
   }
 
   getLetters (str, pos) {
@@ -446,11 +446,11 @@ module.exports = class Scanner {
           it += charit;
         }
         else {
-          return {letters:it,curPos:curPos};
+          return {letters:it,start:pos,end:curPos-1};
         }
       }
     }
-    return {letters:it,curPos:curPos};
+    return {letters:it,start:pos,end:curPos-1};
   }
 
   inArgList (str, pos) {

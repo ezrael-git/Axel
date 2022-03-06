@@ -196,6 +196,11 @@ class Lexer {
           }
           pos = inArg.ending - 1;
         }
+        else if (this.letters.includes(char)) {
+          let full_word = sc.getLetters(source,pos);
+          add("IDENTIFIER", pos, full_word.curPos, full_word.letters);
+          pos = full_word.curPos;
+        }
         // skip
         else {
           skipped.push({it:char});

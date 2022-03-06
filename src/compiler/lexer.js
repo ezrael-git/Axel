@@ -162,8 +162,8 @@ class Lexer {
         console.log("digit: yes");
         // get full integer
         let full_integer = sc.getIntegers(source,pos);
-        add("INTEGER", pos, full_integer.curPos, full_integer.integers);
-        pos = full_integer.curPos;
+        add("INTEGER", pos, full_integer.curPos-1, full_integer.integers);
+        pos = full_integer.curPos-1;
       }
       // fn keyword
       else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {

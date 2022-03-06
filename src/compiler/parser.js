@@ -106,6 +106,17 @@ module.exports = class Parser {
         let node = new Node.VarAssignNode(name_token.tk,false,value_token.type,value_node,token.line,token.start,value_token.end);
         node_tree.push(node);
       }
+      else if (type == "FUNCTION") {
+        let identifier_token = this.next();
+        if (this.next().type != "LPAREN") {
+          throw new Error(`Expected TokenType to be LPAREN, got ${this.current().type} instead`);
+        }
+        let args = [];
+        while (this.next().type == "IDENTIFIER") {
+          let arg_token = this.current();
+          
+        }
+      }
     }
   }
 

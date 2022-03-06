@@ -85,6 +85,7 @@ class Lexer {
     let skipped = [];
 
     function add (type, starts, ends, tk) {
+      console.log("added " + tk);
       lexed.push({type:type, starts:starts, ends:ends, tk:tk.replaceAll(" ", "")})
     }
 
@@ -108,6 +109,10 @@ class Lexer {
       pos += 1;
       let char = source[pos];
       it += char;
+
+      wait(3000);
+      console.log(char)
+      console.log(pos)
 
 
 

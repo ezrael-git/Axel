@@ -39,6 +39,18 @@ class FuncAssignNode {
   }
 }
 
+class ArgNode {
+  constructor (name, line, start, end) {
+    this.type = "FunctionArgument";
+    this.body = {
+      name:name,
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+}
+
 class CallNode {
   constructor (node_to_call, args, line, start, end) {
     this.type = "CallExpression";

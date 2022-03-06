@@ -432,7 +432,7 @@ module.exports = class Scanner {
     }
     // another return statement because if the integers are at the last line then it doesn't return anything
     // e.g. "def lol = 72"
-    return {integers:it,start:pos,end:curPos-1};
+    return {integers:it,start:pos,end:curPos};
   }
 
   getLetters (str, pos) {
@@ -450,7 +450,7 @@ module.exports = class Scanner {
         }
       }
     }
-    return {letters:it,start:pos,end:curPos-1};
+    return {letters:it,start:pos,end:curPos};
   }
 
   inArgList (str, pos) {

@@ -411,6 +411,7 @@ module.exports = class Scanner {
         }
       }
     }
+    return {string:it,curPos:curPos};
   }
 
   getIntegers (str, pos) {
@@ -440,13 +441,16 @@ module.exports = class Scanner {
     let it = "";
     for (let charit of str) {
       curPos += 1;
-      if (this.letters.includes(charit) && curPos >= pos) {
-        it += charit;
-      }
-      else {
-        return {letters:it,curPos:curPos};
+      if (curPos >= pos) {
+        if (this.letters.includes(charit)) {
+          it += charit;
+        }
+        else {
+          return {letters:it,curPos:curPos};
+        }
       }
     }
+    return {letters:it,curPos:curPos};
   }
 
   inArgList (str, pos) {

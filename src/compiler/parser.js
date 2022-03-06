@@ -48,6 +48,7 @@ module.exports = class Parser {
     }
   }
 
+
   
   
   parse (tks) {
@@ -114,10 +115,19 @@ module.exports = class Parser {
         let args = [];
         while (this.next().type == "IDENTIFIER") {
           let arg_token = this.current();
-          
+          let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
+          args.push(arg_node);
         }
+        if (this.next().type != "RPAREN") {
+          throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
+        }
+        let body = this.parse() // unfinished
+        let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
+        node_tree.push(node);
       }
     }
+
+    return node_tree;
   }
 
 

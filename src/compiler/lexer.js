@@ -111,8 +111,8 @@ class Lexer {
       it += char;
 
       wait(3000);
-      console.log(char)
-      console.log(pos)
+      console.log("char " + char)
+      console.log("pos " + pos)
 
 
 

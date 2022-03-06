@@ -8,11 +8,12 @@ let TT_MINUS = "-"
 let TT_MULTIPLY = "*"
 let TT_DIVIDE = "/"
 let TT_DOT = "."
-TT_COMMA = ","
+let TT_COMMA = ","
 
 let TT_FN = "fn"
 let TT_DEF = "def"
 let TT_IMM = "imm"
+let TT_END = "end"
 
 
 
@@ -180,6 +181,10 @@ class Lexer {
       // imm keyword
       else if (it.endsWith(TT_IMM) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ") {
         add("IMMUTABLE", pos-2, pos, TT_DEF);
+      }
+      // end keyword
+      else if (it.endsWith(TT_END) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
+        add("END", pos-2, pos, TT_END);
       }
       else {
         // identifiers

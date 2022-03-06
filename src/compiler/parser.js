@@ -195,6 +195,22 @@ module.exports = class Parser {
     }
     return ast;
   }
+
+  wrap (ast) {
+    /*
+    Wrap the AST from Parser.parse nicely
+    */
+    let new_ast = {};
+    new_ast["Program"] = ast;
+    let tokens = 0;
+    for (let line_number in this.lineTokens) {
+      tokens += this.lineTokens[line_number].length;
+    }
+    let name = "main.ax";
+    new_ast["tokens"] = tokens;
+    new_ast["name"] = name;
+    return new_ast;
+  }
     
 
 

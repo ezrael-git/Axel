@@ -94,14 +94,14 @@ class BinaryOperatorNode {
   }
 
   run () {
-    if (this.op == "+") {
-      return this.lhs + this.rhs;
-    } else if (this.op == "-") {
-      return this.lhs - this.rhs;
-    } else if (this.op == "/") {
-      return this.lhs / this.rhs
-    } else if (this.op == "*") {
-      return this.lhs * this.rhs
+    if (this.body.op == "+") {
+      return this.body.lhs + this.body.rhs;
+    } else if (this.body.op == "-") {
+      return this.body.lhs - this.body.rhs;
+    } else if (this.body.op == "/") {
+      return this.body.lhs / this.body.rhs
+    } else if (this.body.op == "*") {
+      return this.body.lhs * this.body.rhs
     }
   }
 }

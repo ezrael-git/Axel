@@ -197,7 +197,7 @@ class Lexer {
           pos = inArg.ending - 1;
         }
         else if (this.letters.includes(char)) {
-          let full_word = sc.getLetters(source,pos);
+          let full_word = sc.getLetters(source,pos-1);
           add("IDENTIFIER", pos, full_word.curPos, full_word.letters);
           pos = full_word.curPos;
         }

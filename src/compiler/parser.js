@@ -107,10 +107,12 @@ module.exports = class Parser {
   
   parse (lineTokens) {
     /*
-    Parse code and return node
-    lineTks must be an Object containing { line : tokens }
+    Parse code and return the AST.Program
+    Arguments:
+      lineTks must be an Object containing { line : tokens }
     */
     this.lineTokens = lineTokens;
+    let ast = [];
     while (this.nextLine(false) != undefined) {
       let tokens = this.nextLine();
       this.tokens = tokens;
@@ -189,8 +191,9 @@ module.exports = class Parser {
         }
       }
   
-      return node_tree;
+      ast.push(node_tree);
     }
+    return ast;
   }
     
 

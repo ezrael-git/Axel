@@ -41,7 +41,10 @@ module.exports = class Parser {
 
   handleType (token) {
     if (token.type == "STRING") {
-      return 
+      return new Node.TextNode(token.value,token.line,token.start,token.end);
+    }
+    else if (token.type == "INTEGER") {
+      return new Node.IntegerNode(token.value,token.line,token.start,token.end);
     }
   }
 
@@ -84,11 +87,24 @@ module.exports = class Parser {
         node_tree.push(node);
       }
       else if (type == "DEFINE") {
+        let name_token = this.next();
         if (this.next().type != "EQUALITY") {
           throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
         }
         let value_token = this.next();
-        
+        let value_node = this.handleType(value_token);
+        let node = new Node.VarAssignNode(name_token.tk,true,value_token.type,value_node,token.line,token.start,value_token.end);
+        node_tree.push(node);
+      }
+      else if (type == "IMMUTABLE") {
+        let name_token = this.next();
+        if (this.next().type != "EQUALITY") {
+          throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
+        }
+        let value_token = this.next();
+        let value_node = this.handleType(value_token);
+        let node = new Node.VarAssignNode(name_token.tk,false,value_token.type,value_node,token.line,token.start,value_token.end);
+        node_tree.push(node);
       }
     }
   }

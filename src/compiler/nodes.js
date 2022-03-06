@@ -83,4 +83,27 @@ class IntegerNode {
   }
 }
 
+class BinaryOperatorNode {
+  constructor (lhs, rhs, op) {
+    this.type = "BinaryExpression";
+    this.body = {
+      lhs:lhs,
+      rhs:rhs,
+      op:op
+    }
+  }
+
+  run () {
+    if (this.op == "+") {
+      return this.lhs + this.rhs;
+    } else if (this.op == "-") {
+      return this.lhs - this.rhs;
+    } else if (this.op == "/") {
+      return this.lhs / this.rhs
+    } else if (this.op == "*") {
+      return this.lhs * this.rhs
+    }
+  }
+}
+
 

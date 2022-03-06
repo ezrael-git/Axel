@@ -3,10 +3,11 @@
 
 
 class VarAssignNode {
-  constructor (name, value_type, value, line, start, end) {
+  constructor (name, mutability, value_type, value, line, start, end) {
     this.type = "DeclarationExpression";
     this.body = {
       name:name,
+      mutability:mutability,
       line:line,
       start:start,
       end:end,

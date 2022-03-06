@@ -8,6 +8,7 @@ let TT_MINUS = "-"
 let TT_MULTIPLY = "*"
 let TT_DIVIDE = "/"
 let TT_DOT = "."
+TT_COMMA = ","
 
 let TT_FN = "fn"
 let TT_DEF = "def"
@@ -151,6 +152,10 @@ class Lexer {
       // dot operator
       else if (it.endsWith(TT_DOT)) {
         add("DOT", pos, pos, TT_DOT);
+      }
+      // comma operator
+      else if (it.endsWith(TT_COMMA)) {
+        add("COMMA", pos, pos, TT_COMMA);
       }
       // integers
       else if (this.digits.includes(it[it.length - 1])) {

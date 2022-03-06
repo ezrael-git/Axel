@@ -161,8 +161,8 @@ class Lexer {
       else if (this.digits.includes(it[it.length - 1])) {
         // get full integer
         let full_integer = sc.getIntegers(source,pos);
-        add("INTEGER", pos, full_integer.curPos, full_integer.integers);
-        pos = full_integer.curPos;
+        add("INTEGER", pos, full_integer.end, full_integer.integers);
+        pos = full_integer.end;
       }
       // fn keyword
       else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {
@@ -197,8 +197,8 @@ class Lexer {
         }
         else if (this.letters.includes(char)) {
           let full_word = sc.getLetters(source,pos-1);
-          add("IDENTIFIER", pos, full_word.curPos-1, full_word.letters);
-          pos = full_word.curPos-1;
+          add("IDENTIFIER", pos, full_word.end, full_word.letters);
+          pos = full_word.end;
         }
         // skip
         else {

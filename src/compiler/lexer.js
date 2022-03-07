@@ -111,9 +111,7 @@ class Lexer {
       let char = source[pos];
       it += char;
 
-      wait(5000);
-      console.log("char " + char)
-      console.log("pos " + pos)
+
 
 
 

@@ -3,6 +3,9 @@
 
 
 class VarAssignNode {
+  /*
+  Node for when a variable is declared, or assigned to.
+  */
   constructor (name, mutable, value_type, value, line, start, end) {
     this.type = "DeclarationExpression";
     this.body = {
@@ -17,12 +20,18 @@ class VarAssignNode {
   }
   
   run (variables) {
+    /* 
+    Takes in an Object containing the variables for the program and returns an edited version of it containing the information of the variable.
+    */
     variables[this.body.name] = this.body.line;
     return variables;
   }
 }
 
 class VarAccessNode {
+  /*
+  For when a variable is accessed.
+  */
   constructor (name, line, start, end) {
     this.type = "AccessExpression"
     this.body = {
@@ -39,6 +48,9 @@ class VarAccessNode {
 }
 
 class FuncAssignNode {
+  /*
+  For when a function is declared.
+  */
   constructor (name, line, start, end, args, body) {
     this.type = "DeclarationExpression";
     this.body = {};
@@ -57,6 +69,10 @@ class FuncAssignNode {
 }
 
 class ArgNode {
+  /*
+  Node containing an individual argument in a function's parameters.
+  Note that this node mustn't be used for function calls.
+  */
   constructor (name, line, start, end) {
     this.type = "FunctionArgument";
     this.body = {
@@ -73,6 +89,9 @@ class ArgNode {
 }
 
 class CallNode {
+  /*
+  For when a function is called.
+  */
   constructor (node_to_call, args, line, start, end) {
     this.type = "CallExpression";
     this.body = {
@@ -93,6 +112,9 @@ class CallNode {
 }
 
 class TextNode {
+  /*
+  For when a String object is detected.
+  */
   constructor (value, line, start, end) {
     this.type = "TextExpression";
     this.body = {
@@ -109,6 +131,9 @@ class TextNode {
 }
 
 class IntegerNode {
+  /*
+  For when an Integer object is detected.
+  */
   constructor (value, line, start, end) {
     this.type = "IntegerExpression";
     this.body = {
@@ -125,6 +150,9 @@ class IntegerNode {
 }
 
 class BinaryOperatorNode {
+  /*
+  For arithmetic operations done on numbers.
+  */
   constructor (lhs, rhs, op) {
     this.type = "BinaryExpression";
     this.body = {

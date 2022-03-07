@@ -47,8 +47,6 @@ module.exports = class Parser {
     /*
     Get next token without incrementing token_iterated
     */
-    console.log(typeof this.tokens);
-    console.log(this.tokens);
     return this.tokens.slice(this.token_iterated,this.token_iterated + tokens);
   }
 
@@ -136,7 +134,7 @@ module.exports = class Parser {
       let node_tree = [];
       while (this.peek() != undefined) {
         let token = this.next();
-        console.log("TOKENS " + JSON.stringify(this.tokens));
+        console.log("TOKEN " + JSON.stringify(token));
         let type = token.type;
         if (type == "PLUS") {
           let lhs = this.lookBack();

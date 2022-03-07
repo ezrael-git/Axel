@@ -43,11 +43,11 @@ module.exports = class Parser {
     return this.tokens[this.token_iterated];
   }
 
-  peek (tokens=1) {
+  peek (tokens=1) { // fix
     /*
     Get next token without incrementing token_iterated
     */
-    return this.tokens.slice(this.token_iterated,this.token_iterated + tokens);
+    return this.tokens[this.token_iterated+1];
   }
 
   lookBack (tokens=1) {

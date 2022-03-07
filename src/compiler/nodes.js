@@ -19,6 +19,7 @@ class VarAssignNode {
   run (variables) {
     variables[this.body.name] = this.body.line;
     return variables;
+  }
 }
 
 class VarAccessNode {

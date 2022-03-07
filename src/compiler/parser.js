@@ -136,6 +136,7 @@ module.exports = class Parser {
       let node_tree = [];
       while (this.peek() != undefined) {
         let token = this.next();
+        console.log("TOKENS " + this.tokens);
         let type = token.type;
         if (type == "PLUS") {
           let lhs = this.lookBack();

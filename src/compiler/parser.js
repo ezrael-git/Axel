@@ -65,7 +65,7 @@ module.exports = class Parser {
       return this.lineTokens[this.line]
     }
     else {
-      return this.lineTokens[this.line+1]
+      return this.lineTokens[this.line + 1]
     }
   }
   

@@ -66,7 +66,7 @@ class Lexer {
     let line = 0;
     for (let stat of stats) {
       line += 1;
-      collection[line] = this.lex(stat);
+      collection[line] = this.lex(stat).lexed;
     }
     return collection;
   }

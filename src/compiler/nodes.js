@@ -175,5 +175,13 @@ class BinaryOperatorNode {
   }
 }
 
-// last change (7-3-22, 15:51)
-// added run method to all node classes
+module.exports = {
+  VarAssignNode:VarAssignNode,
+  VarAccessNode:VarAccessNode,
+  FuncAssignNode:FuncAssignNode,
+  ArgNode:ArgNode,
+  CallNode:CallNode,
+  TextNode:TextNode,
+  IntegerNode:IntegerNode,
+  BinaryOperatorNode:BinaryOperatorNode
+}

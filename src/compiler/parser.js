@@ -59,24 +59,22 @@ module.exports = class Parser {
     return this.tokens.slice(this.token_iterated,this.token_iterated - tokens);
   }
   
-  nextLine (increment=true) {
-    if (increment == true) {
-      this.line += 1;
-      return this.lineTokens[this.line]
-    }
-    else {
-      return this.lineTokens[this.line + 1]
-    }
+  nextLine () {
+    this.line += 1;
+    return this.lineTokens[this.line]
   }
   
-  previousLine (increment=true) {
-    if (increment == true) {
-      this.line -= 1;
-      return this.lineTokens[this.line]
-    }
-    else {
-      return this.lineTokens[this.line-1]
-    }
+  previousLine () {
+    this.line -= 1;
+    return this.lineTokens[this.line]
+  }
+
+  peekLine (l=1) {
+    return this.lineTokens[this.line + l];
+  }
+
+  lookBackline (l=1) {
+    return this.lineTokens[this.line - l];
   }
   
   currentLine () {
@@ -115,7 +113,7 @@ module.exports = class Parser {
     */
     this.lineTokens = lineTokens;
     let ast = [];
-    while (this.nextLine(false) != undefined) {
+    while (this.peekLine() != undefined) {
       let tokens = this.nextLine();
       this.tokens = tokens;
       this.token_iterated = -1;

@@ -15,6 +15,10 @@ class VarAssignNode {
       value:value
     }
   }
+  
+  run (variables) {
+    variables[this.body.name] = this.body.line;
+    return variables;
 }
 
 class VarAccessNode {
@@ -26,16 +30,28 @@ class VarAccessNode {
       end:end
     }
   }
+  
+  run (variables) {
+    let value = variables[this.body.name];
+    return value;
+  }
 }
 
 class FuncAssignNode {
   constructor (name, line, start, end, args, body) {
     this.type = "DeclarationExpression";
-    this.body = body;
+    this.body = {};
+    this.body["statements"] = body;
+    this.body["name"] = name;
     this.body["args"] = args;
     this.body["start"] = start;
     this.body["end"] = end;
     this.body["line"] = line;
+  }
+  
+  run (variables) {
+    variables[this.body.name] = this.body.statements;
+    return variables;
   }
 }
 
@@ -48,6 +64,10 @@ class ArgNode {
       start:start,
       end:end
     }
+  }
+  
+  run () {
+    return this.body.name;
   }
 }
 
@@ -62,6 +82,13 @@ class CallNode {
       end:end
     }
   }
+  
+  run (variables,AST_walker) {
+    let walker = new AST_walker();
+    let statements = variables[this.body.callee];
+    let output = walker.walk(statements);
+    return output;
+  }
 }
 
 class TextNode {
@@ -75,7 +102,7 @@ class TextNode {
     }
   }
 
-  toString () {
+  run () {
     return this.body.value;
   }
 }
@@ -91,7 +118,7 @@ class IntegerNode {
     }
   }
 
-  toString () {
+  run () {
     return this.body.value;
   }
 }
@@ -119,4 +146,5 @@ class BinaryOperatorNode {
   }
 }
 
-
+// last change (7-3-22, 15:51)
+// added run method to all node classes

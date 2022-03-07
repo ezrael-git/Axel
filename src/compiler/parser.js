@@ -60,10 +60,10 @@ module.exports = class Parser {
   nextLine (increment=true) {
     if (increment == true) {
       this.line += 1;
-      return this.lineTokens[line]
+      return this.lineTokens[this.line]
     }
     else {
-      return this.lineTokens[line+1]
+      return this.lineTokens[this.line+1]
     }
   }
   

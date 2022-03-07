@@ -60,24 +60,39 @@ module.exports = class Parser {
   }
   
   nextLine () {
+    /*
+    Get next line in lineTokens
+    */
     this.line += 1;
     return this.lineTokens[this.line]
   }
   
   previousLine () {
+    /*
+    Get previous line in lineTokens
+    */
     this.line -= 1;
     return this.lineTokens[this.line]
   }
 
   peekLine (l=1) {
+    /*
+    Peek forward in lineTokens without changing this.line
+    */
     return this.lineTokens[this.line + l];
   }
 
-  lookBackline (l=1) {
+  lookBackLine (l=1) {
+    /*
+    Peek backwards in lineTokens without changing this.line
+    */
     return this.lineTokens[this.line - l];
   }
   
   currentLine () {
+    /*
+    Get current line in lineTokens
+    */
     return this.lineTokens[this.line]
   }
 

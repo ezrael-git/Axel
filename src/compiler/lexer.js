@@ -86,8 +86,11 @@ class Lexer {
     let skipped = [];
 
     function add (type, starts, ends, tk) {
-      console.log("added " + tk);
-      lexed.push({type:type, starts:starts, ends:ends, tk:tk.replaceAll(" ", "")})
+      if (type == "INTEGER") {
+        lexed.push({type:type, starts:starts, ends:ends, tk:tk})
+      } else {
+        lexed.push({type:type, starts:starts, ends:ends, tk:tk.replaceAll(" ", "")});
+      }
     }
 
     function lastToken () {

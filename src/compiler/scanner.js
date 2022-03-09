@@ -453,6 +453,19 @@ module.exports = class Scanner {
     return {letters:it,start:pos,end:curPos};
   }
 
+  getLettersReverse (str, pos) {
+    let curPos = str.slice(0,pos).length;
+    let it = "";
+    for (let char of str.slice(0,pos).reverse) {
+      curPos -=1;
+      it += char;
+      if (!this.letters.includes(char)) {
+        return {letters:it,start:pos,end:curPos};
+      }
+    }
+    return {letters:it,start:pos,end:curPos};
+  }
+
   inArgList (str, pos) {
     let it = "";
     let starting = 0;

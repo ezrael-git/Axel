@@ -1,7 +1,7 @@
-// ast_walker.js
+// walker.js
 
 
-class Walker {
+module.exports = class Walker {
   constructor () {
     this.program = [];
     this.node = -1;

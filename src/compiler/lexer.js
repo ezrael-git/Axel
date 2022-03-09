@@ -202,8 +202,8 @@ class Lexer {
           }
           pos = inArg.ending - 1;
         }
-        else if (this.letters.includes(char)) {
-          let full_word = sc.getLetters(source,pos-1);
+        else if (this.letters.includes(char) && !this.letters.includes(this.peek())) {
+          let full_word = sc.getLettersReverse(source,pos-1);
           add("IDENTIFIER", pos, full_word.end, full_word.letters);
           pos = full_word.end;
         }

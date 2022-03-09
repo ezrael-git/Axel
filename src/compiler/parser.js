@@ -137,8 +137,8 @@ module.exports = class Parser {
         console.log("TOKEN " + JSON.stringify(token));
         let type = token.type;
         if (type == "PLUS") {
-          let lhs = this.lookBack();
-          let rhs = this.peek();
+          let lhs = this.lookBack().tk;
+          let rhs = this.peek().tk;
           let node = new Node.BinaryOperatorNode(lhs,rhs,"+");
           node_tree.push(node);
         }

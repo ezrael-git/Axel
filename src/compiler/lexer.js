@@ -86,11 +86,7 @@ class Lexer {
     let skipped = [];
 
     function add (type, starts, ends, tk) {
-      if (type == "INTEGER") {
-        lexed.push({type:type, starts:starts, ends:ends, tk:tk})
-      } else {
-        lexed.push({type:type, starts:starts, ends:ends, tk:tk.replaceAll(" ", "")});
-      }
+      lexed.push({type:type, starts:starts, ends:ends, tk:tk.replaceAll(" ", "")});
     }
 
     function lastToken () {
@@ -168,7 +164,7 @@ class Lexer {
       else if (this.digits.includes(it[it.length - 1])) {
         // get full integer
         let full_integer = sc.getIntegers(source,pos);
-        add("INTEGER", pos, full_integer.end, parseInt(full_integer.integers));
+        add("INTEGER", pos, full_integer.end, full_integer.integers);
         pos = full_integer.end;
       }
       // fn keyword

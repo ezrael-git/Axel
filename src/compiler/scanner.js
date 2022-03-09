@@ -456,14 +456,15 @@ module.exports = class Scanner {
   getLettersReverse (str, pos) {
     let curPos = str.slice(0,pos).length;
     let it = "";
-    for (let char of str.slice(0,pos).reverse) {
+    let it_str = str.slice(0,pos+1).split('').reverse();
+    for (let char of it_str) {
       curPos -=1;
       it += char;
       if (!this.letters.includes(char)) {
-        return {letters:it,start:pos,end:curPos};
+        return {letters:it.split('').reverse().join(''),start:pos,end:curPos};
       }
     }
-    return {letters:it,start:pos,end:curPos};
+    return {letters:it.split('').reverse().join(''),start:pos,end:curPos};
   }
 
   inArgList (str, pos) {

@@ -205,7 +205,7 @@ module.exports = class Parser {
         }
       }
   
-      ast.push(node_tree);
+      ast.concat(node_tree);
     }
     return ast;
   }

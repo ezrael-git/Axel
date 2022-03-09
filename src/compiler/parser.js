@@ -143,20 +143,20 @@ module.exports = class Parser {
           node_tree.push(node);
         }
         else if (type == "MINUS") {
-          let lhs = this.lookBack();
-          let rhs = this.peek();
+          let lhs = this.lookBack().tk;
+          let rhs = this.peek().tk;
           let node = new Node.BinaryOperatorNode(lhs,rhs,"-");
           node_tree.push(node);
         }
         else if (type == "MULTIPLY") {
-          let lhs = this.lookBack();
-          let rhs = this.peek();
+          let lhs = this.lookBack().tk;
+          let rhs = this.peek().tk;
           let node = new Node.BinaryOperatorNode(lhs,rhs,"*");
           node_tree.push(node);
         }
         else if (type == "DIVIDE") {
-          let lhs = this.lookBack();
-          let rhs = this.peek();
+          let lhs = this.lookBack().tk;
+          let rhs = this.peek().tk;
           let node = new Node.BinaryOperatorNode(lhs,rhs,"/");
           node_tree.push(node);
         }

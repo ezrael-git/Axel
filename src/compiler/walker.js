@@ -45,7 +45,6 @@ module.exports = class Walker {
       
       if (type == "BinaryOperatorNode") {
         let result = node.run();
-        console.log("walk result: " + result);
       }
       else if (type == "FuncAssignNode") {
         let name = node.body.name;

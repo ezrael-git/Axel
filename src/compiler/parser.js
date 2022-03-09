@@ -186,8 +186,8 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be LPAREN, got ${this.current().type} instead`);
           }
           let args = [];
-          while (this.next().type == "IDENTIFIER") {
-            let arg_token = this.current();
+          while (this.peek().type == "IDENTIFIER") {
+            let arg_token = this.next();
             let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
             args.push(arg_node);
           }

@@ -31,7 +31,7 @@ class Walker {
   }
   
   checkType (obj) {
-    return typeof obj;
+    return obj.constructor.name;
   }
   
   
@@ -41,14 +41,19 @@ class Walker {
     this.program = program;
     while (this.peek() != undefined) {
       let node = this.next();
+      let type = this.checkType(node);
       
-      if (this.checkType(node) == "FuncAssignNode") {
+      if (type == "BinaryOperatorNode") {
+        let result = node.run();
+        console.log("walk result: " + result);
+      }
+      else if (type == "FuncAssignNode") {
         let name = node.body.name;
         let stats = node.body.statements;
         let args = node.body.args;
         this.variables[name] = [args,stats];
       }
-      else if (this.checkType(node) == "CallNode") {
+      else if (type == "CallNode") {
         let o = node.run(this.variables,Walker);
       }
     }

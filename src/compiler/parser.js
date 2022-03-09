@@ -50,11 +50,11 @@ module.exports = class Parser {
     return this.tokens[this.token_iterated+1];
   }
 
-  lookBack (tokens=1) {
+  lookBack (tokens=1) { // fix
     /*
     Get previous token without de-incrementing token_iterated
     */
-    return this.tokens.slice(this.token_iterated,this.token_iterated - tokens);
+    return this.tokens[this.token_iterated - 1];
   }
   
   nextLine () {

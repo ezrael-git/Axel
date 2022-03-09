@@ -461,10 +461,13 @@ module.exports = class Scanner {
       curPos -=1;
       it += char;
       if (!this.letters.includes(char)) {
-        return {letters:it.split('').reverse().join(''),start:curPos,end:pos};
+        it = it.split('')
+        it[it.length-1] = ''
+        it = it.join('')
+        return {letters:it.split('').reverse().join(''),start:curPos+2,end:pos};
       }
     }
-    return {letters:it.split('').reverse().join(''),start:curPos,end:pos};
+    return {letters:it.split('').reverse().join(''),start:curPos+1,end:pos};
   }
 
   inArgList (str, pos) {

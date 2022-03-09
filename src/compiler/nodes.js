@@ -151,30 +151,20 @@ class IntegerNode {
 
 class BinaryOperatorNode {
   /*
-  For arithmetic operations.
+  For arithmetic operations on integers.
   */
-  constructor (lhs, rhs, op, op_type="int") {
-    /*
-    if op_type is int, it converts lhs and rhs to integers before the operation.
-    else, it does the operation without any conversions. 
-    this is to prevent things like `5+5 = 55` from happening.
-    */
+  constructor (lhs, rhs, op) {
     this.type = "BinaryExpression";
     this.body = {
       lhs:lhs,
       rhs:rhs,
-      op:op,
-      op_type:op_type
+      op:op
     }
   }
 
   run () {
-    let lhs = this.body.lhs
-    let rhs = this.body.rhs
-    if (this.body.op_type == "int") {
-      lhs = parseInt(lhs);
-      rhs = parseInt(rhs);
-    }
+    let lhs = parseInt(this.body.lhs);
+    let rhs = parseInt(this.body.rhs);
     if (this.body.op == "+") {
       return lhs + rhs
     } else if (this.body.op == "-") {

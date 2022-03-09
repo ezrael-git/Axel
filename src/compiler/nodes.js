@@ -151,26 +151,38 @@ class IntegerNode {
 
 class BinaryOperatorNode {
   /*
-  For arithmetic operations done on numbers.
+  For arithmetic operations.
   */
-  constructor (lhs, rhs, op) {
+  constructor (lhs, rhs, op, op_type="int") {
+    /*
+    if op_type is int, it converts lhs and rhs to integers before the operation.
+    else, it does the operation without any conversions. 
+    this is to prevent things like `5+5 = 55` from happening.
+    */
     this.type = "BinaryExpression";
     this.body = {
       lhs:lhs,
       rhs:rhs,
-      op:op
+      op:op,
+      op_type:op_type
     }
   }
 
   run () {
+    let lhs = this.body.lhs
+    let rhs = this.body.rhs
+    if (this.body.op_type == "int") {
+      lhs = parseInt(lhs);
+      rhs = parseInt(rhs);
+    }
     if (this.body.op == "+") {
-      return this.body.lhs + this.body.rhs;
+      return lhs + rhs
     } else if (this.body.op == "-") {
-      return this.body.lhs - this.body.rhs;
+      return lhs - rhs
     } else if (this.body.op == "/") {
-      return this.body.lhs / this.body.rhs
+      return lhs / rhs
     } else if (this.body.op == "*") {
-      return this.body.lhs * this.body.rhs
+      return lhs * rhs
     }
   }
 }

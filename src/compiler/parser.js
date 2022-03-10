@@ -195,6 +195,7 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
           }
           let body = [];
+          console.log(this.currentLine()[0].type);
           while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
             let node_tree_lite = this.recursiveParse(tokens_lite);

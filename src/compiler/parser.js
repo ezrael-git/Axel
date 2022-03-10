@@ -126,13 +126,13 @@ module.exports = class Parser {
     */
     this.lineTokens = lineTokens;
     let ast = [];
-    while (this.peekLine() != undefined) {
+    while (this.peekLine() != undefined && this.currentLine() != undefined) {
       let tokens = this.nextLine();
       this.tokens = tokens;
       this.token_iterated = -1;
   
       let node_tree = [];
-      while (this.peek() != undefined) {
+      while (this.peek() != undefined && this.current() != undefined) {
         let token = this.next();
         console.log("TOKEN " + JSON.stringify(token));
         let type = token.type;

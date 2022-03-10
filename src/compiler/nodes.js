@@ -166,7 +166,7 @@ class IntegerNode {
   }
 }
 
-class HandSideNode (
+class HandSideNode {
   /*
   For the BinaryOperatorNode
   */

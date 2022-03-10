@@ -198,12 +198,14 @@ module.exports = class Parser {
           while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
             let node_tree_lite = this.recursiveParse(tokens_lite);
+            console.log("NTL " + JSON.stringify(node_tree_lite));
             body = body.concat(node_tree_lite);
           }
           let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
           node_tree.push(node);
         }
         else if (type == "IDENTIFIER" && this.peek().type == "LPAREN") {
+          console.log("LAST CONDITIONAL WOOOOO")
           let identifier_token = token;
           this.next(); // skip lparen
           let args = [];

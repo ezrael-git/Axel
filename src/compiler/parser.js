@@ -204,7 +204,6 @@ module.exports = class Parser {
           node_tree.push(node);
         }
       }
-      // function calls
       else if (type == "IDENTIFIER" && this.peek().type == "LPAREN") {
         let identifier_token = token;
         this.next(); // skip lparen

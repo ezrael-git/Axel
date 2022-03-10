@@ -190,7 +190,7 @@ class BinaryOperatorNode {
   */
   constructor (lhs, rhs, op) {
     this.type = "BinaryExpression";
-    if (lhs.constructor.name != "HandSideNode" || rhs.constructor.name != "HandSideNode) {
+    if (lhs.constructor.name != "HandSideNode" || rhs.constructor.name != "HandSideNode") {
       throw new Error("BinaryOperatorNode lhs and rhs arguments must be a HandSideNode");
     }
     this.body = {

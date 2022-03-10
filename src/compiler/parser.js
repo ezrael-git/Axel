@@ -203,19 +203,19 @@ module.exports = class Parser {
           let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
           node_tree.push(node);
         }
-      }
-      else if (type == "IDENTIFIER" && this.peek().type == "LPAREN") {
-        let identifier_token = token;
-        this.next(); // skip lparen
-        let args = [];
-        while (this.current().type != "RPAREN") {
-          let arg_token = this.next();
-          let node_tree_lite = this.recursiveParse(arg_token.tk);
-          args = args.concat(node_tree_lite);
+        else if (type == "IDENTIFIER" && this.peek().type == "LPAREN") {
+          let identifier_token = token;
+          this.next(); // skip lparen
+          let args = [];
+          while (this.current().type != "RPAREN") {
+            let arg_token = this.next();
+            let node_tree_lite = this.recursiveParse(arg_token.tk);
+            args = args.concat(node_tree_lite);
+          }
+          let rparen_token = this.current();
+          let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, rparen_token.end);
+          node_tree.push(node);
         }
-        let rparen_token = this.current();
-        let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, rparen_token.end);
-        node_tree.push(node);
       }
   
       ast = ast.concat(node_tree);

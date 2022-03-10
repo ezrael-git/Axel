@@ -1,5 +1,23 @@
 // nodes.js
 
+class Literal {
+  /* base class */
+  constructor (value) {
+    this.value = value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
+}
 
 
 class VarAssignNode {
@@ -23,7 +41,7 @@ class VarAssignNode {
     /* 
     Takes in an Object containing the variables for the program and returns an edited version of it containing the information of the variable.
     */
-    variables[this.body.name] = this.body.line;
+    variables[this.body.name] = this.body.value;
     return variables;
   }
 }
@@ -41,8 +59,8 @@ class VarAccessNode {
     }
   }
   
-  run (variables) {
-    let value = variables[this.body.name];
+  run (variables,walker) {
+    let value = walker.walk(variables[this.body.name]);
     return value;
   }
 }
@@ -51,10 +69,10 @@ class FuncAssignNode {
   /*
   For when a function is declared.
   */
-  constructor (name, line, start, end, args, body) {
+  constructor (name, line, start, end, args, statements) {
     this.type = "DeclarationExpression";
     this.body = {};
-    this.body["statements"] = body;
+    this.body["statements"] = statements;
     this.body["name"] = name;
     this.body["args"] = args;
     this.body["start"] = start;
@@ -92,10 +110,10 @@ class CallNode {
   /*
   For when a function is called.
   */
-  constructor (node_to_call, args, line, start, end) {
+  constructor (func_to_call, args, line, start, end) {
     this.type = "CallExpression";
     this.body = {
-      callee:node_to_call,
+      callee:func_to_call,
       args:args,
       line:line,
       start:start,
@@ -103,8 +121,7 @@ class CallNode {
     }
   }
   
-  run (variables,AST_walker) {
-    let walker = new AST_walker();
+  run (variables,walker) {
     let statements = variables[this.body.callee];
     let output = walker.walk(statements);
     return output;
@@ -149,12 +166,33 @@ class IntegerNode {
   }
 }
 
+class HandSideNode (
+  /*
+  For the BinaryOperatorNode
+  */
+  constructor (data, side) {
+    this.type = "HandSideNode"
+    this.body = {
+      data:data,
+      side:side
+    }
+  }
+
+  run (variables,walker) {
+    let output = walker.walk(this.body.data);
+    return output;
+  }
+}
+
 class BinaryOperatorNode {
   /*
   For arithmetic operations on integers.
   */
   constructor (lhs, rhs, op) {
     this.type = "BinaryExpression";
+    if (!lhs.constructor.name != "HandSideNode" || !rhs.constructor.node != "HandSideNode) {
+      throw new Error("BinaryOperatorNode lhs and rhs arguments must be a HandSideNode");
+    }
     this.body = {
       lhs:lhs,
       rhs:rhs,
@@ -162,9 +200,9 @@ class BinaryOperatorNode {
     }
   }
 
-  run () {
-    let lhs = parseInt(this.body.lhs);
-    let rhs = parseInt(this.body.rhs);
+  run (variables,walker) {
+    let lhs = this.body.lhs.run(variables,walker);
+    let rhs = this.body.rhs.run(variables,walker);
     if (this.body.op == "+") {
       return lhs + rhs
     } else if (this.body.op == "-") {
@@ -185,5 +223,6 @@ module.exports = {
   CallNode:CallNode,
   TextNode:TextNode,
   IntegerNode:IntegerNode,
+  HandSideNode:HandSideNode,
   BinaryOperatorNode:BinaryOperatorNode
 }

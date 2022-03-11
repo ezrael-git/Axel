@@ -52,9 +52,36 @@ module.exports = class Walker {
         let stats = node.body.statements;
         let args = node.body.args;
         this.variables[name] = [args,stats];
+        return name;
       }
       else if (type == "CallNode") {
         let o = node.run(this.variables,new Walker());
+        return o;
+      }
+      else if (type == "VarAssignNode") {
+        let name = node.body.name;
+        let value = node.body.value.run();
+        let mutable = node.body.mutable;
+        if (this.variables[name] == undefined) {
+          this.variables[name] = value;
+          return value;
+        } else if (mutable == true) {
+          this.variables[name] = value;
+          return value;
+        } else {
+          throw new Error("Cannot change a constant variable");
+        }
+      }
+      else if (type == "VarAccessNode") {
+        let name = node.body.name;
+        if (this.variables[name] != undefined) {
+          return this.variables[name];
+        } else {
+          throw new Error("Cannot access unknown variable " + name)
+        }
+      }
+      else if (type == "TextNode" || type == "IntegerNode") {
+        return node.run();
       }
     }
   }

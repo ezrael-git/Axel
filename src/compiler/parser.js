@@ -111,7 +111,7 @@ module.exports = class Parser {
     Parse tokens from a new instance of the Parser
     */
     let parser = new Parser();
-    let node_tree = parser.parse(tokens);
+    let node_tree = parser.parse({1:tokens});
     return node_tree;
   }
 

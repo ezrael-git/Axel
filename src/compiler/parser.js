@@ -198,7 +198,7 @@ module.exports = class Parser {
           console.log(this.currentLine()[0].type);
           while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
-            console.log("TOKENS LITE " + tokens_lite);
+            console.log("TOKENS LITE " + JSON.stringify(tokens_lite));
             let node_tree_lite = this.recursiveParse(tokens_lite);
             console.log("NTL " + JSON.stringify(node_tree_lite));
             body = body.concat(node_tree_lite);

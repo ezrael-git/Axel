@@ -125,6 +125,7 @@ module.exports = class Parser {
       lineTks must be an Object containing { line : tokens }
     */
     this.lineTokens = lineTokens;
+    console.log("LINETOKENS " + JSON.stringify(lineTokens));
     let ast = [];
     while (this.peekLine() != undefined) {
       let tokens = this.nextLine();

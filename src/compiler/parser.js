@@ -103,17 +103,6 @@ module.exports = class Parser {
     return this.lineTokens[this.line]
   }
 
-  handleType (token) {
-    /*
-    Make node based on token.type
-    */
-    if (token.type == "STRING") {
-      return new Node.TextNode(token.value,token.line,token.start,token.end);
-    }
-    else if (token.type == "INTEGER") {
-      return new Node.IntegerNode(token.value,token.line,token.start,token.end);
-    }
-  }
 
   recursiveParse (tokens) {
     /*
@@ -181,7 +170,7 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
           }
           let value_token = this.next();
-          let value_node = this.handleType(value_token);
+          let value_node = this.recursiveParse([value_token]);
           let node = new Node.VarAssignNode(name_token.tk,true,value_token.type,value_node,token.line,token.start,value_token.end);
           node_tree.push(node);
         }

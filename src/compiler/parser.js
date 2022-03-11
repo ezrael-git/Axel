@@ -43,11 +43,20 @@ module.exports = class Parser {
     return this.tokens[this.token_iterated];
   }
 
-  peek (tokens=1) { // fix
+  peek (safety=false) { // fix
     /*
     Get next token without incrementing token_iterated
     */
-    return this.tokens[this.token_iterated+1];
+    if (safety == false) {
+      return this.tokens[this.token_iterated+1];
+    } else {
+      if (this.tokens[this.token_iterated+1] == undefined) {
+        return {type:"undefined",line:0,start:0,end:0}
+      }
+      else {
+        return this.tokens[this.token_iterated+1];
+      }
+    }
   }
 
   lookBack (tokens=1) { // fix
@@ -214,7 +223,7 @@ module.exports = class Parser {
           node_tree.push(node);
         }
         // function calls
-        else if (type == "IDENTIFIER" && this.peek().type == "LPAREN") {
+        else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
           let identifier_token = token;
           this.next(); // skip lparen
           let args = [];

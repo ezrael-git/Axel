@@ -125,18 +125,14 @@ module.exports = class Parser {
       lineTks must be an Object containing { line : tokens }
     */
     this.lineTokens = lineTokens;
-    console.log("LINETOKENS " + JSON.stringify(lineTokens));
     let ast = [];
     while (this.peekLine() != undefined) {
-      console.log("checking line")
       let tokens = this.nextLine();
       this.tokens = tokens;
       this.token_iterated = -1;
   
       let node_tree = [];
-      console.log("SET OF TOKENS " + tokens);
       while (this.peek() != undefined) {
-        console.log("checking token")
         let token = this.next();
         console.log("TOKEN " + JSON.stringify(token));
         let type = token.type;
@@ -207,12 +203,11 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
           }
           let body = [];
-          console.log(this.currentLine()[0].type);
           while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
             console.log("TOKENS LITE " + JSON.stringify(tokens_lite));
+            console.log(typeof tokens_lite);
             let node_tree_lite = this.recursiveParse(tokens_lite);
-            console.log("NTL " + JSON.stringify(node_tree_lite));
             body = body.concat(node_tree_lite);
           }
           let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
@@ -220,17 +215,13 @@ module.exports = class Parser {
         }
         // function calls
         else if (type == "IDENTIFIER" && this.peek().type == "LPAREN") {
-          console.log("LAST CONDITIONAL WOOOOO")
           let identifier_token = token;
           this.next(); // skip lparen
           let args = [];
-          console.log("CURRENT TYPE " + this.current().type);
           while (this.peek().type != "RPAREN") {
             let arg_token = this.next();
-            console.log("arg_token " + JSON.stringify(arg_token));
             let node_tree_lite = this.recursiveParse([arg_token]);
             args = args.concat(node_tree_lite);
-            console.log("NTL " + node_tree_lite);
           }
           let rparen_token = this.current();
           let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, rparen_token.end);

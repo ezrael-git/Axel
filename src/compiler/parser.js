@@ -170,6 +170,10 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
           }
           let value_token = this.next();
+          // Since recursiveParse returns a full-blown AST generated from a bunch of statements,
+          // we need to get the first element of the AST and assume it's the value. I mean, no one defines their variables like:
+          // def a = 1 + 4 + 
+          // print(5) + 3
           let value_node = this.recursiveParse([value_token])[0];
           let node = new Node.VarAssignNode(name_token.tk,true,value_token.type,value_node,token.line,token.start,value_token.end);
           node_tree.push(node);
@@ -181,7 +185,9 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
           }
           let value_token = this.next();
-          let value_node = this.handleType(value_token);
+          // Refer to the comments above to figure out why we're assuming the first element of the AST of recursiveParse as the value,
+          // instead of the whole AST.
+          let value_node = this.recursiveParse([value_token])[0];
           let node = new Node.VarAssignNode(name_token.tk,false,value_token.type,value_node,token.line,token.start,value_token.end);
           node_tree.push(node);
         }

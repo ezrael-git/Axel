@@ -227,6 +227,7 @@ module.exports = class Parser {
             console.log("arg_token " + JSON.stringify(arg_token));
             let node_tree_lite = this.recursiveParse(arg_token);
             args = args.concat(node_tree_lite);
+            console.log("NTL " + node_tree_lite);
           }
           let rparen_token = this.current();
           let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, rparen_token.end);

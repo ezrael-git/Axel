@@ -136,30 +136,36 @@ module.exports = class Parser {
         let token = this.next();
         console.log("TOKEN " + JSON.stringify(token));
         let type = token.type;
+        // handle...
+        // addition operator
         if (type == "PLUS") {
           let lhs = this.lookBack().tk;
           let rhs = this.peek().tk;
           let node = new Node.BinaryOperatorNode(lhs,rhs,"+");
           node_tree.push(node);
         }
+        // subtraction operator
         else if (type == "MINUS") {
           let lhs = this.lookBack().tk;
           let rhs = this.peek().tk;
           let node = new Node.BinaryOperatorNode(lhs,rhs,"-");
           node_tree.push(node);
         }
+        // multiplication operator
         else if (type == "MULTIPLY") {
           let lhs = this.lookBack().tk;
           let rhs = this.peek().tk;
           let node = new Node.BinaryOperatorNode(lhs,rhs,"*");
           node_tree.push(node);
         }
+        // division operator
         else if (type == "DIVIDE") {
           let lhs = this.lookBack().tk;
           let rhs = this.peek().tk;
           let node = new Node.BinaryOperatorNode(lhs,rhs,"/");
           node_tree.push(node);
         }
+        // def keyword
         else if (type == "DEFINE") {
           let name_token = this.next();
           if (this.next().type != "EQUALITY") {
@@ -170,6 +176,7 @@ module.exports = class Parser {
           let node = new Node.VarAssignNode(name_token.tk,true,value_token.type,value_node,token.line,token.start,value_token.end);
           node_tree.push(node);
         }
+        // imm keyword
         else if (type == "IMMUTABLE") {
           let name_token = this.next();
           if (this.next().type != "EQUALITY") {
@@ -180,6 +187,7 @@ module.exports = class Parser {
           let node = new Node.VarAssignNode(name_token.tk,false,value_token.type,value_node,token.line,token.start,value_token.end);
           node_tree.push(node);
         }
+        // fn keyword
         else if (type == "FUNCTION") {
           let identifier_token = this.next();
           if (this.next().type != "LPAREN") {
@@ -206,6 +214,7 @@ module.exports = class Parser {
           let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
           node_tree.push(node);
         }
+        // function calls
         else if (type == "IDENTIFIER" && this.peek().type == "LPAREN") {
           console.log("LAST CONDITIONAL WOOOOO")
           let identifier_token = token;
@@ -220,6 +229,16 @@ module.exports = class Parser {
           }
           let rparen_token = this.current();
           let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, rparen_token.end);
+          node_tree.push(node);
+        }
+        // strings
+        else if (type == "STRING") {
+          let node = new Node.TextNode(token.tk,token.line,token.start,token.end);
+          node_tree.push(node);
+        }
+        // integers
+        else if (type == "INTEGER") {
+          let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
           node_tree.push(node);
         }
       }

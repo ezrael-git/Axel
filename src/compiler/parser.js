@@ -134,6 +134,7 @@ module.exports = class Parser {
       this.token_iterated = -1;
   
       let node_tree = [];
+      console.log("SET OF TOKENS " + tokens);
       while (this.peek() != undefined) {
         console.log("checking token")
         let token = this.next();

@@ -228,7 +228,7 @@ module.exports = class Parser {
           while (this.peek().type != "RPAREN") {
             let arg_token = this.next();
             console.log("arg_token " + JSON.stringify(arg_token));
-            let node_tree_lite = this.recursiveParse(arg_token);
+            let node_tree_lite = this.recursiveParse([arg_token]);
             args = args.concat(node_tree_lite);
             console.log("NTL " + node_tree_lite);
           }

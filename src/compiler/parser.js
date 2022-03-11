@@ -227,6 +227,7 @@ module.exports = class Parser {
           let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, rparen_token.end);
           node_tree.push(node);
         }
+        // variable accesses
         else if (type == "IDENTIFIER") {
           let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
           node_tree.push(node);

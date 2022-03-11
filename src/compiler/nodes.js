@@ -53,6 +53,7 @@ class VarAccessNode {
   constructor (name, line, start, end) {
     this.type = "AccessExpression"
     this.body = {
+      name:name,
       line:line,
       start:start,
       end:end

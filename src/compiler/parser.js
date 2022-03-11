@@ -222,10 +222,10 @@ module.exports = class Parser {
           this.next(); // skip lparen
           let args = [];
           console.log("CURRENT TYPE " + this.current().type);
-          while (this.current().type != "RPAREN") {
+          while (this.peek().type != "RPAREN") {
             let arg_token = this.next();
             console.log("arg_token " + JSON.stringify(arg_token));
-            let node_tree_lite = this.recursiveParse(arg_token.tk);
+            let node_tree_lite = this.recursiveParse(arg_token);
             args = args.concat(node_tree_lite);
           }
           let rparen_token = this.current();

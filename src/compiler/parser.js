@@ -217,6 +217,13 @@ module.exports = class Parser {
           let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
           node_tree.push(node);
         }
+        // print keyword
+        else if (type == "PRINT") {
+          let value_token = this.next();
+          let value_node = this.recursiveParse([value_token]);
+          let node = new Node.PrintNode(value_node,value_token.line,value_token.start,value_token.end);
+          node_tree.push(node);
+        }
         // function calls
         else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
           let identifier_token = token;

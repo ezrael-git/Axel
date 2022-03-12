@@ -231,8 +231,8 @@ class PrintNode {
     }
   }
 
-  run () {
-    console.log(this.body.value.run());
+  run (variables,walker) {
+    console.log(this.body.value.run(variables,walker));
     return this.body.value;
   }
 }

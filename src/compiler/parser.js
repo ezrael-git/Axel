@@ -34,6 +34,26 @@ module.exports = class Parser {
     return n;
   }
 
+  allAfterSort (types) {
+    let sorted = [];
+    for (let token of this.tokens.slice(this.token_iterated,this.tokens.length)) {
+      if (types.includes(token.type)) {
+        sorted.push(token);
+      }
+    }
+    return sorted;
+  }
+
+  allBeforeSort (types) {
+    let sorted = [];
+    for (let token of this.tokens.slice(0,this.token_iterated)) {
+      if (types.includes(token.type)) {
+        sorted.push(token);
+      }
+    }
+    return sorted;
+  }
+
   previous () {
     /*
     Previous token
@@ -144,9 +164,12 @@ module.exports = class Parser {
         // handle...
         // addition operator
         if (type == "PLUS") {
-          let lhs = this.lookBack().tk;
-          let rhs = this.peek().tk;
-          let node = new Node.BinaryOperatorNode(lhs,rhs,"+");
+          let types = ["PLUS","MINUS","DIVIDE","MULTIPLY","INTEGER"]
+          let rhs = this.allAfterSort(types);
+          let lhs = this.allBeforeSort(types);
+          let rhs_node = this.recursiveParse(rhs);
+          let lhs_node = this.recursiveParse(lhs);
+          let node = new Node.BinaryOperatorNode(lhs_node,rhs_node,"+");
           node_tree.push(node);
         }
         // subtraction operator

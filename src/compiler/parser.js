@@ -164,12 +164,9 @@ module.exports = class Parser {
         // handle...
         // addition operator
         if (type == "PLUS") {
-          let types = ["PLUS","MINUS","DIVIDE","MULTIPLY","INTEGER"]
-          let rhs = this.allAfterSort(types);
-          let lhs = this.allBeforeSort(types);
-          let rhs_node = this.recursiveParse(rhs);
-          let lhs_node = this.recursiveParse(lhs);
-          let node = new Node.BinaryOperatorNode(lhs_node,rhs_node,"+");
+          let lhs = this.lookBack().tk;
+          let rhs = this.peek().tk;
+          let node = new Node.BinaryOperatorNode(lhs,rhs,"+");
           node_tree.push(node);
         }
         // subtraction operator

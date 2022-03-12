@@ -246,5 +246,6 @@ module.exports = {
   TextNode:TextNode,
   IntegerNode:IntegerNode,
   HandSideNode:HandSideNode,
-  BinaryOperatorNode:BinaryOperatorNode
+  BinaryOperatorNode:BinaryOperatorNode,
+  PrintNode:PrintNode
 }

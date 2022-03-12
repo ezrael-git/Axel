@@ -81,6 +81,9 @@ module.exports = class Walker {
     else if (type == "TextNode" || type == "IntegerNode") {
       return node.run();
     }
+    else if (type == "PrintNode") {
+      return node.run();
+    }
   }
   
   

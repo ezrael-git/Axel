@@ -93,6 +93,7 @@ module.exports = class Walker {
     this.program = program;
     while (this.peek() != undefined) {
       let node = this.next();
+      console.log(JSON.stringify(node));
       let type = this.checkType(node);
       let o = this.interpretNode(node,type);
       return o;

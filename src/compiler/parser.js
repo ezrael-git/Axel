@@ -164,8 +164,8 @@ module.exports = class Parser {
         // handle...
         // addition operator
         if (type == "PLUS") {
-          let lhs = this.lookBack().tk;
-          let rhs = this.peek().tk;
+          let lhs = this.recursiveParse([this.lookBack()]);
+          let rhs = this.recursiveParse([this.peek()]);
           let node = new Node.BinaryOperatorNode(lhs,rhs,"+");
           node_tree.push(node);
         }

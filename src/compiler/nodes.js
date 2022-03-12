@@ -61,6 +61,9 @@ class VarAccessNode {
   }
   
   run (variables,walker) {
+    if (this.variables[this.body.name] == undefined) {
+      throw new Error("Cannot access unknown variable " + this.body.name);
+    }
     let value = walker.walk(variables[this.body.name]);
     return value;
   }

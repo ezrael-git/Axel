@@ -96,7 +96,6 @@ module.exports = class Walker {
       console.log(JSON.stringify(node));
       let type = this.checkType(node);
       let o = this.interpretNode(node,type);
-      return o;
     }
   }
 }

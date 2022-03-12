@@ -85,12 +85,16 @@ module.exports = class Walker {
   
   
   
-  walk (ast) {
+  walk (ast, wrapped=false) {
     /*
     Interpret a whole AST. Basically this.interpretNode in a while loop.
     */
-    let program = ast["Program"];
-    this.program = program;
+    if (wrapped == true) {
+      let program = ast["Program"];
+      this.program = program;
+    } else {
+      this.program = ast;
+    }
     console.log("PG " + JSON.stringify(this.program));
     while (this.peek() != undefined) {
       let node = this.next();

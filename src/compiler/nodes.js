@@ -123,7 +123,10 @@ class CallNode {
   }
   
   run (variables,walker) {
-    let statements = variables[this.body.callee];
+    if (variables[this.body.callee] == undefined) {
+      throw new Error("Tried to call unknown function: " + this.body.callee);
+    }
+    let statements = variables[this.body.callee][1];
     let output = walker.walk(statements);
     return output;
   }

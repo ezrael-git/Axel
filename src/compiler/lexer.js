@@ -187,7 +187,7 @@ class Lexer {
       // print keyword
       else if (it.endsWith(TT_PRINT) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
         add("PRINT", pos-4, pos, TT_PRINT);
-      )
+      }
       else {
         // identifiers
         if (lastToken() != undefined) {

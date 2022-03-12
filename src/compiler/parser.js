@@ -182,7 +182,7 @@ module.exports = class Parser {
           // def a = 1 + 4 + 
           // print(5) + 3
           let value_node = this.recursiveParse(value_tokens)[0];
-          let node = new Node.VarAssignNode(name_token.tk,true,value_node.constructor.name,value_node,token.line,token.start,value_token.end);
+          let node = new Node.VarAssignNode(name_token.tk,true,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
           node_tree.push(node);
         }
         // imm keyword

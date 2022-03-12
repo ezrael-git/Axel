@@ -220,6 +220,23 @@ class BinaryOperatorNode {
   }
 }
 
+class PrintNode {
+  constructor (value, line, start, end) {
+    this.type = "PrintExpression"
+    this.body = {
+      value:value,
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  run () {
+    console.log(this.body.value.run());
+    return this.body.value;
+  }
+}
+
 module.exports = {
   VarAssignNode:VarAssignNode,
   VarAccessNode:VarAccessNode,

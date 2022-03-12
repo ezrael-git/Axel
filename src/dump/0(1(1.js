@@ -1,136 +1,90 @@
-// parser.js
-// generate AST
-
-const Node = require("./nodes.js");
-const Scanner = require("./scanner.js");
+// walker.js
 
 
-
-
-module.exports = class Parser {
+module.exports = class Walker {
   constructor () {
-    this.variables = {};
-    this.token_iterated = -1;
-    this.tokens = [];
-    this.line = 0;
+    this.program = [];
+    this.node = -1;
+    this.variables = [];
   }
-
+  
   next () {
-    this.token_iterated += 1;
-    let n = this.tokens[this.token_iterated];
-    return n;
+    this.node += 1;
+    return this.program[this.node];
   }
-
+  
   previous () {
-    this.token_iterated -= 1;
-    let n = this.tokens[this.token_iterated];
-    return n;
+    this.node -= 1;
+    return this.program[this.node];
   }
-
+  
   current () {
-    return this.tokens[this.token_iterated];
+    return this.program[this.node];
   }
-
-  peek (tokens=1) {
-    return this.tokens.slice(this.token_iterated,this.token_iterated + tokens);
+  
+  peek (nodes=1) {
+    return this.program[this.node+nodes];
   }
-
-  lookBack (tokens=1) {
-    return this.tokens.slice(this.token_iterated,this.token_iterated - tokens);
+  
+  lookBack (nodes=1) {
+    return this.program[this.node-nodes];
   }
-
-  handleType (token) {
-    if (token.type == "STRING") {
-      return new Node.TextNode(token.value,token.line,token.start,token.end);
-    }
-    else if (token.type == "INTEGER") {
-      return new Node.IntegerNode(token.value,token.line,token.start,token.end);
-    }
+  
+  checkType (obj) {
+    return obj.constructor.name;
   }
-
-
   
   
-  parse (tks) {
-    /*
-    parse line and return node
-    */
-    this.line += 1;
-    this.tokens = tks;
-    this.token_iterated = -1;
-
-    let node_tree = [];
+  
+  walk (ast) {
+    let program = ast["Program"];
+    this.program = program;
     while (this.peek() != undefined) {
-      let token = this.next();
-      let type = token.type;
-      if (type == "PLUS") {
-        let lhs = this.lookBack();
-        let rhs = this.peek();
-        let node = new Node.BinaryOperatorNode(lhs,rhs,"+");
-        node_tree.push(node);
+      let node = this.next();
+      let type = this.checkType(node);
+      
+      if (type == "BinaryOperatorNode") {
+        let result = node.run();
+        return result;
       }
-      else if (type == "MINUS") {
-        let lhs = this.lookBack();
-        let rhs = this.peek();
-        let node = new Node.BinaryOperatorNode(lhs,rhs,"-");
-        node_tree.push(node);
+      else if (type == "FuncAssignNode") {
+        let name = node.body.name;
+        let stats = node.body.statements;
+        let args = node.body.args;
+        this.variables[name] = [args,stats];
+        return name;
       }
-      else if (type == "MULTIPLY") {
-        let lhs = this.lookBack();
-        let rhs = this.peek();
-        let node = new Node.BinaryOperatorNode(lhs,rhs,"*");
-        node_tree.push(node);
+      else if (type == "CallNode") {
+        let o = node.run(this.variables,new Walker());
+        return o;
       }
-      else if (type == "DIVIDE") {
-        let lhs = this.lookBack();
-        let rhs = this.peek();
-        let node = new Node.BinaryOperatorNode(lhs,rhs,"/");
-        node_tree.push(node);
-      }
-      else if (type == "DEFINE") {
-        let name_token = this.next();
-        if (this.next().type != "EQUALITY") {
-          throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
+      else if (type == "VarAssignNode") {
+        let name = node.body.name;
+        let getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
+        console.log("VALUE " + JSON.stringify(node.body.value));
+        let value = node.body.value.run();
+        let mutable = node.body.mutable;
+        if (this.variables[name] == undefined) {
+          this.variables[name] = value;
+          return value;
+        } else if (mutable == true) {
+          this.variables[name] = value;
+          return value;
+        } else {
+          throw new Error("Cannot change a constant variable");
         }
-        let value_token = this.next();
-        let value_node = this.handleType(value_token);
-        let node = new Node.VarAssignNode(name_token.tk,true,value_token.type,value_node,token.line,token.start,value_token.end);
-        node_tree.push(node);
       }
-      else if (type == "IMMUTABLE") {
-        let name_token = this.next();
-        if (this.next().type != "EQUALITY") {
-          throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
+      else if (type == "VarAccessNode") {
+        let name = node.body.name;
+        if (this.variables[name] != undefined) {
+          return this.variables[name];
+        } else {
+          throw new Error("Cannot access unknown variable " + name)
         }
-        let value_token = this.next();
-        let value_node = this.handleType(value_token);
-        let node = new Node.VarAssignNode(name_token.tk,false,value_token.type,value_node,token.line,token.start,value_token.end);
-        node_tree.push(node);
       }
-      else if (type == "FUNCTION") {
-        let identifier_token = this.next();
-        if (this.next().type != "LPAREN") {
-          throw new Error(`Expected TokenType to be LPAREN, got ${this.current().type} instead`);
-        }
-        let args = [];
-        while (this.next().type == "IDENTIFIER") {
-          let arg_token = this.current();
-          let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
-          args.push(arg_node);
-        }
-        if (this.next().type != "RPAREN") {
-          throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
-        }
-        let body = this.parse() // unfinished
-        let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
-        node_tree.push(node);
+      else if (type == "TextNode" || type == "IntegerNode") {
+        return node.run();
       }
     }
-
-    return node_tree;
   }
-
-
-
 }
-

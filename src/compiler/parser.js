@@ -276,7 +276,7 @@ module.exports = class Parser {
           node_tree.push(node);
         }
         // integers
-        else if (type == "INTEGER") {
+        else if (type == "INTEGER" && !["PLUS","MINUS","DIVIDE","MULTIPLY"].includes(this.peek().type)) {
           let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
           node_tree.push(node);
         }

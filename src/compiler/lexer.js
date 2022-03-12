@@ -14,6 +14,7 @@ let TT_FN = "fn"
 let TT_DEF = "def"
 let TT_IMM = "imm"
 let TT_END = "end"
+let TT_PRINT = "print"
 
 
 
@@ -183,6 +184,10 @@ class Lexer {
       else if (it.endsWith(TT_END) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
         add("END", pos-2, pos, TT_END);
       }
+      // print keyword
+      else if (it.endsWith(TT_PRINT) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
+        add("PRINT", pos-4, pos, TT_PRINT);
+      )
       else {
         // identifiers
         if (lastToken() != undefined) {

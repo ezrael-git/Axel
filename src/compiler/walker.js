@@ -82,6 +82,7 @@ module.exports = class Walker {
       return node.run();
     }
     else if (type == "PrintNode") {
+      console.log("PN " + this.variables);
       return node.run(this.variables,new Walker());
     }
   }

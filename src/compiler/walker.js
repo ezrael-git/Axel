@@ -76,6 +76,7 @@ module.exports = class Walker {
 
       console.log("varassignnode runned value " + JSON.stringify(value));
       value = this.toLiteral(value);
+      console.log("after toliteral value " + JSON.stringify(value));
       let mutable = node.body.mutable;
       if (this.variables[name] == undefined) {
         this.variables[name] = value;

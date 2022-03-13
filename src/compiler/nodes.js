@@ -132,7 +132,9 @@ class CallNode {
       console.log(JSON.stringify(variables));
     }
     let statements = variables[this.body.callee][1];
+    console.log("CALLNODE STATEMENTS " + JSON.stringify(statements));
     let output = walker.walk(statements);
+    console.log("CALLNODE OUTPUT " + output);
     return output;
   }
 }

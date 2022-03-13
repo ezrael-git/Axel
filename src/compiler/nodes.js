@@ -217,6 +217,7 @@ class PrintNode {
   }
 
   run (variables,walker) {
+    console.log("PRINTNODE VALUE " + this.body.value + " & TYPE " + this.body.value.constructor.name);
     console.log(this.body.value.run(variables,walker));
     return this.body.value;
   }

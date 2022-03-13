@@ -1,43 +1,5 @@
 // nodes.js
 
-class Literal {
-  /* base class */
-  constructor (value) {
-    this.value = value;
-  }
-
-  to_s () {
-    return String(this.value);
-  }
-
-  to_i () {
-    return parseInt(this.value);
-  }
-
-  to_b () {
-    return !!this.value;
-  }
-}
-
-class TextLiteral {
-  constructor (value) {
-    this.value = value;
-  }
-
-  run (v,w) {
-    return this.value;
-  }
-}
-
-class IntegerLiteral {
-  constructor (value) {
-    this.value = value;
-  }
-
-  run (v,w) {
-    return this.value;
-  }
-}
 
 
 class VarAssignNode {
@@ -270,7 +232,6 @@ module.exports = {
   IntegerNode:IntegerNode,
   HandSideNode:HandSideNode,
   BinaryOperatorNode:BinaryOperatorNode,
-  PrintNode:PrintNode,
-  TextLiteral:TextLiteral,
-  IntegerLiteral:IntegerLiteral
+  PrintNode:PrintNode
+  
 }

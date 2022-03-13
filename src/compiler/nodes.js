@@ -270,5 +270,7 @@ module.exports = {
   IntegerNode:IntegerNode,
   HandSideNode:HandSideNode,
   BinaryOperatorNode:BinaryOperatorNode,
-  PrintNode:PrintNode
+  PrintNode:PrintNode,
+  TextLiteral:TextLiteral,
+  IntegerLiteral:IntegerLiteral
 }

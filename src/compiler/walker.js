@@ -41,7 +41,7 @@ module.exports = class Walker {
     if (obj.constructor.name == "string") {
       return new Literal.TextLiteral(obj);
     }
-    else if (obj.constructor.name.includes("Node")) {
+    else if (["Node", "Literal"].includes(obj.constructor.name)) {
       return obj;
     }
     else {

@@ -34,6 +34,15 @@ module.exports = class Walker {
     return obj.constructor.name;
   }
 
+  toLiteral (obj) {
+    if (obj.constructor.name == "string") {
+      return new Node.TextLiteral(obj);
+    }
+    else {
+      return new Node.IntegerLiteral(obj);
+    }
+  }
+
   interpretNode (node,type) {
     /*
     Interpret a single node.
@@ -59,6 +68,7 @@ module.exports = class Walker {
       let getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
       let value = node.body.value.run(this.variables,new Walker());
       console.log("varassignnode runned value " + JSON.stringify(value));
+      value = this.toLiteral(value);
       let mutable = node.body.mutable;
       if (this.variables[name] == undefined) {
         this.variables[name] = value;

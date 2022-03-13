@@ -19,6 +19,26 @@ class Literal {
   }
 }
 
+class TextLiteral {
+  constructor (value) {
+    this.value = value;
+  }
+
+  run (v,w) {
+    return this.value;
+  }
+}
+
+class IntegerLiteral {
+  constructor (value) {
+    this.value = value;
+  }
+
+  run (v,w) {
+    return this.value;
+  }
+}
+
 
 class VarAssignNode {
   /*

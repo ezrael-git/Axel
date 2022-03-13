@@ -5,7 +5,7 @@ module.exports = class Walker {
   constructor () {
     this.program = [];
     this.node = -1;
-    this.variables = [];
+    this.variables = {};
   }
   
   next () {

@@ -57,11 +57,12 @@ module.exports = class Walker {
     else if (type == "VarAssignNode") {
       let name = node.body.name;
       let getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
-      console.log("VALUE " + JSON.stringify(node.body.value));
       let value = node.body.value.run(this.variables,new Walker());
+      console.log("varassignnode runned value " + JSON.stringify(value));
       let mutable = node.body.mutable;
       if (this.variables[name] == undefined) {
         this.variables[name] = value;
+        console.log("added " + name + " to this.variables");
         return value;
       } else if (mutable == true) {
         this.variables[name] = value;

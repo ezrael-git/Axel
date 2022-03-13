@@ -38,3 +38,8 @@ class IntegerLiteral {
     return this.value;
   }
 }
+
+module.exports = {
+  TextLiteral:TextLiteral,
+  IntegerLiteral:IntegerLiteral
+}

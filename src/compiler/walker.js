@@ -1,4 +1,6 @@
 // walker.js
+// interpret nodes and ASTs
+
 const Literal = require("./literals.js");
 
 
@@ -61,7 +63,7 @@ module.exports = class Walker {
       let stats = node.body.statements;
       let args = node.body.args;
       this.variables[name] = [args,stats];
-      return Literal.TextLiteral(name);
+      return new Literal.TextLiteral(name);
     }
     else if (type == "CallNode") {
       let o = node.run(this.variables,new Walker());

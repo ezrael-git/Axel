@@ -1,4 +1,5 @@
 // walker.js
+const Node = require("./nodes.js");
 
 
 module.exports = class Walker {

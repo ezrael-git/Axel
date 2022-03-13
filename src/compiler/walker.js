@@ -38,14 +38,17 @@ module.exports = class Walker {
   }
 
   toLiteral (obj) {
-    if (obj.constructor.name == "string") {
+    if (obj.constructor.name == "String") {
       return new Literal.TextLiteral(obj);
+    }
+    else if (obj.constructor.name == "Number") {
+      return new Literal.IntegerLiteral(obj);
     }
     else if (["Node", "Literal"].includes(obj.constructor.name)) {
       return obj;
     }
     else {
-      return new Literal.IntegerLiteral(obj);
+      return obj;
     }
   }
 

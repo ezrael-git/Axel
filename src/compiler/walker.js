@@ -1,5 +1,5 @@
 // walker.js
-const Node = require("./nodes.js");
+const Literal = require("./literals.js");
 
 
 module.exports = class Walker {
@@ -37,10 +37,13 @@ module.exports = class Walker {
 
   toLiteral (obj) {
     if (obj.constructor.name == "string") {
-      return new Node.TextLiteral(obj);
+      return new Literal.TextLiteral(obj);
+    }
+    else if (obj.constructor.name.includes("Node")) {
+      return obj;
     }
     else {
-      return new Node.IntegerLiteral(obj);
+      return new Literal.IntegerLiteral(obj);
     }
   }
 
@@ -58,16 +61,16 @@ module.exports = class Walker {
       let stats = node.body.statements;
       let args = node.body.args;
       this.variables[name] = [args,stats];
-      return name;
+      return Literal.TextLiteral(name);
     }
     else if (type == "CallNode") {
       let o = node.run(this.variables,new Walker());
-      return o;
+      return this.toLiteral(o);
     }
     else if (type == "VarAssignNode") {
       let name = node.body.name;
-      let getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
       let value = node.body.value.run(this.variables,new Walker());
+
       console.log("varassignnode runned value " + JSON.stringify(value));
       value = this.toLiteral(value);
       let mutable = node.body.mutable;
@@ -91,13 +94,15 @@ module.exports = class Walker {
       }
     }
     else if (type == "TextNode" || type == "IntegerNode") {
-      return node.run();
+      return this.toLiteral(node.run());
     }
     else if (type == "PrintNode") {
-      console.log("PN " + JSON.stringify(this.variables));
+      console.log("PN this.variables: " + JSON.stringify(this.variables));
       let value = node.body.value.run(this.variables,new Walker());
-      console.log("PN VALUE " + JSON.stringify(node.body.value));
-      console.log(this.variables[value]);
+      console.log("PN VALUE RAW " + JSON.stringify(node.body.value));
+      console.log("PN VALUE UNRAW " + JSON.stringify(value))
+      console.log("PN OUTPUT:");
+      node.run(this.variables,new Walker());
     }
   }
   

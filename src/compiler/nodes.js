@@ -131,9 +131,9 @@ class CallNode {
       throw new Error("Tried to call unknown function: " + this.body.callee);
       console.log(JSON.stringify(variables));
     }
-    let statements = variables[this.body.callee][1][0];
-    console.log("CALLNODE STATEMENTS " + JSON.stringify(statements));
-    let output = walker.interpretNode(statements);
+    let statement = variables[this.body.callee][1][0];
+    console.log("CALLNODE STATEMENT " + JSON.stringify(statement));
+    let output = walker.interpretNode(statement,walker.checkType(statement));
     console.log("CALLNODE OUTPUT " + output);
     return output;
   }

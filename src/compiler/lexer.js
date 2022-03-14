@@ -55,6 +55,20 @@ class Lexer {
     return this.source[pos - chars];
   }
 
+  cleanWhitespace (str) {
+    while (str.startsWith(" ")) {
+      str = str.split('');
+      str[0] = '';
+      str = str.join('');
+    }
+    while (str.endsWith(" ")) {
+      str = str.split('');
+      str[str.length - 1] = '';
+      str = str.join('');
+    }
+    return str;
+  }
+
   process (stats) {
     /*
     Handy wrapper around Lexer.lex. Instead of passing one line at a time to the Lexer.lex method, this method allows you to pass multiple lines and then returns their tokens in an Object.
@@ -87,7 +101,7 @@ class Lexer {
     let skipped = [];
 
     function add (type, starts, ends, tk) {
-      lexed.push({type:type, starts:starts, ends:ends, tk:tk.replaceAll(" ", "")});
+      lexed.push({type:type, starts:starts, ends:ends, tk:cleanWhitespace(tk)});
     }
 
     function lastToken () {

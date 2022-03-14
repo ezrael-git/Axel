@@ -114,7 +114,17 @@ class CallNode {
       console.log(JSON.stringify(variables));
     }
     let statement = variables[this.body.callee][1][0];
+    let args_requested = variables[this.body.callee][0];
+    let args_given = this.body.args;
     console.log("CALLNODE STATEMENT " + JSON.stringify(statement));
+    if (args_requested.length != args_given.length) {
+      throw new Error(`Missing arg(s): ${args_given.length} out of ${args_requested.length}`)
+    }
+    for (let arg of args_given) {
+      let name = arg.body.name;
+      let value = arg.run(variables,walker);
+      walker.variables[name] = value;
+    }
     let output = walker.interpretNode(statement,walker.checkType(statement));
     console.log("CALLNODE OUTPUT " + output);
     return output;

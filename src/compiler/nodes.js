@@ -121,17 +121,14 @@ class CallNode {
     }
 
     let argPos = -1;
+    // iterate over given args and introduce them as variables in the function scope
     for (let arg of args_given) {
       argPos += 1;
-      console.log("ARG TYPE " + arg.constructor.name);
       let name = args_requested[argPos].body.name;
-      console.log("ARG Name " + name);
       let value = arg.run(variables,walker);
       walker.variables[name] = value;
     }
-    console.log("CALLNODE VARIABLES " + JSON.stringify(variables));
     let output = walker.interpretNode(statement,walker.checkType(statement));
-    console.log("CALLNODE OUTPUT " + output);
     return output;
   }
 }

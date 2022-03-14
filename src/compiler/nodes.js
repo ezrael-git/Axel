@@ -123,6 +123,7 @@ class CallNode {
     for (let arg of args_given) {
       console.log("ARG TYPE " + arg.constructor.name);
       let name = arg.body.name;
+      console.log("ARG Name " + name);
       let value = arg.run(variables,walker);
       variables[name] = value;
     }

@@ -121,10 +121,11 @@ class CallNode {
       throw new Error(`Missing arg(s): ${args_given.length} out of ${args_requested.length}`)
     }
     let argPos = -1;
+    console.log("ARGS REQUESTED " + JSON.stringify(args_requested));
     for (let arg of args_given) {
       argPos += 1;
       console.log("ARG TYPE " + arg.constructor.name);
-      let name = args_requested[argPos].name;
+      let name = args_requested[argPos].body.name;
       console.log("ARG Name " + name);
       let value = arg.run(variables,walker);
       variables[name] = value;

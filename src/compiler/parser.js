@@ -248,7 +248,7 @@ module.exports = class Parser {
         else if (type == "PRINT") {
           let value_tokens = this.allAfter();
           let value_node = this.recursiveParse(value_tokens)[0];
-          let node = new Node.PrintNode(value_node,value_token.line,value_token.start,value_token.end);
+          let node = new Node.PrintNode(value_node,value_tokens[0].line,value_tokens[0].start,value_tokens[value_tokens.length-1].end);
           node_tree.push(node);
         }
         // function calls

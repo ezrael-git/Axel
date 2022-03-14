@@ -123,8 +123,9 @@ class CallNode {
     for (let arg of args_given) {
       let name = arg.body.name;
       let value = arg.run(variables,walker);
-      walker.variables[name] = value;
+      variables[name] = value;
     }
+    console.log("CALLNODE VARIABLES " + JSON.stringify(variables));
     let output = walker.interpretNode(statement,walker.checkType(statement));
     console.log("CALLNODE OUTPUT " + output);
     return output;

@@ -101,7 +101,7 @@ class Lexer {
     let skipped = [];
 
     function add (type, starts, ends, tk) {
-      lexed.push({type:type, starts:starts, ends:ends, tk:cleanWhitespace(tk)});
+      lexed.push({type:type, starts:starts, ends:ends, tk:this.cleanWhitespace(tk)});
     }
 
     function lastToken () {

@@ -126,11 +126,17 @@ module.exports = class Walker {
       this.program = ast;
     }
     console.log("PG " + JSON.stringify(this.program));
+    let iterated = -1;
+    let outputs = [];
     while (this.peek() != undefined) {
+      iterated += 1;
       let node = this.next();
       console.log("ND " + JSON.stringify(node));
       let type = this.checkType(node);
       let o = this.interpretNode(node,type);
+      outputs.push(o);
     }
+    // return last expression's result
+    return outputs[outputs.length - 1];
   }
 }

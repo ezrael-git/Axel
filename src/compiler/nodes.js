@@ -113,7 +113,7 @@ class CallNode {
       throw new Error("Tried to call unknown function: " + this.body.callee);
       console.log(JSON.stringify(variables));
     }
-    let statement = variables[this.body.callee][1][0];
+    let statements = variables[this.body.callee][1];
     let args_requested = variables[this.body.callee][0];
     let args_given = this.body.args;
     if (args_requested.length != args_given.length) {
@@ -128,7 +128,7 @@ class CallNode {
       let value = arg.run(variables,walker);
       walker.variables[name] = value;
     }
-    let output = walker.interpretNode(statement,walker.checkType(statement));
+    let output = walker.walk(statements);
     return output;
   }
 }

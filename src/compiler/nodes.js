@@ -116,12 +116,11 @@ class CallNode {
     let statement = variables[this.body.callee][1][0];
     let args_requested = variables[this.body.callee][0];
     let args_given = this.body.args;
-    console.log("CALLNODE STATEMENT " + JSON.stringify(statement));
     if (args_requested.length != args_given.length) {
-      throw new Error(`Missing arg(s): ${args_given.length} out of ${args_requested.length}`)
+      throw new Error(`In line ${this.body.line}:\nMissing arg(s): ${args_given.length} were given, ${args_requested.length} were requested`)
     }
+
     let argPos = -1;
-    console.log("ARGS REQUESTED " + JSON.stringify(args_requested));
     for (let arg of args_given) {
       argPos += 1;
       console.log("ARG TYPE " + arg.constructor.name);

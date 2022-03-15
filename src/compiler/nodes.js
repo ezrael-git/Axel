@@ -235,6 +235,54 @@ class PrintNode {
   }
 }
 
+class TrueNode {
+  constructor (line,start,end) {
+    this.type = "BooleanExpression";
+    this.body = {
+      value:"true",
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  run (v,w) {
+    return this.body.value;
+  }
+}
+
+class FalseNode {
+  constructor (line,start,end) {
+    this.type = "BooleanExpression";
+    this.body = {
+      value:"false",
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  run (v,w) {
+    return this.body.value;
+  }
+}
+
+class NilNode {
+  constructor (line,start,end) {
+    this.type = "BooleanExpression";
+    this.body = {
+      value:"nil",
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  run (v,w) {
+    return this.body.value;
+  }
+}
+
 module.exports = {
   VarAssignNode:VarAssignNode,
   VarAccessNode:VarAccessNode,
@@ -245,6 +293,9 @@ module.exports = {
   IntegerNode:IntegerNode,
   HandSideNode:HandSideNode,
   BinaryOperatorNode:BinaryOperatorNode,
-  PrintNode:PrintNode
+  PrintNode:PrintNode,
+  TrueNode:TrueNode,
+  FalseNode:FalseNode,
+  NilNode:NilNode
   
 }

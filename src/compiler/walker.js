@@ -119,10 +119,11 @@ module.exports = class Walker {
       return value;
     }
     else if (["TrueNode","FalseNode","NilNode"].includes(type)) {
-      return node.run();
+      return this.toLiteral(node.run());
     }
     else if (type == "ComparisonOperatorNode") {
-      let o = node.run(this.variables,new Walker(),Literal);
+      let o = node.run(this.variables,new Walker());
+      o = this.toLiteral(o);
       return o;
     }
     else {

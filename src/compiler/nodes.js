@@ -231,11 +231,12 @@ class ComparisonOperatorNode {
     let lhs = this.body.lhs.run(variables,walker);
     let rhs = this.body.rhs.run(variables,walker);
 
-    if (lhs == rhs) {
-      return new Literal.TrueLiteral();
+    if (lhs === rhs) {
+      // note for the walker: please convert the output to Literal before returning
+      return "true";
     }
     else {
-      return new Literal.FalseLiteral();
+      return "false;
     }
   }
 }

@@ -2,6 +2,7 @@
 // generate AST
 
 const Node = require("./nodes.js");
+const Literal = require("./literals.js");
 const Scanner = require("./scanner.js");
 
 
@@ -192,9 +193,10 @@ module.exports = class Parser {
         }
         // comparison operator
         else if (type == "COMPARE") {
-          let lhs = this.lookBack().tk;
-          let rhs = this.peek().tk;
-          let node = new Node.ComparisonOperatorNode(
+          let lhs = this.recursiveParse([this.lookBack()])
+          let rhs = this.recursiveParse([this.peek()])
+          let node = new Node.ComparisonOperatorNode(lhs,rhs,Literal);
+          node_tree.push(node);
         }
         // def keyword
         else if (type == "DEFINE") {

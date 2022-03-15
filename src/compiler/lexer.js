@@ -15,6 +15,9 @@ let TT_DEF = "def"
 let TT_IMM = "imm"
 let TT_END = "end"
 let TT_PRINT = "print"
+let TT_TRUE = "true"
+let TT_FALSE = "false"
+let TT_NIL = "nil"
 
 
 
@@ -202,6 +205,18 @@ class Lexer {
       // print keyword
       else if (it.endsWith(TT_PRINT) && !this.letters.includes(source[pos-5]) && !this.letters.includes(this.peek(pos))) {
         add("PRINT", pos-4, pos, TT_PRINT);
+      }
+      // true keyword
+      else if (it.endsWith(TT_TRUE) && !this.letters.includes(source[pos-4]) && !this.letters.includes(this.peek(pos))) {
+        add("TRUE", pos-3, pos, TT_TRUE);
+      }
+      // false keyword
+      else if (it.endsWith(TT_FALSE) && !this.letters.includes(source[pos-5]) && !this.letters.includes(this.peek(pos))) {
+        add("FALSE", pos-4, pos, TT_FALSE);
+      }
+      // nil keyword
+      else if (it.endsWith(TT_TRUE) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
+        add("NIL", pos-2, pos, TT_NIL);
       }
       else {
         // identifiers

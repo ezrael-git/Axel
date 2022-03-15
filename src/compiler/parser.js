@@ -195,7 +195,7 @@ module.exports = class Parser {
         else if (type == "COMPARE") {
           let lhs = this.recursiveParse([this.lookBack()])
           let rhs = this.recursiveParse([this.peek()])
-          let node = new Node.ComparisonOperatorNode(lhs,rhs,Literal);
+          let node = new Node.ComparisonOperatorNode(lhs,rhs);
           node_tree.push(node);
         }
         // def keyword

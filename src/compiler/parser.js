@@ -251,6 +251,17 @@ module.exports = class Parser {
           let node = new Node.PrintNode(value_node,value_tokens[0].line,value_tokens[0].start,value_tokens[value_tokens.length-1].end);
           node_tree.push(node);
         }
+        // booleans
+        else if (["TRUE","FALSE","NIL"].includes(type)) {
+          if (type == "TRUE") {
+            let node = new Node.TrueNode(token.line,token.start,token.end);
+          } else if (type == "FALSE") {
+            let node = new Node.FalseNode(token.line,token.start,token.end);
+          } else {
+            let node = new Node.NilNode(token.line,token.start,token.end);
+          }
+          node_tree.push(node);
+        }
         // function calls
         else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
           let identifier_token = token;

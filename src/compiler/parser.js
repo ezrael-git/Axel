@@ -141,6 +141,15 @@ module.exports = class Parser {
     return node_tree;
   }
 
+  operatorCheck () {
+    if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE"].includes(this.peek().type)) {
+      return true; // good to go!
+    }
+    else {
+      return false;
+    }
+  }
+
 
   
   
@@ -194,7 +203,7 @@ module.exports = class Parser {
         // comparison operator
         else if (type == "COMPARE") {
           let lhs = this.recursiveParse([this.lookBack()])
-          let rhs = this.recursiveParse([this.peek()])
+          let rhs = this.recursiveParse([this.next()])
           let node = new Node.ComparisonOperatorNode(lhs,rhs);
           node_tree.push(node);
         }
@@ -260,7 +269,7 @@ module.exports = class Parser {
           node_tree.push(node);
         }
         // booleans
-        else if (["TRUE","FALSE","NIL"].includes(type)) {
+        else if (["TRUE","FALSE","NIL"].includes(type) && this.operatorCheck() == true) {
           let node;
           if (type == "TRUE") {
             node = new Node.TrueNode(token.line,token.start,token.end);
@@ -286,7 +295,7 @@ module.exports = class Parser {
           node_tree.push(node);
         }
         // variable accesses
-        else if (type == "IDENTIFIER") {
+        else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
           let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
           node_tree.push(node);
         }
@@ -296,7 +305,7 @@ module.exports = class Parser {
           node_tree.push(node);
         }
         // integers
-        else if (type == "INTEGER" && !["PLUS","MINUS","DIVIDE","MULTIPLY"].includes(this.peek(true).type)) {
+        else if (type == "INTEGER" && this.operatorCheck() == true) {
           let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
           node_tree.push(node);
         }

@@ -190,6 +190,12 @@ module.exports = class Parser {
           let node = new Node.BinaryOperatorNode(lhs,rhs,"/");
           node_tree.push(node);
         }
+        // comparison operator
+        else if (type == "COMPARE") {
+          let lhs = this.lookBack().tk;
+          let rhs = this.peek().tk;
+          let node = new Node.ComparisonOperatorNode(
+        }
         // def keyword
         else if (type == "DEFINE") {
           let name_token = this.next();

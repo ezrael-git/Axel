@@ -38,11 +38,20 @@ module.exports = class Walker {
   }
 
   toLiteral (obj) {
-    if (obj.constructor.name == "String") {
+    if (obj.constructor.name == "String" && !["true","false","nil"].includes(obj)) {
       return new Literal.TextLiteral(obj);
     }
     else if (obj.constructor.name == "Number") {
       return new Literal.IntegerLiteral(obj);
+    }
+    else if (obj == "true") {
+      return new Literal.TrueLiteral(obj);
+    }
+    else if (obj == "false") {
+      return new Literal.FalseLiteral(obj);
+    }
+    else if (obj == "nil") {
+      return new Literal.NilLiteral(obj);
     }
     else if (["Node", "Literal"].includes(obj.constructor.name)) {
       return obj;
@@ -106,10 +115,14 @@ module.exports = class Walker {
     else if (type == "PrintNode") {
       console.log("PN this.variables: " + JSON.stringify(this.variables));
       let value = node.body.value.run(this.variables,new Walker());
-      console.log("PN VALUE RAW " + JSON.stringify(node.body.value));
-      console.log("PN VALUE UNRAW " + JSON.stringify(value))
-      console.log("PN OUTPUT:");
-      node.run(this.variables,new Walker());
+      node.run(this.variables,new Walker())
+      return value;
+    }
+    else if (["TrueNode","FalseNode","NilNode"].includes(type)) {
+      return node.run();
+    }
+    else {
+      throw new Error(`Unknown Node: ${JSON.stringify(node)} \nWith type: ${type}`);
     }
   }
   

@@ -19,12 +19,15 @@ module.exports = class Parser {
     this.ast = {};
   }
 
-  next () {
+  next (safety=false) {
     /*
     Next token
     */
     this.token_iterated += 1;
     let n = this.tokens[this.token_iterated];
+    if (n == undefined && safety == true) {
+      return {0:0}
+    }
     return n;
   }
 
@@ -142,7 +145,7 @@ module.exports = class Parser {
   }
 
   operatorCheck () {
-    if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE"].includes(this.peek().type)) {
+    if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE"].includes(this.peek(true).type)) {
       return true; // good to go!
     }
     else {

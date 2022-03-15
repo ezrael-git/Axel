@@ -121,6 +121,10 @@ module.exports = class Walker {
     else if (["TrueNode","FalseNode","NilNode"].includes(type)) {
       return node.run();
     }
+    else if (type == "ComparisonOperatorNode") {
+      let o = node.run(this.variables,new Walker(),Literal);
+      return o;
+    }
     else {
       throw new Error(`Unknown Node: ${JSON.stringify(node)} \nWith type: ${type}`);
     }

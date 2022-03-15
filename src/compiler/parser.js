@@ -253,12 +253,13 @@ module.exports = class Parser {
         }
         // booleans
         else if (["TRUE","FALSE","NIL"].includes(type)) {
+          let node;
           if (type == "TRUE") {
-            let node = new Node.TrueNode(token.line,token.start,token.end);
+            node = new Node.TrueNode(token.line,token.start,token.end);
           } else if (type == "FALSE") {
-            let node = new Node.FalseNode(token.line,token.start,token.end);
+            node = new Node.FalseNode(token.line,token.start,token.end);
           } else {
-            let node = new Node.NilNode(token.line,token.start,token.end);
+            node = new Node.NilNode(token.line,token.start,token.end);
           }
           node_tree.push(node);
         }

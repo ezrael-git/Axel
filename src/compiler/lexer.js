@@ -169,7 +169,7 @@ class Lexer {
         add("DIVIDE", pos, pos, TT_DIVIDE);
       }
       // equality / assignment operator
-      else if (it.endsWith(TT_EQ) && this.peek(pos) != "=") {
+      else if (it.endsWith(TT_EQ) && this.peek(pos) != "=" && this.back(pos) != "=") {
         add("EQUALITY", pos, pos, TT_EQ);
       }
       // comparison operator

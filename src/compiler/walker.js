@@ -61,6 +61,13 @@ module.exports = class Walker {
     }
   }
 
+  resolveRun (obj) {
+    while (obj.run != undefined) {
+      obj = this.interpretNode(obj);
+    }
+    return obj;
+  }
+
   interpretNode (node,type) {
     /*
     Interpret a single node.
@@ -115,6 +122,7 @@ module.exports = class Walker {
     else if (type == "PrintNode") {
       console.log("PN this.variables: " + JSON.stringify(this.variables));
       let value = node.body.value.run(this.variables,new Walker());
+      value = this.resolveRun(value);
       console.log("PN VALUE BEFORE " + JSON.stringify(node.body.value) + " AFTER " + JSON.stringify(value));
       node.run(this.variables,new Walker())
       return value;
@@ -126,6 +134,10 @@ module.exports = class Walker {
       let o = node.run(this.variables,new Walker());
       o = this.toLiteral(o);
       return o;
+    }
+    // literals
+    else if (node.constructor.name.includes("Literal")) {
+      return obj.run();
     }
     else {
       throw new Error(`Unknown Node: ${JSON.stringify(node)} \nWith type: ${type}`);

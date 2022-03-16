@@ -61,9 +61,9 @@ module.exports = class Walker {
     }
   }
 
-  resolveRun (obj) {
+  resolveRun (obj,interpretNode) {
     while (obj.run != undefined) {
-      obj = this.interpretNode(obj);
+      obj = interpretNode(obj);
     }
     return obj;
   }
@@ -120,10 +120,6 @@ module.exports = class Walker {
       return this.toLiteral(node.run());
     }
     else if (type == "PrintNode") {
-      console.log("PN this.variables: " + JSON.stringify(this.variables));
-      let value = node.body.value.run(this.variables,new Walker());
-      value = this.resolveRun(value);
-      console.log("PN VALUE BEFORE " + JSON.stringify(node.body.value) + " AFTER " + JSON.stringify(value));
       node.run(this.variables,new Walker())
       return value;
     }

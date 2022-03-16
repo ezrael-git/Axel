@@ -120,7 +120,7 @@ module.exports = class Walker {
       return this.toLiteral(node.run());
     }
     else if (type == "PrintNode") {
-      node.run(this.variables,new Walker())
+      let value = node.run(this.variables,new Walker())
       return value;
     }
     else if (["TrueNode","FalseNode","NilNode"].includes(type)) {

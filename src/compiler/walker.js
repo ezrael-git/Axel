@@ -115,6 +115,7 @@ module.exports = class Walker {
     else if (type == "PrintNode") {
       console.log("PN this.variables: " + JSON.stringify(this.variables));
       let value = node.body.value.run(this.variables,new Walker());
+      console.log("PN VALUE BEFORE " + JSON.stringify(node.body.value) + " AFTER " + JSON.stringify(value));
       node.run(this.variables,new Walker())
       return value;
     }

@@ -137,7 +137,7 @@ module.exports = class Walker {
     }
     // literals
     else if (node.constructor.name.includes("Literal")) {
-      return obj.run();
+      return node.run();
     }
     else {
       throw new Error(`Unknown Node: ${JSON.stringify(node)} \nWith type: ${type}`);

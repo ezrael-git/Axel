@@ -47,6 +47,7 @@ class VarAccessNode {
       console.log("VR " + JSON.stringify(variables));
       throw new Error("Cannot access unknown variable " + this.body.name);
     }
+    console.log("VAN VARIABLES " + JSON.stringify(variables));
     let value = variables[this.body.name].run(variables,walker);
     return value;
   }

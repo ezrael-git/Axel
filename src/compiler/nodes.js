@@ -258,7 +258,6 @@ class PrintNode {
   }
 
   run (variables,walker) {
-    let scanner = new Scanner();
     console.log("PRINTNODE VALUE " + this.body.value + " & TYPE " + this.body.value.constructor.name);
     let value = this.body.value.run(variables,walker);
     if (this.body.value.constructor.name == "CallNode") {

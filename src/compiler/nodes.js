@@ -227,7 +227,7 @@ class ComparisonOperatorNode {
     }
   }
 
-  run (variables,walker,Literal) {
+  run (variables,walker) {
     let lhs = this.body.lhs.run(variables,walker);
     let rhs = this.body.rhs.run(variables,walker);
 

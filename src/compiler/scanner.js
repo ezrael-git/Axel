@@ -527,5 +527,12 @@ module.exports = class Scanner {
     }
   }
 
+  resolveRun (obj,interpretNode) {
+    while (obj.run != undefined) {
+      obj = interpretNode(obj);
+    }
+    return obj;
+  }
+
 
 }

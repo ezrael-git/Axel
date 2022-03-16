@@ -108,8 +108,9 @@ class CallNode {
       end:end
     }
   }
+
   
-  run (variables,walker) {
+  run (variables,walker,Literal,toLiteral) {
     if (variables[this.body.callee] == undefined) {
       throw new Error("Tried to call unknown function: " + this.body.callee);
       console.log(JSON.stringify(variables));
@@ -127,7 +128,7 @@ class CallNode {
       argPos += 1;
       let name = args_requested[argPos].body.name;
       let value = arg.run(variables,walker);
-      walker.variables[name] = value;
+      walker.variables[name] = toLiteral(value);
     }
     let output = walker.walk(statements);
     return output;

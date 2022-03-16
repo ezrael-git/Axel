@@ -228,6 +228,7 @@ class ComparisonOperatorNode {
   }
 
   run (variables,walker) {
+    console.log("CON LHS " + JSON.stringify(this.body.lhs))
     let lhs = this.body.lhs.run(variables,walker);
     let rhs = this.body.rhs.run(variables,walker);
 

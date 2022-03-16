@@ -258,8 +258,9 @@ class PrintNode {
   }
 
   run (variables,walker) {
+    let scanner = new Scanner();
     console.log("PRINTNODE VALUE " + this.body.value + " & TYPE " + this.body.value.constructor.name);
-    console.log(this.body.value.run(variables,walker));
+    console.log(scanner.resolveRun(this.body.value.run(variables,walker),walker));
     return this.body.value;
   }
 }

@@ -1,4 +1,5 @@
 // nodes.js
+const Scanner = require("./scanner.js");
 
 
 
@@ -110,7 +111,7 @@ class CallNode {
   }
 
   
-  run (variables,walker,Literal,toLiteral) {
+  run (variables,walker) {
     if (variables[this.body.callee] == undefined) {
       throw new Error("Tried to call unknown function: " + this.body.callee);
       console.log(JSON.stringify(variables));
@@ -123,12 +124,13 @@ class CallNode {
     }
 
     let argPos = -1;
+    let scanner = new Scanner();
     // iterate over given args and introduce them as variables in the function scope
     for (let arg of args_given) {
       argPos += 1;
       let name = args_requested[argPos].body.name;
       let value = arg.run(variables,walker);
-      walker.variables[name] = toLiteral(value);
+      walker.variables[name] = scanner.toLiteral(value);
     }
     let output = walker.walk(statements);
     return output;

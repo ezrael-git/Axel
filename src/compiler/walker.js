@@ -78,7 +78,7 @@ module.exports = class Walker {
       return new Literal.TextLiteral(name);
     }
     else if (type == "CallNode") {
-      let o = node.run(this.variables,new Walker(),Literal,this.toLiteral);
+      let o = node.run(this.variables,new Walker());
       return this.toLiteral(o);
     }
     else if (type == "VarAssignNode") {

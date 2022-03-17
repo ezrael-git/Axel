@@ -284,7 +284,10 @@ module.exports = class Parser {
           let condition_tokens = this.allAfter();
           let condition_node = this.recursiveParse(condition_tokens)[0];
           let statements = [];
+          console.log("LN " + this.line);
+          console.log("CURL " + this.currentLine());
           while (this.currentLine()[0].type != "END") {
+            console.log("CURL " + this.currentLine());
             let tokens_lite = this.nextLine();
             let node_tree_lite = this.recursiveParse(tokens_lite);
             statements = statements.concat(node_tree_lite);

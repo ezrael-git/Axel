@@ -286,6 +286,7 @@ module.exports = class Parser {
         else if (type == "IF") {
           const copy_token = token;
           let condition_tokens = this.allAfter();
+          console.log(JSON.stringify(condition_tokens))
           let condition_node = this.recursiveParse(condition_tokens)[0];
           let statements = [];
           console.log("LN " + this.line);

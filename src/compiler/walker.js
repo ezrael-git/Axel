@@ -44,13 +44,13 @@ module.exports = class Walker {
     else if (obj.constructor.name == "Number") {
       return new Literal.IntegerLiteral(obj);
     }
-    else if (obj == "true") {
+    else if (String(obj) == "true") {
       return new Literal.TrueLiteral(obj);
     }
-    else if (obj == "false") {
+    else if (String(obj) == "false") {
       return new Literal.FalseLiteral(obj);
     }
-    else if (obj == "nil") {
+    else if (String(obj) == "nil") {
       return new Literal.NilLiteral(obj);
     }
     else if (["Node", "Literal"].includes(obj.constructor.name)) {

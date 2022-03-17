@@ -282,7 +282,7 @@ module.exports = class Parser {
         else if (type == "IF") {
           const copy_token = token;
           let condition_tokens = this.allAfter();
-          let condition_node = this.recursiveParse(condition_tokens);
+          let condition_node = this.recursiveParse(condition_tokens)[0];
           let statements = [];
           while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();

@@ -4,6 +4,7 @@ let TT_LPAREN = "("
 let TT_RPAREN = ")"
 let TT_EQ = "="
 let TT_COMPARE = "=="
+let TT_COMPAREOPP = "!="
 let TT_PLUS = "+"
 let TT_MINUS = "-"
 let TT_MULTIPLY = "*"
@@ -169,12 +170,15 @@ class Lexer {
         add("DIVIDE", pos, pos, TT_DIVIDE);
       }
       // equality / assignment operator
-      else if (it.endsWith(TT_EQ) && this.peek(pos) != "=" && this.back(pos) != "=") {
+      else if (it.endsWith(TT_EQ) && this.peek(pos) != "=" && this.back(pos) != "=" && this.back(pos) != "!") {
         add("EQUALITY", pos, pos, TT_EQ);
       }
       // comparison operator
       else if (it.endsWith(TT_COMPARE)) {
         add("COMPARE", pos-1, pos, TT_COMPARE);
+      }
+      else if (it.endsWith(TT_COMPAREOPP)) {
+        add("COMPAREOPP", pos-1, pos, TT_COMPAREOPP);
       }
       // dot operator
       else if (it.endsWith(TT_DOT)) {

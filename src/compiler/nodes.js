@@ -280,7 +280,7 @@ class PrintNode {
     console.log("PRINTNODE VALUE " + this.body.value + " & TYPE " + this.body.value.constructor.name);
     console.log("PN VARS " + JSON.stringify(variables));
     let value = this.body.value.run(variables,walker);
-    console.log"PN VALUE " + JSON.stringify(value));
+    console.log("PN VALUE " + JSON.stringify(value));
     if (this.body.value.constructor.name == "CallNode") {
       value = value.run(variables,walker);
     }

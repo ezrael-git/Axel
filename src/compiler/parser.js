@@ -232,8 +232,8 @@ module.exports = class Parser {
           // we need to get the first element of the AST and assume it's the value. I mean, no one defines their variables like:
           // def a = 1 + 4 + 
           // print(5) + 3
-          let value_node = this.recursiveParse(value_tokens)[0];
-          let node = new Node.VarAssignNode(name_token.tk,true,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
+          let value_nodes = this.recursiveParse(value_tokens);
+          let node = new Node.VarAssignNode(name_token.tk,true,value_nodes[0].constructor.name,value_nodes,token.line,token.start,value_tokens[value_tokens.length-1].end);
           node_tree.push(node);
         }
         // imm keyword

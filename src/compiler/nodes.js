@@ -222,12 +222,15 @@ class BinaryOperatorNode {
 }
 
 class ComparisonOperatorNode {
-  constructor (lhs, rhs) {
+  constructor (lhs, rhs, opposite=false) {
     this.type = "ComparisonExpression";
     this.body = {
       value:"==",
       lhs:lhs,
-      rhs:rhs
+      rhs:rhs,
+    }
+    if (opposite == true) {
+      this.body.value == "!="
     }
   }
 
@@ -236,12 +239,21 @@ class ComparisonOperatorNode {
     let lhs = this.body.lhs.run(variables,walker);
     let rhs = this.body.rhs.run(variables,walker);
 
-    if (lhs === rhs) {
-      // note for the walker: please convert the output to Literal before returning
-      return "true";
+    if (this.body.value == "==") {
+      if (lhs === rhs) {
+        // note for the walker: please convert the output to Literal before returning
+        return "true";
+      }
+      else {
+        return "false";
+      }
     }
     else {
-      return "false";
+      if (lhs !== rhs) {
+        return "true"
+      } else {
+        return "false";
+      }
     }
   }
 }

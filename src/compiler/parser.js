@@ -131,7 +131,11 @@ module.exports = class Parser {
     /*
     Get current line in lineTokens
     */
-    return this.lineTokens[this.line]
+    let o = this.lineTokens[this.line]
+    console.log("CURLS LINE " + this.line);
+    console.log("CURLS " + JSON.stringify(o));
+    console.log("TOTAL " + JSON.stringify(this.lineTokens));
+    return o;
   }
 
 

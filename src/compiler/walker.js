@@ -74,7 +74,7 @@ module.exports = class Walker {
     */
 
     if (type == "BinaryOperatorNode") {
-      let result = this.toLiteral(node.run());
+      let result = this.toLiteral(node.run(this.variables,new Walker()));
       return result;
     }
     else if (type == "FuncAssignNode") {

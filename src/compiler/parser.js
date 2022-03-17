@@ -207,15 +207,14 @@ module.exports = class Parser {
         else if (type == "COMPARE") {
           let lhs = this.recursiveParse([this.lookBack()])
           let rhs = this.recursiveParse([this.next()])
-          let node = new Node.ComparisonOperatorNode(lhs[0],rhs[0]);
+          let node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"==");
           node_tree.push(node);
         }
         else if (type == "COMPAREOPP") {
           console.log("ENTERED COMPAREOPP");
           let lhs = this.recursiveParse([this.lookBack()])
           let rhs = this.recursiveParse([this.next()])
-          let node = new Node.ComparisonOperatorNode(lhs[0],rhs[0],true);
-          console.log("COMPAREOPP NODE.BODY.VALUE " + node.body.value);
+          let node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"!=");
           node_tree.push(node);
         }
         // def keyword

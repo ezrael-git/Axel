@@ -268,8 +268,13 @@ class IfNode {
   }
 
   runStatements (v,w) {
+    let c = -1;
     for (let stat of this.body.statements) {
+      c += 1;
       let o = stat.run(v,w);
+      if (c == this.body.statements.length-1) {
+        return o;
+      }
     }
   }
 
@@ -279,7 +284,8 @@ class IfNode {
       conditionResult = conditionResult.run();
     }
     if (conditionResult == "true") {
-      this.runStatements(v,w);
+      let o = this.runStatements(v,w);
+      return o;
     } else {
       return false;
     }

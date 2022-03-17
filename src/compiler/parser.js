@@ -278,6 +278,20 @@ module.exports = class Parser {
           let node = new Node.PrintNode(value_node,value_tokens[0].line,value_tokens[0].start,value_tokens[value_tokens.length-1].end);
           node_tree.push(node);
         }
+        // if keyword
+        else if (type == "IF") {
+          const copy_token = token;
+          let condition_tokens = this.allAfter();
+          let condition_node = this.recursiveParse(condition_tokens);
+          let statements = [];
+          while (this.currentLine()[0].type != "END") {
+            let tokens_lite = this.nextLine();
+            let node_tree_lite = this.recursiveParse(tokens_lite);
+            statements = statements.concat(node_tree_lite);
+          }
+          let node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+          node_tree.push(node);
+        }
         // booleans
         else if (["TRUE","FALSE","NIL"].includes(type) && this.operatorCheck() == true) {
           let node;

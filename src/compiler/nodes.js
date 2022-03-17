@@ -227,42 +227,6 @@ class BinaryOperatorNode {
   }
 }
 
-class ComparisonOperatorNode {
-  constructor (lhs, rhs, opposite=false) {
-    this.type = "ComparisonExpression";
-    this.body = {
-      value:"==",
-      lhs:lhs,
-      rhs:rhs,
-    }
-    if (opposite == true) {
-      this.body.value == "!="
-    }
-  }
-
-  run (variables,walker) {
-    console.log("CON LHS " + JSON.stringify(this.body.lhs))
-    let lhs = this.body.lhs.run(variables,walker);
-    let rhs = this.body.rhs.run(variables,walker);
-
-    if (this.body.value == "==") {
-      if (lhs === rhs) {
-        // note for the walker: please convert the output to Literal before returning
-        return "true";
-      }
-      else {
-        return "false";
-      }
-    }
-    else {
-      if (lhs !== rhs) {
-        return "true"
-      } else {
-        return "false";
-      }
-    }
-  }
-}
 
 class PrintNode {
   constructor (value, line, start, end) {
@@ -452,7 +416,6 @@ module.exports = {
   IntegerNode:IntegerNode,
   HandSideNode:HandSideNode,
   BinaryOperatorNode:BinaryOperatorNode,
-  ComparisonOperatorNode:ComparisonOperatorNode,
   PrintNode:PrintNode,
   TrueNode:TrueNode,
   FalseNode:FalseNode,

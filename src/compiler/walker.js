@@ -126,6 +126,10 @@ module.exports = class Walker {
     else if (["TrueNode","FalseNode","NilNode"].includes(type)) {
       return this.toLiteral(node.run());
     }
+    else if (type == "IfNode") {
+      let o = node.run(this.variables,new Walker());
+      return this.toLiteral(o);
+    }
     // literals
     else if (node.constructor.name.includes("Literal")) {
       return node.run();

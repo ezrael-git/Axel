@@ -281,6 +281,111 @@ class PrintNode {
   }
 }
 
+class IfNode {
+  constructor (condition, statements, line, start, end) {
+    this.type = "IfExpression";
+    this.body = {
+      condition:condition,
+      statements:statements,
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  runStatements (v,w) {
+    let outputs = [];
+    for (let stat of this.body.statements) {
+      let o = stat.run(v,w);
+    }
+  }
+
+  run (v,w) {
+    let conditionResult = w.interpretNode(this.body.condition);
+    if (conditionResult.run != undefined) {
+      conditionResult = conditionResult.run();
+    }
+    if (conditionResult == "true") {
+      this.runStatements(v,w);
+    } else {
+      return undefined;
+    }
+  }
+}
+
+class ElifNode {
+  constructor (condition, statements, line, start, end) {
+    this.type = "IfExpression";
+    this.body = {
+      condition:condition,
+      statements:statements,
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  runStatements (v,w) {
+    let outputs = [];
+    for (let stat of this.body.statements) {
+      let o = stat.run(v,w);
+    }
+  }
+
+  run (v,w) {
+    let conditionResult = w.interpretNode(this.body.condition);
+    if (conditionResult.run != undefined) {
+      conditionResult = conditionResult.run();
+    }
+    if (conditionResult == "true") {
+      this.runStatements(v,w);
+    } else {
+      return undefined;
+    }
+  }
+}
+
+class ElseNode {
+  constructor (statements, line, start, end) {
+    this.type = "ElseExpression";
+    this.body = {
+      statements:statements,
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  run (v,w) {
+    let outputs = [];
+    for (let stat of this.body.statements) {
+      let o = stat.run(v,w);
+      outputs.push(o);
+    }
+    return outputs[outputs.length - 1];
+  }
+}
+
+class IfChainNode {
+  constructor (if_stat,elif_stats,else_stat,line,start,end) {
+    this.type = "IfChainExpression";
+    this.body = {
+      if:if_stat,
+      elif:elif_stats,
+      else:else_stat,
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  run (v,w) {
+    let if_result = this.body.if.run(v,w);
+    
+  }
+}
+
+
 class TrueNode {
   constructor (line,start,end) {
     this.type = "BooleanExpression";

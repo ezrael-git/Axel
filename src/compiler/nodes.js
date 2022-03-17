@@ -217,6 +217,10 @@ class BinaryOperatorNode {
       return lhs / rhs
     } else if (this.body.op == "*") {
       return lhs * rhs
+    } else if (this.body.op == "==") {
+      return lhs === rhs
+    } else if (this.body.op == "!=") {
+      return lhs !== rhs
     }
   }
 }

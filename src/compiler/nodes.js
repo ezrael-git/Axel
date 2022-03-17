@@ -176,27 +176,27 @@ class IntegerNode {
   }
 }
 
-class HandSideNode {
-  /*
-  For the BinaryOperatorNode
-  */
-  constructor (data, side) {
-    this.type = "HandSideNode"
+class UnaryOperatorNode {
+  constructor (op, rhs) {
+    this.type = "UnaryExpression";
     this.body = {
-      data:data,
-      side:side
+      op:op,
+      rhs:rhs
     }
   }
 
-  run (variables,walker) {
-    let output = walker.walk(this.body.data);
-    return output;
+  run (v,w) {
+    let rhs = this.body.rhs.run(v,w);
+    let op = this.body.op;
+    if (op == "!") {
+      return !rhs
+    }
   }
 }
 
 class BinaryOperatorNode {
   /*
-  For arithmetic operations on integers.
+  For arithmetic operations.
   */
   constructor (lhs, rhs, op) {
     this.type = "BinaryExpression";
@@ -268,7 +268,6 @@ class IfNode {
   }
 
   runStatements (v,w) {
-    let outputs = [];
     for (let stat of this.body.statements) {
       let o = stat.run(v,w);
     }
@@ -282,7 +281,7 @@ class IfNode {
     if (conditionResult == "true") {
       this.runStatements(v,w);
     } else {
-      return undefined;
+      return false;
     }
   }
 }
@@ -416,9 +415,10 @@ module.exports = {
   CallNode:CallNode,
   TextNode:TextNode,
   IntegerNode:IntegerNode,
-  HandSideNode:HandSideNode,
+  UnaryOperatorNode:UnaryOperatorNode,
   BinaryOperatorNode:BinaryOperatorNode,
   PrintNode:PrintNode,
+  IfNode:IfNode,
   TrueNode:TrueNode,
   FalseNode:FalseNode,
   NilNode:NilNode

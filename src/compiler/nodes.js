@@ -44,6 +44,7 @@ class VarAccessNode {
   }
   
   run (variables,walker) {
+    console.log("VARACCESSNODE VARS " + JSON.stringify(variables));
     if (variables[this.body.name] == undefined) {
       console.log("VR " + JSON.stringify(variables));
       throw new Error("Cannot access unknown variable " + this.body.name);

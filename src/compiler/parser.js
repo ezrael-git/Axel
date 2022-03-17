@@ -145,7 +145,7 @@ module.exports = class Parser {
   }
 
   operatorCheck () {
-    if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE"].includes(this.peek(true).type)) {
+    if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE", "COMPAREOPP"].includes(this.peek(true).type)) {
       return true; // good to go!
     }
     else {
@@ -208,6 +208,12 @@ module.exports = class Parser {
           let lhs = this.recursiveParse([this.lookBack()])
           let rhs = this.recursiveParse([this.next()])
           let node = new Node.ComparisonOperatorNode(lhs[0],rhs[0]);
+          node_tree.push(node);
+        }
+        else if (type == "COMPAREOPP") {
+          let lhs = this.recursiveParse([this.lookBack()])
+          let rhs = this.recursiveParse([this.next()])
+          let node = new Node.ComparisonOperatorNode(lhs[0],rhs[0],true);
           node_tree.push(node);
         }
         // def keyword

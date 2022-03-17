@@ -274,7 +274,7 @@ class IfNode {
   }
 
   run (v,w) {
-    let conditionResult = w.interpretNode(this.body.condition);
+    let conditionResult = w.interpretNode(this.body.condition,this.body.condition.constructor.name);
     if (conditionResult.run != undefined) {
       conditionResult = conditionResult.run();
     }

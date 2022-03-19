@@ -228,21 +228,6 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
           }
           let value_tokens = this.allAfter();
-          // collect block tokens, if any
-          // this allows things like:
-          // def a = fn _ ()
-          //   -- do something
-          // end
-          let value_tokens_types = [];
-          for (let v of value_tokens) { value_tokens_types.push(v.tk) };
-          if (value_tokens_types.includes("if") || value_tokens_types.includes("fn")) {
-            while (this.currentLine()[0].type != "END") {
-              let line = this.nextLine();
-              value_tokens.push(line);
-            }
-          }
-          console.log("VT " + JSON.stringify(value_tokens));
-          console.log("VTT " + JSON.stringify(value_tokens_types));
           // Since recursiveParse returns a full-blown AST generated from a bunch of statements,
           // we need to get the first element of the AST and assume it's the value. 
 

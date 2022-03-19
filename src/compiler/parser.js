@@ -241,6 +241,8 @@ module.exports = class Parser {
               value_tokens.push(line);
             }
           }
+          console.log("VT " + JSON.stringify(value_tokens));
+          console.log("VTT " + JSON.stringify(value_tokens_types));
           // Since recursiveParse returns a full-blown AST generated from a bunch of statements,
           // we need to get the first element of the AST and assume it's the value. 
 

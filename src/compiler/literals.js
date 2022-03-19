@@ -1,6 +1,6 @@
 // literals.js
 
-class Literal {
+class BaseLiteral {
   /* base class */
   constructor (value) {
     this.value = value;
@@ -27,6 +27,18 @@ class TextLiteral {
   run () {
     return this.value;
   }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
 }
 
 class IntegerLiteral {
@@ -36,6 +48,18 @@ class IntegerLiteral {
 
   run () {
     return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
   }
 }
 
@@ -47,6 +71,18 @@ class TrueLiteral {
   run () {
     return this.value;
   }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
 }
 class FalseLiteral {
   constructor () {
@@ -55,6 +91,18 @@ class FalseLiteral {
 
   run () {
     return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
   }
 }
 
@@ -65,6 +113,18 @@ class NilLiteral {
 
   run () {
     return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
   }
 }
 

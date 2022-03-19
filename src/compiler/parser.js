@@ -228,12 +228,24 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
           }
           let value_tokens = this.allAfter();
+          // collect block tokens, if any
+          // this allows things like:
+          // def a = fn _ ()
+          //   -- do something
+          // end
+          let value_tokens_types = [];
+          for (let v of value_tokens) { value_tokens_types.push(v.value) };
+          if (value_tokens_types.includes("if") || value_tokens_types.includes("fn")) {
+            while (this.currentLine()[0].type != "end") {
+              let line = this.nextLine();
+              value_tokens.push(line);
+            }
+          }
           // Since recursiveParse returns a full-blown AST generated from a bunch of statements,
-          // we need to get the first element of the AST and assume it's the value. I mean, no one defines their variables like:
-          // def a = 1 + 4 + 
-          // print(5) + 3
-          let value_nodes = this.recursiveParse(value_tokens);
-          let node = new Node.VarAssignNode(name_token.tk,true,value_nodes[0].constructor.name,value_nodes,token.line,token.start,value_tokens[value_tokens.length-1].end);
+          // we need to get the first element of the AST and assume it's the value. 
+
+          let value_node = this.recursiveParse(value_tokens)[0];
+          let node = new Node.VarAssignNode(name_token.tk,true,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
           node_tree.push(node);
         }
         // imm keyword

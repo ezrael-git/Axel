@@ -279,6 +279,7 @@ class IfNode {
   }
 
   run (v,w) {
+    w.variables = v; // pass global variables to the ifNode interpreter
     let conditionResult = w.interpretNode(this.body.condition,this.body.condition.constructor.name);
     if (conditionResult.run != undefined) {
       conditionResult = conditionResult.run();

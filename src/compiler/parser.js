@@ -279,7 +279,7 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
           }
           let body = [];
-          while (this.peekLine()[0].type != "END") {
+          while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
             console.log("TOKENS LITE " + JSON.stringify(tokens_lite));
             console.log(typeof tokens_lite);
@@ -310,6 +310,7 @@ module.exports = class Parser {
             let tokens_lite = this.nextLine();
             let node_tree_lite = this.recursiveParse(tokens_lite);
             statements = statements.concat(node_tree_lite);
+            if (this.peekLine() == undefined) { break };
           }
           let node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
           node_tree.push(node);

@@ -284,6 +284,9 @@ class IfNode {
     if (conditionResult.run != undefined) {
       conditionResult = conditionResult.run();
     }
+    if (conditionResult.constructor.name.includes("Literal")) {
+      conditionResult = String(conditionResult.to_b());
+    }
     if (conditionResult == "true") {
       let o = this.runStatements(v,w);
       return o;

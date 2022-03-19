@@ -28,7 +28,7 @@ class Axel {
     statements = statements.replaceAll(';', '\n').trim().split('\n');
     let tokens = this.lexer.process(statements);
     let ast = this.parser.parse(tokens);
-    let o = walker.walk(ast);
+    let o = this.walker.walk(ast);
     return "return " + o;
   }
 

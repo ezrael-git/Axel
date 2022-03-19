@@ -234,7 +234,7 @@ module.exports = class Parser {
           //   -- do something
           // end
           let value_tokens_types = [];
-          for (let v of value_tokens) { value_tokens_types.push(v.value) };
+          for (let v of value_tokens) { value_tokens_types.push(v.tk) };
           if (value_tokens_types.includes("if") || value_tokens_types.includes("fn")) {
             while (this.currentLine()[0].type != "end") {
               let line = this.nextLine();

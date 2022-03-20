@@ -341,6 +341,7 @@ module.exports = class Parser {
         // else keyword, to be catched by the if line
         else if (type == "ELSE") {
           let statements = [];
+          const copy_token = token;
           while (this.currentLine()[0].type != "END" && this.currentLine()[0].type != "ELIF" && this.currentLine()[0].type != "ELSE" && this.currentLine()[0].type != "IF") {
             let tokens_lite = this.nextLine();
             let node_tree_lite = this.recursiveParse(tokens_lite);

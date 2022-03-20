@@ -285,19 +285,51 @@ module.exports = class Parser {
         else if (type == "IF") {
           const copy_token = token;
           let condition_tokens = this.allAfter();
-          console.log(JSON.stringify(condition_tokens))
           let condition_node = this.recursiveParse(condition_tokens)[0];
           let statements = [];
-          console.log("LN " + this.line);
-          console.log("CURL " + this.currentLine());
-          while (this.currentLine()[0].type != "END") {
-            console.log("CURL " + this.currentLine());
+          while (this.currentLine()[0].type != "END" && this.currentLine()[0].type != "ELIF" && this.currentLine()[0].type != "ELSE") {
             let tokens_lite = this.nextLine();
             let node_tree_lite = this.recursiveParse(tokens_lite);
             statements = statements.concat(node_tree_lite);
             if (this.peekLine() == undefined) { break };
           }
-          let node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+          let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+          let elif_tokens = [];
+          // go through the next few lines checking if there are any elif statements
+          // this is so we can build a proper if-elif-else chain if possible
+          if (this.peekLine()[0].type == "ELIF") {
+            while (this.currentLine()[0].type != "END") {
+              let tks_lite = this.nextLine();
+              elif_tokens.push(tks_lite);
+            }
+          }
+          let elif_nodes = [];
+          
+          node_tree.push(node);
+        }
+        else if (type == "ELIF") {
+          const copy_token = token;
+          let condition_tokens = this.allAfter();
+          let condition_node = this.recursiveParse(condition_tokens)[0];
+          let statements = [];
+          while (this.currentLine()[0].type != "END" && this.currentLine()[0].type != "ELIF" && this.currentLine()[0].type != "ELSE" && this.currentLine()[0].type != "IF") {
+            let tokens_lite = this.nextLine();
+            let node_tree_lite = this.recursiveParse(tokens_lite);
+            statements = statements.concat(node_tree_lite);
+            if (this.peekLine() == undefined) { break };
+          }
+          let node = new Node.ElifNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+          node_tree.push(node);
+        }
+        else if (type == "ELSE") {
+          let statements = [];
+          while (this.currentLine()[0].type != "END" && this.currentLine()[0].type != "ELIF" && this.currentLine()[0].type != "ELSE" && this.currentLine()[0].type != "IF") {
+            let tokens_lite = this.nextLine();
+            let node_tree_lite = this.recursiveParse(tokens_lite);
+            statements = statements.concat(node_tree_lite);
+            if (this.peekLine() == undefined) { break };
+          }
+          let node = new Node.ElseNode(statements,copy_token.line,copy_token.start,token.end);
           node_tree.push(node);
         }
         // booleans

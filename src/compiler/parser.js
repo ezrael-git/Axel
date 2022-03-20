@@ -300,11 +300,23 @@ module.exports = class Parser {
           if (this.peekLine()[0].type == "ELIF") {
             while (this.currentLine()[0].type != "END") {
               let tks_lite = this.nextLine();
-              elif_tokens.push(tks_lite);
+              elif_tokens.concat(tks_lite);
             }
           }
-          let elif_nodes = [];
-          
+          let elif_nodes = this.recursiveParse(elif_tokens);
+      
+          // now that we have elif nodes, we should look for an else statement
+          if (this.peekLine()[0].type == "ELSE") {
+            let else_tokens = this.nextLine();
+            while (this.currentLine()[0].type != "END") {
+              let tks_lite = this.nextLine();
+              else_tokens.push(tks_lite);
+            }
+
+            let else_node = this.recursiveParse(else_tokens);
+          }
+          let chain = [if_node].concat(elif_nodes).concat(else_node);
+          let node = new Node.IfChainNode();
           node_tree.push(node);
         }
         else if (type == "ELIF") {

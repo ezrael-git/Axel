@@ -401,7 +401,13 @@ class IfChainNode {
           continue;
         }
       }
-      e
+      else if (type == "ElseNode") {
+        let o = member.run(v,w);
+        return o;
+      }
+      else {
+        throw new Error("Unknown type in ifNodeChain: " + type);
+      }
     }
   }
 }

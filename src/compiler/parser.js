@@ -315,7 +315,7 @@ module.exports = class Parser {
 
             let else_node = this.recursiveParse(else_tokens);
           } else {
-            console.log("NEXT LINE " + this.peekLine()[0].type);
+            console.log("NEXT LINE " + this.peekLine()[0]);
             let else_node = [];
           }
           let chain = [if_node].concat(elif_nodes).concat(else_node);

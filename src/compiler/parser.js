@@ -314,11 +314,15 @@ module.exports = class Parser {
             }
 
             let else_node = this.recursiveParse(else_tokens);
+          } else {
+            console.log("NEXT LINE " + this.peekLine()[0].type);
+            let else_node = [];
           }
           let chain = [if_node].concat(elif_nodes).concat(else_node);
           let node = new Node.IfChainNode();
           node_tree.push(node);
         }
+        // elif keyword, to be catched by the if line
         else if (type == "ELIF") {
           const copy_token = token;
           let condition_tokens = this.allAfter();
@@ -333,6 +337,7 @@ module.exports = class Parser {
           let node = new Node.ElifNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
           node_tree.push(node);
         }
+        // else keyword, to be catched by the if line
         else if (type == "ELSE") {
           let statements = [];
           while (this.currentLine()[0].type != "END" && this.currentLine()[0].type != "ELIF" && this.currentLine()[0].type != "ELSE" && this.currentLine()[0].type != "IF") {

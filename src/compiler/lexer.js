@@ -21,6 +21,8 @@ let TT_TRUE = "true"
 let TT_FALSE = "false"
 let TT_NIL = "nil"
 let TT_IF = "if"
+let TT_ELIF = "elif"
+let TT_ELSE = "else"
 
 
 
@@ -231,6 +233,14 @@ class Lexer {
       // if keyword
       else if (it.endsWith(TT_IF) && !this.letters.includes(source[pos-2]) && !this.letters.includes(this.peek(pos))) {
         add("IF", pos-1, pos, TT_IF);
+      }
+      // elif keyword
+      else if (it.endsWith(TT_ELIF) && !this.letters.includes(source[pos-4]) && !this.letters.includes(this.peek(pos))) {
+        add("ELIF", pos-2, pos, TT_ELIF);
+      }
+      // else keyword
+      else if (it.endsWith(TT_ELSE) && !this.letters.includes(source[pos-4]) && !this.letters.includes(this.peek(pos))) {
+        add("ELSE", pos-2, pos, TT_ELSE);
       }
       else {
         // identifiers

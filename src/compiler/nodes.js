@@ -467,6 +467,9 @@ module.exports = {
   BinaryOperatorNode:BinaryOperatorNode,
   PrintNode:PrintNode,
   IfNode:IfNode,
+  ElifNode:ElifNode,
+  ElseNode:ElseNode,
+  IfChainNode:IfChainNode,
   TrueNode:TrueNode,
   FalseNode:FalseNode,
   NilNode:NilNode

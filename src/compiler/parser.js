@@ -306,6 +306,7 @@ module.exports = class Parser {
           let elif_nodes = this.recursiveParse(elif_tokens);
       
           // now that we have elif nodes, we should look for an else statement
+          let else_node = [];
           if (this.peekLine()[0].type == "ELSE") {
             let else_tokens = this.nextLine();
             while (this.currentLine()[0].type != "END") {
@@ -313,13 +314,13 @@ module.exports = class Parser {
               else_tokens.push(tks_lite);
             }
 
-            let else_node = this.recursiveParse(else_tokens);
+            else_node = this.recursiveParse(else_tokens);
           } else {
-            console.log("NEXT LINE " + this.peekLine()[0]);
-            let else_node = [];
+            console.log("NEXT LINE " + JSON.stringify(this.peekLine()[0]));
+            else_node = [];
           }
           let chain = [if_node].concat(elif_nodes).concat(else_node);
-          let node = new Node.IfChainNode();
+          let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
           node_tree.push(node);
         }
         // elif keyword, to be catched by the if line

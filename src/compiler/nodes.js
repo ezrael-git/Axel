@@ -278,7 +278,7 @@ class IfNode {
     }
   }
 
-  run (v,w) {
+  runCondition (v,w) {
     w.variables = v; // pass global variables to the ifNode interpreter
     let conditionResult = w.interpretNode(this.body.condition,this.body.condition.constructor.name);
     if (conditionResult.run != undefined && !conditionResult.constructor.name.includes("Literal")) {
@@ -287,6 +287,11 @@ class IfNode {
     if (conditionResult.constructor.name.includes("Literal")) {
       conditionResult = String(conditionResult.to_b());
     }
+    return conditionResult;
+  }
+
+  run (v,w) {
+    let conditionResult = this.runCondition(v,w);
     if (conditionResult == "true") {
       let o = this.runStatements(v,w);
       return o;
@@ -298,7 +303,7 @@ class IfNode {
 
 class ElifNode {
   constructor (condition, statements, line, start, end) {
-    this.type = "IfExpression";
+    this.type = "ElifExpression";
     this.body = {
       condition:condition,
       statements:statements,
@@ -309,22 +314,31 @@ class ElifNode {
   }
 
   runStatements (v,w) {
-    let outputs = [];
+    let c = -1;
     for (let stat of this.body.statements) {
+      c += 1;
       let o = stat.run(v,w);
+      if (c == this.body.statements.length-1) {
+        return o;
+      }
     }
   }
 
-  run (v,w) {
-    let conditionResult = w.interpretNode(this.body.condition);
-    if (conditionResult.run != undefined) {
+  runCondition (v,w) {
+    w.variables = v; // pass global variables to the ifNode interpreter
+    let conditionResult = w.interpretNode(this.body.condition,this.body.condition.constructor.name);
+    if (conditionResult.run != undefined && !conditionResult.constructor.name.includes("Literal")) {
       conditionResult = conditionResult.run();
     }
-    if (conditionResult == "true") {
-      this.runStatements(v,w);
-    } else {
-      return undefined;
+    if (conditionResult.constructor.name.includes("Literal")) {
+      conditionResult = String(conditionResult.to_b());
     }
+    return conditionResult;
+  }
+
+  run (v,w) {
+    let o = this.runStatements(v,w);
+    return o;
   }
 }
 
@@ -332,6 +346,7 @@ class ElseNode {
   constructor (statements, line, start, end) {
     this.type = "ElseExpression";
     this.body = {
+      condition:condition,
       statements:statements,
       line:line,
       start:start,
@@ -339,23 +354,29 @@ class ElseNode {
     }
   }
 
-  run (v,w) {
-    let outputs = [];
+  runStatements (v,w) {
+    let c = -1;
     for (let stat of this.body.statements) {
+      c += 1;
       let o = stat.run(v,w);
-      outputs.push(o);
+      if (c == this.body.statements.length-1) {
+        return o;
+      }
     }
-    return outputs[outputs.length - 1];
+  }
+
+
+  run (v,w) {
+    let o = this.runStatements(v,w);
+    return o;
   }
 }
 
 class IfChainNode {
-  constructor (if_stat,elif_stats,else_stat,line,start,end) {
+  constructor (chain,line,start,end) {
     this.type = "IfChainExpression";
     this.body = {
-      if:if_stat,
-      elif:elif_stats,
-      else:else_stat,
+      chain:chain,
       line:line,
       start:start,
       end:end
@@ -363,8 +384,25 @@ class IfChainNode {
   }
 
   run (v,w) {
-    let if_result = this.body.if.run(v,w);
-    
+    let pos = -1;
+    if (this.body.chain[0].type != "IfExpression") {
+      throw new Error("IfChain's first member should be an IfExpression, not " + JSON.stringify(this.body.chain[0]));
+    }
+    for (let member of this.body.chain) {
+      pos += 1;
+      let type = member.constructor.name;
+      if (type == "IfNode" || type == "ElifNode") {
+        let condition = member.runCondition(v,w);
+        if (condition == "true") {
+          let o = member.run(v,w);
+          return o;
+        }
+        else {
+          continue;
+        }
+      }
+      e
+    }
   }
 }
 

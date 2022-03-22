@@ -310,7 +310,9 @@ module.exports = class Parser {
               elif_tokens[this.line] = tks_lite
             }
           }
+          console.log("ELIF TOKENS " + JSON.stringify(elif_tokens));
           let elif_nodes = this.recursiveParse(elif_tokens,false);
+          console.log("ELIF NODES " + JSON.stringify(elif_nodes));
       
           // now that we have elif nodes, we should look for an else statement
           let else_node = [];

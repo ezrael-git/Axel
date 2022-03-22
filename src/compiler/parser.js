@@ -343,7 +343,7 @@ module.exports = class Parser {
           let condition_tokens = this.allAfter();
           let condition_node = this.recursiveParse(condition_tokens)[0];
           let statements = [];
-          while (this.currentLine()[0].type != "END" && this.currentLine()[0].type != "ELIF" && this.currentLine()[0].type != "ELSE" && this.currentLine()[0].type != "IF") {
+          while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
             let node_tree_lite = this.recursiveParse(tokens_lite);
             statements = statements.concat(node_tree_lite);
@@ -356,7 +356,7 @@ module.exports = class Parser {
         else if (type == "ELSE") {
           let statements = [];
           const copy_token = token;
-          while (this.currentLine()[0].type != "END" && this.currentLine()[0].type != "ELIF" && this.currentLine()[0].type != "ELSE" && this.currentLine()[0].type != "IF") {
+          while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
             let node_tree_lite = this.recursiveParse(tokens_lite);
             statements = statements.concat(node_tree_lite);

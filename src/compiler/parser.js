@@ -320,7 +320,7 @@ module.exports = class Parser {
           console.log("ELIF NODES " + JSON.stringify(elif_nodes));
       
           // now that we have elif nodes, we should look for an else statement
-          let else_tokens = [];
+          let else_tokens = {};
           let else_it = 0;
           if (this.peekLine()[0].type == "ELSE") {
             this.nextLine();

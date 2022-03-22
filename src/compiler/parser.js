@@ -320,19 +320,25 @@ module.exports = class Parser {
           console.log("ELIF NODES " + JSON.stringify(elif_nodes));
       
           // now that we have elif nodes, we should look for an else statement
-          let else_node = [];
+          let else_tokens = [];
+          let else_it = 0;
           if (this.peekLine()[0].type == "ELSE") {
-            let else_tokens = this.nextLine();
+            this.nextLine();
             while (this.currentLine()[0].type != "END") {
+              if (else_it == 0) {
+                this.previousLine();
+              }
               let tks_lite = this.nextLine();
-              else_tokens.push(tks_lite);
+              else_it += 1;
+              console.log("ADDING " + JSON.stringify(tks_lite));
+              else_tokens[else_it] = tks_lite
             }
-
-            else_node = this.recursiveParse(else_tokens);
-          } else {
-            console.log("NEXT LINE " + JSON.stringify(this.peekLine()[0]));
-            else_node = [];
           }
+          console.log("ELSE TOKENS " + JSON.stringify(else_tokens));
+          let else_node = this.recursiveParse(else_tokens);
+          console.log("ELSE NODE " + JSON.stringify(else_node));
+
+          // finally we can construct the chain
           let chain = [if_node].concat(elif_nodes).concat(else_node);
           let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
           node_tree.push(node);

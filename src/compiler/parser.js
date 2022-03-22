@@ -304,9 +304,13 @@ module.exports = class Parser {
           // go through the next few lines checking if there are any elif statements
           // this is so we can build a proper if-elif-else chain if possible
           console.log("peekline " + JSON.stringify(this.peekLine()));
+          function performElifCheck (er) {
+            return this.currentLine()[0].type != "ELIF" && this.line != er;
+          }
           if (this.currentLine()[0].type == "ELIF") {
             console.log("ELIF STATEMENT CAUGHT");
-            while (this.currentLine()[0].type != "END" && this.currentLine()[0].type != "ELIF" && this.currentLine()[0].type != "ELSE") {
+            const elif_ref = this.line;
+            while (this.currentLine()[0].type != "END" && performElifCheck(elif_ref) == true && this.currentLine()[0].type != "ELSE") {
               let tks_lite = this.nextLine();
               console.log("ADDING " + JSON.stringify(tks_lite));
               elif_tokens[this.line] = tks_lite

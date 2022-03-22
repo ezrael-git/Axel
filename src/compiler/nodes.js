@@ -346,7 +346,6 @@ class ElseNode {
   constructor (statements, line, start, end) {
     this.type = "ElseExpression";
     this.body = {
-      condition:condition,
       statements:statements,
       line:line,
       start:start,

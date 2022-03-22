@@ -139,12 +139,17 @@ module.exports = class Parser {
   }
 
 
-  recursiveParse (tokens) {
+  recursiveParse (tokens, oneline=true) {
     /*
     Parse tokens from a new instance of the Parser
     */
     let parser = new Parser();
-    let node_tree = parser.parse({1:tokens});
+    let node_tree = "";
+    if (oneline == true) {
+      node_tree = parser.parse({1:tokens});
+    } else {
+      node_tree = parser.parse(tokens);
+    }
     return node_tree;
   }
 
@@ -294,16 +299,20 @@ module.exports = class Parser {
             if (this.peekLine() == undefined) { break };
           }
           let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
-          let elif_tokens = [];
+          let elif_tokens = {};
+          let elif_it = 0;
           // go through the next few lines checking if there are any elif statements
           // this is so we can build a proper if-elif-else chain if possible
+          console.log("peekline " + JSON.stringify(this.peekLine()));
           if (this.peekLine()[0].type == "ELIF") {
+            console.log("ELIF STATEMENT CAUGHT");
             while (this.currentLine()[0].type != "END") {
               let tks_lite = this.nextLine();
-              elif_tokens.concat(tks_lite);
+              console.log("ADDING " + JSON.stringify(tks_lite));
+              elif_tokens[this.line] = tks_lite
             }
           }
-          let elif_nodes = this.recursiveParse(elif_tokens);
+          let elif_nodes = this.recursiveParse(elif_tokens,false);
       
           // now that we have elif nodes, we should look for an else statement
           let else_node = [];

@@ -301,6 +301,7 @@ module.exports = class Parser {
           let elif_tokens = {};
 
           this.previousLine();
+          console.log("PEEKLINE " + JSON.stringify(this.peekLine()));
           if (this.peekLine()[0].type == "ELIF") {
             console.log("ELIF STATEMENT CAUGHT");
             while (this.currentLine()[0].type != "END") {

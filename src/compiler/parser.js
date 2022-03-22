@@ -300,7 +300,6 @@ module.exports = class Parser {
           // this is so we can build a proper if-elif-else chain if possible
           let elif_tokens = {};
 
-          this.previousLine();
           console.log("PEEKLINE " + JSON.stringify(this.peekLine()));
           if (this.peekLine()[0].type == "ELIF") {
             console.log("ELIF STATEMENT CAUGHT");

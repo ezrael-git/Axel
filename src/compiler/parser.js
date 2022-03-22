@@ -306,6 +306,9 @@ module.exports = class Parser {
             console.log("ELIF STATEMENT CAUGHT");
             this.nextLine();
             while (this.currentLine()[0].type != "END") {
+              if (elif_it == 0) {
+                this.previousLine();
+              }
               let tks_lite = this.nextLine();
               elif_it += 1;
               console.log("ADDING " + JSON.stringify(tks_lite));

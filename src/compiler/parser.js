@@ -303,6 +303,7 @@ module.exports = class Parser {
           console.log("PEEKLINE " + JSON.stringify(this.peekLine()));
           if (this.peekLine()[0].type == "ELIF") {
             console.log("ELIF STATEMENT CAUGHT");
+            this.nextLine();
             while (this.currentLine()[0].type != "END") {
               let tks_lite = this.nextLine();
               console.log("ADDING " + JSON.stringify(tks_lite));

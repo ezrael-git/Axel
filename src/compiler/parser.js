@@ -292,25 +292,21 @@ module.exports = class Parser {
           let condition_tokens = this.allAfter();
           let condition_node = this.recursiveParse(condition_tokens)[0];
           let statements = [];
-          while (this.currentLine()[0].type != "END" && this.currentLine()[0].type != "ELIF" && this.currentLine()[0].type != "ELSE") {
+          while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
             let node_tree_lite = this.recursiveParse(tokens_lite);
             statements = statements.concat(node_tree_lite);
             if (this.peekLine() == undefined) { break };
           }
           let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
-          let elif_tokens = {};
-          let elif_it = 0;
           // go through the next few lines checking if there are any elif statements
           // this is so we can build a proper if-elif-else chain if possible
-          console.log("peekline " + JSON.stringify(this.peekLine()));
-          function performElifCheck (cl,er,l) {
-            return cl[0].type != "ELIF" && l != er;
-          }
-          if (this.currentLine()[0].type == "ELIF") {
+          let elif_tokens = {};
+
+          this.previousLine();
+          if (this.peekLine()[0].type == "ELIF") {
             console.log("ELIF STATEMENT CAUGHT");
-            const elif_ref = this.line;
-            while (this.currentLine()[0].type != "END" && performElifCheck(this.currentLine(),elif_ref,this.line) == true && this.currentLine()[0].type != "ELSE") {
+            while (this.currentLine()[0].type != "END") {
               let tks_lite = this.nextLine();
               console.log("ADDING " + JSON.stringify(tks_lite));
               elif_tokens[this.line] = tks_lite

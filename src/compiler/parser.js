@@ -360,10 +360,12 @@ module.exports = class Parser {
         }
         // else keyword, to be catched by the if line
         else if (type == "ELSE") {
+          console.log("ENTERED ELSE SPACE WITH TOKEN " + JSON.stringify(token));
           let statements = [];
           const copy_token = token;
           while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
+            console.log("ELSE TKS LITE " + JSON.stringify(tokens_lite));
             let node_tree_lite = this.recursiveParse(tokens_lite);
             statements = statements.concat(node_tree_lite);
             if (this.peekLine() == undefined) { break };

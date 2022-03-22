@@ -335,7 +335,7 @@ module.exports = class Parser {
             }
           }
           console.log("ELSE TOKENS " + JSON.stringify(else_tokens));
-          let else_node = this.recursiveParse(else_tokens);
+          let else_node = this.recursiveParse(else_tokens,false);
           console.log("ELSE NODE " + JSON.stringify(else_node));
 
           // finally we can construct the chain

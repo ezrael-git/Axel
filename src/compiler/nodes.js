@@ -392,6 +392,7 @@ class IfChainNode {
       let type = member.constructor.name;
       if (type == "IfNode" || type == "ElifNode") {
         let condition = member.runCondition(v,w);
+        console.log("COND " + JSON.stringify(condition));
         if (condition == "true") {
           let o = member.run(v,w);
           return o;

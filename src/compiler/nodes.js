@@ -292,9 +292,12 @@ class IfNode {
     if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = String(conditionResult.to_b());
     }
+    else if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
+      conditionResult = conditionResult.run();
+    }
     console.log("third")
     console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
-    return conditionResult;
+    return conditionResult; 
   }
 
   run (v,w) {
@@ -334,13 +337,22 @@ class ElifNode {
   runCondition (v,w) {
     w.variables = v; // pass global variables to the ifNode interpreter
     let conditionResult = w.interpretNode(this.body.condition,this.body.condition.constructor.name);
+    console.log("elif first");
+    console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
     if (conditionResult.run != undefined && !conditionResult.constructor.name.includes("Literal")) {
       conditionResult = conditionResult.run();
     }
-    if (conditionResult.constructor.name.includes("Literal")) {
+    console.log("elif second")
+    console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
+    if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = String(conditionResult.to_b());
     }
-    return conditionResult;
+    else if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
+      conditionResult = conditionResult.run();
+    }
+    console.log("elif third")
+    console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
+    return conditionResult; 
   }
 
   run (v,w) {

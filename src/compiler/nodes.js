@@ -406,6 +406,7 @@ class IfChainNode {
     if (this.body.chain[0].type != "IfExpression") {
       throw new Error("IfChain's first member should be an IfExpression, not " + JSON.stringify(this.body.chain[0]));
     }
+    console.log("CHAIN " + JSON.stringify(this.chain));
     for (let member of this.body.chain) {
       pos += 1;
       let type = member.constructor.name;

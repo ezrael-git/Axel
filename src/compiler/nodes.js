@@ -222,7 +222,8 @@ class BinaryOperatorNode {
     } else if (this.body.op == "*") {
       return lhs * rhs
     } else if (this.body.op == "==") {
-      return lhs === rhs
+      console.log("COMP " + lhs === rhs);
+      return lhs === rhs;
     } else if (this.body.op == "!=") {
       return lhs !== rhs
     }

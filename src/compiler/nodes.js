@@ -289,7 +289,7 @@ class IfNode {
     }
     console.log("second")
     console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
-    if (conditionResult.constructor.name.includes("Literal")) {
+    if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = String(conditionResult.to_b());
     }
     console.log("third")

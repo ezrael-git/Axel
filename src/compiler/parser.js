@@ -322,7 +322,7 @@ module.exports = class Parser {
           // now that we have elif nodes, we should look for an else statement
           let else_tokens = {};
           let else_it = 0;
-          if (this.peekLine()[0].type == "ELSE") {
+          while (this.peekLine()[0].type == "ELSE") {
             this.nextLine();
             while (this.currentLine()[0].type != "END") {
               if (else_it == 0) {
@@ -333,6 +333,7 @@ module.exports = class Parser {
               console.log("ADDING " + JSON.stringify(tks_lite));
               else_tokens[else_it] = tks_lite
             }
+            else_it = 0;
           }
           console.log("ELSE TOKENS " + JSON.stringify(else_tokens));
           let else_node = this.recursiveParse(else_tokens,false);

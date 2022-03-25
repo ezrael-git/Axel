@@ -172,7 +172,7 @@ class IntegerNode {
   }
 
   run () {
-    return this.body.value;
+    return parseInt(this.body.value);
   }
 }
 

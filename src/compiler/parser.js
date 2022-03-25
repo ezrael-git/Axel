@@ -335,6 +335,7 @@ module.exports = class Parser {
             }
             else_it = 0;
           }
+          console.log("PEEKLINE " + JSON.stringify(this.peekLine()));
           console.log("ELSE TOKENS " + JSON.stringify(else_tokens));
           let else_node = this.recursiveParse(else_tokens,false);
           console.log("ELSE NODE " + JSON.stringify(else_node));

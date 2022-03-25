@@ -44,12 +44,10 @@ class VarAccessNode {
   }
   
   run (variables,walker) {
-    console.log("VARACCESSNODE VARS " + JSON.stringify(variables));
     if (variables[this.body.name] == undefined) {
       console.log("VR " + JSON.stringify(variables));
       throw new Error("Cannot access unknown variable " + this.body.name);
     }
-    console.log("VAN VARIABLES " + JSON.stringify(variables));
     let value = variables[this.body.name].run(variables,walker);
     return value;
   }
@@ -211,8 +209,6 @@ class BinaryOperatorNode {
     console.log("BON " + JSON.stringify(variables));
     let lhs = this.body.lhs.run(variables,walker);
     let rhs = this.body.rhs.run(variables,walker);
-    console.log("L " + lhs + lhs.constructor.name);
-    console.log("R " + rhs + rhs.constructor.name);
     if (this.body.op == "+") {
       return lhs + rhs
     } else if (this.body.op == "-") {
@@ -244,14 +240,10 @@ class PrintNode {
 
   run (variables,walker) {
     let scanner = new Scanner();
-    console.log("PRINTNODE VALUE " + this.body.value + " & TYPE " + this.body.value.constructor.name);
-    console.log("PN VARS " + JSON.stringify(variables));
     let value = this.body.value.run(variables,walker);
-    console.log("PN VALUE " + JSON.stringify(value));
     if (this.body.value.constructor.name == "CallNode") {
       value = value.run(variables,walker);
     }
-    console.log(value);
     return scanner.toLiteral(value);
   }
 }
@@ -282,22 +274,18 @@ class IfNode {
   runCondition (v,w) {
     w.variables = v; // pass global variables to the ifNode interpreter
     let conditionResult = w.interpretNode(this.body.condition,this.body.condition.constructor.name);
-    console.log("first");
-    console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
     if (conditionResult.run != undefined && !conditionResult.constructor.name.includes("Literal")) {
       conditionResult = conditionResult.run();
     }
-    console.log("second")
-    console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
+
     if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = String(conditionResult.to_b());
     }
+
     else if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = conditionResult.run();
     }
-    console.log("third")
-    console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
-    return conditionResult; 
+    return conditionResult
   }
 
   run (v,w) {
@@ -337,21 +325,17 @@ class ElifNode {
   runCondition (v,w) {
     w.variables = v; // pass global variables to the ifNode interpreter
     let conditionResult = w.interpretNode(this.body.condition,this.body.condition.constructor.name);
-    console.log("elif first");
-    console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
     if (conditionResult.run != undefined && !conditionResult.constructor.name.includes("Literal")) {
       conditionResult = conditionResult.run();
     }
-    console.log("elif second")
-    console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
+
     if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = String(conditionResult.to_b());
     }
+
     else if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = conditionResult.run();
     }
-    console.log("elif third")
-    console.log(JSON.stringify(conditionResult) + " " + conditionResult.constructor.name);
     return conditionResult; 
   }
 
@@ -406,13 +390,11 @@ class IfChainNode {
     if (this.body.chain[0].type != "IfExpression") {
       throw new Error("IfChain's first member should be an IfExpression, not " + JSON.stringify(this.body.chain[0]));
     }
-    console.log("CHAIN " + JSON.stringify(this.body.chain));
     for (let member of this.body.chain) {
       pos += 1;
       let type = member.constructor.name;
       if (type == "IfNode" || type == "ElifNode") {
         let condition = member.runCondition(v,w);
-        console.log("COND " + JSON.stringify(condition));
         if (condition == "true") {
           let o = member.run(v,w);
           return o;

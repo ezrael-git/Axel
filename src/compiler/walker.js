@@ -38,6 +38,8 @@ module.exports = class Walker {
   }
 
   toLiteral (obj) {
+    console.log("tol enter");
+    console.log("obj " + JSON.stringify(obj));
     if (obj.constructor.name == "String" && !["true","false","nil"].includes(obj)) {
       return new Literal.TextLiteral(obj);
     }

@@ -302,7 +302,7 @@ module.exports = class Parser {
           let elif_it = 0;
 
           console.log("PEEKLINE " + JSON.stringify(this.peekLine()));
-          if (this.peekLine()[0].type == "ELIF") {
+          while (this.peekLine()[0].type == "ELIF") {
             console.log("ELIF STATEMENT CAUGHT");
             this.nextLine();
             while (this.currentLine()[0].type != "END") {
@@ -314,7 +314,9 @@ module.exports = class Parser {
               console.log("ADDING " + JSON.stringify(tks_lite));
               elif_tokens[elif_it] = tks_lite
             }
+            elif_it = 0;
           }
+          console.log("PEEKLINE " + JSON.stringify(this.peekLine()));
           console.log("ELIF TOKENS " + JSON.stringify(elif_tokens));
           let elif_nodes = this.recursiveParse(elif_tokens,false);
           console.log("ELIF NODES " + JSON.stringify(elif_nodes));
@@ -322,7 +324,7 @@ module.exports = class Parser {
           // now that we have elif nodes, we should look for an else statement
           let else_tokens = {};
           let else_it = 0;
-          while (this.peekLine()[0].type == "ELSE") {
+          if (this.peekLine()[0].type == "ELSE") {
             this.nextLine();
             while (this.currentLine()[0].type != "END") {
               if (else_it == 0) {
@@ -333,9 +335,7 @@ module.exports = class Parser {
               console.log("ADDING " + JSON.stringify(tks_lite));
               else_tokens[else_it] = tks_lite
             }
-            else_it = 0;
           }
-          console.log("PEEKLINE " + JSON.stringify(this.peekLine()));
           console.log("ELSE TOKENS " + JSON.stringify(else_tokens));
           let else_node = this.recursiveParse(else_tokens,false);
           console.log("ELSE NODE " + JSON.stringify(else_node));

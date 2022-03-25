@@ -300,21 +300,22 @@ module.exports = class Parser {
           // this is so we can build a proper if-elif-else chain if possible
           let elif_tokens = {};
           let elif_it = 0;
+          let helper = 0;
 
           console.log("PEEKLINE " + JSON.stringify(this.peekLine()));
           while (this.peekLine()[0].type == "ELIF") {
             console.log("ELIF STATEMENT CAUGHT");
             this.nextLine();
             while (this.currentLine()[0].type != "END") {
-              if (elif_it == 0) {
+              if (helper == 0) {
                 this.previousLine();
               }
               let tks_lite = this.nextLine();
-              elif_it += 1;
+              elif_it += 1; helper += 1;
               console.log("ADDING " + JSON.stringify(tks_lite));
               elif_tokens[elif_it] = tks_lite
             }
-            elif_it = 0;
+            helper = 0;
           }
           console.log("PEEKLINE " + JSON.stringify(this.peekLine()));
           console.log("ELIF TOKENS " + JSON.stringify(elif_tokens));

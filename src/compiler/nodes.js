@@ -45,7 +45,6 @@ class VarAccessNode {
   
   run (variables,walker) {
     if (variables[this.body.name] == undefined) {
-      console.log("VR " + JSON.stringify(variables));
       throw new Error("Cannot access unknown variable " + this.body.name);
     }
     let value = variables[this.body.name].run(variables,walker);
@@ -113,7 +112,6 @@ class CallNode {
   run (variables,walker) {
     if (variables[this.body.callee] == undefined) {
       throw new Error("Tried to call unknown function: " + this.body.callee);
-      console.log(JSON.stringify(variables));
     }
     let statements = variables[this.body.callee][1];
     let args_requested = variables[this.body.callee][0];

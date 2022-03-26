@@ -27,7 +27,7 @@ module.exports = class Preprocessor {
   removeComments (stats) {
     let fmtd = [];
     for (let stat of stats) {
-      fmtd.push(this.removeAllAfter(stat));
+      fmtd.push(this.removeAllAfter(stat),"--");
     }
     return fmtd;
   }
@@ -59,17 +59,9 @@ module.exports = class Preprocessor {
     /*
     Interface
     */
-    let fm = code
-    if (this.stdblib == true) {
-      fm = this.load_stdblib(fm);
-    }
-    fm = this.remove_comments(fm);
-    fm = this.hoist(fm);
-    this.scanner.scan_unholy_calls(fm);
-    fm = this.handle_calls(fm);
-
-    fm = this.filter(fm);
-
-    return fm;
+    code = this.formatEnd(
+      this.removeComments(code)
+    );
+    return code;
   }
 }

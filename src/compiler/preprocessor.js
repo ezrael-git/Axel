@@ -59,9 +59,10 @@ module.exports = class Preprocessor {
     /*
     Interface
     */
-    code = this.formatEnd(
-      this.removeComments(code)
-    );
+    code = this.removeComments(code)
+    console.log("part " + code);
+    code = this.formatEnd(code);
+    console.log(code);
     return code;
   }
 }

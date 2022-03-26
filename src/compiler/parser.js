@@ -266,11 +266,18 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
           }
           let body = [];
+          let line = 0;
+          let block_tokens = {};
+          // collect block tokens
           while (this.currentLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
-            let node_tree_lite = this.recursiveParse(tokens_lite);
-            body = body.concat(node_tree_lite);
+            line += 1;
+            block_tokens[line] = tokens_lite;
           }
+          // parse block tokens
+          let block_nodes = this.recursiveParse(block_tokens,false);
+          body.concat(block_nodes);
+          console.log("BODY " + JSON.stringify(body));
           let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
           node_tree.push(node);
         }

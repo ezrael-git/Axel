@@ -113,11 +113,16 @@ module.exports = class Parser {
     return this.lineTokens[this.line]
   }
 
-  peekLine (l=1) {
+  peekLine (l=1, safety=false) {
     /*
     Peek forward in lineTokens without changing this.line
     */
-    return this.lineTokens[this.line + l];
+    let res = this.lineTokens[this.line + l];
+    if (safety == true && res == undefined) {
+      return [{"type":"UNDEFINED"});
+    } else {
+      return res;
+    }
   }
 
   lookBackLine (l=1) {
@@ -310,7 +315,7 @@ module.exports = class Parser {
           console.log("PEEKL " + JSON.stringify(this.peekLine()));
           console.log(this.line);
           console.log(JSON.stringify(this.currentLine()));
-          while (this.peekLine()[0].type == "ELIF") {
+          while (this.peekLine(1,true)[0].type == "ELIF") {
             this.nextLine();
             while (this.currentLine()[0].type != "END") {
               if (helper == 0) {
@@ -327,7 +332,7 @@ module.exports = class Parser {
           // now that we have elif nodes, we should look for an else statement
           let else_tokens = {};
           let else_it = 0;
-          if (this.peekLine()[0].type == "ELSE") {
+          if (this.peekLine(1,true)[0].type == "ELSE") {
             this.nextLine();
             while (this.currentLine()[0].type != "END") {
               if (else_it == 0) {

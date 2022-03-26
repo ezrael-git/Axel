@@ -9,28 +9,28 @@ module.exports = class Preprocessor {
     this.stdblib = stdblib;
   }
 
+  removeAllAfter (line,symbol) {
+    let it = "";
+    for (let char of line) {
+      it += char;
+      if (it.endsWith(symbol)) {
+        // because we don't want to return the string with the symbol included
+        let new_it = it.split('');
+        new_it = it.slice(0,it.length - symbol.length).join('');
+        return new_it;
+      }
+    }
+    return it;
+  }
 
-  remove_comments (stats) {
+
+  removeComments (stats) {
     let fmtd = [];
     for (let stat of stats) {
-      if (!stat.startsWith("--")) {
-        fmtd.push(stat);
-      }
+      fmtd.push(this.removeAllAfter(stat));
     }
     return fmtd;
   }
-
-
-  cleanse_calls (stats) {
-    let man = [];
-    for (let stat of stats) {
-      if (!stat.includes("call:")) {
-        man.push(stat);
-      }
-    }
-    return man;
-  }
-
 
   removeStrAt (st, pos, new_char) {
     st = st.split('')
@@ -46,66 +46,11 @@ module.exports = class Preprocessor {
     return stat;
   }
 
-
-  hoist (stats) {
-    let manipulated = [];
-    let imports = this.scanner.scan_imports(stats)
-    for (let filename in imports) {
-      let pkgname = imports[filename]
-      manipulated.push(`const ${pkgname} = require("${filename}")`)
-    }
+  formatEnd (stats) {
+    let fmtd = [];
     for (let stat of stats) {
-      if (!stat.startsWith("import")) {
-        manipulated.push(stat)
-      }
+      fmtd.push(stat.replaceAll("end", "end\n"));
     }
-    return manipulated;
-  }
-
-  handle_calls (fm) {
-    return fm;
-  }
-
-  filter (stats) {
-    let man = [];
-    let variables = this.scanner.scan_variables(stats);
-    let functions = this.scanner.scan_functions(stats);
-    let md = false;
-    for (let stat of stats) {
-      stat = this.cleanse_whitespace(stat);
-      if (!stat.startsWith("private ")) {
-        if (stat.startsWith("module ")) {
-          md = true;
-        }
-        if (md == true && stat == "}") {
-          continue;
-        }
-        for (let name in variables) {
-          stat = stat.replace(name, name.replace("?", "AX_SPEC_CHAR_QUESTION_MARK"))
-        }
-        for (let name in functions) {
-          stat = stat.replace(name, name.replace("?", "AX_SPEC_CHAR_QUESTION_MARK"))
-        }
-        stat = this.scanner.replaceAll(stat, "do", "{");
-        stat = this.scanner.replaceAll(stat, "end", "}");
-        stat = this.scanner.replaceAll(stat, "@", "this.");
-        man.push(stat);
-      }
-    }
-    return man;
-  }
-
-  load_stdblib (stats) {
-    let data = fs.readFileSync("./standard/stdblib.ax", 'utf8');
-    data = data.trim().split('\n')
-    let man = [];
-    for (let dat of data) {
-      man.push(dat)
-    }
-    for (let stat of stats) {
-      man.push(stat)
-    }
-    return man
   }
 
 

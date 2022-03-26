@@ -1,0 +1,78 @@
+-- standard builtin library
+
+import ../compiler/scanner.js as Scanner
+import ../compiler/preprocessor.js as Preprocessor
+import ../compiler/lexer.js as Lexer
+import ../compiler/parser.js as Parser
+import ../compiler/emitter.js as Emitter
+import fs as fs
+
+class StdbLib
+  fn constructor ()
+    @scanner = new Scanner()
+    @preprocessor = new Preprocessor(false)
+    @lexer = new Lexer()
+    @parser = new Parser()
+    @emitter = new Emitter()
+  end
+
+  fn load (filename)
+    def data = fs.readFileSync(filename.replace(".ax", "") + ".ax", "utf8")
+    def statements = data.trim().split('\n')
+    statements = @scanner.scan_exports(statements)
+    statements = @preprocessor.process(statements)
+
+    for (let line of statements) do
+      def lex = @lexer.lex(line)
+      @parser.parse(lex,line)
+    end
+    imm emit = @parser.emitted
+
+    imm retcode = eval(emit)
+    return retcode
+  end
+end
+
+class Struct
+  fn constructor (code)
+    @code = code
+  end
+
+  fn run ()
+    return eval(@code)
+  end
+end
+
+class Text
+  fn constructor (value)
+    @value = value
+  end
+
+  fn toString ()
+    return @value
+  end
+end
+
+class Integer
+  fn constructor (value)
+    @value = value
+  end
+
+  fn toString ()
+    return @value
+  end
+end
+
+class Boolean
+  fn constructor (value)
+    @value = value
+  end
+
+  fn toString ()
+    return @value
+  end
+end
+
+def stdblib = new StdbLib()
+def true = new Boolean("true")
+def false = new Boolean("false")

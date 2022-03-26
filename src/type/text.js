@@ -4,10 +4,12 @@
 
 module.exports = class Text {
   constructor (value) {
-    this.value = String(value); // raw value
+    this.value = value; // raw value
   }
   
-  eval () {
-    return this.value.replaceAll('"', '').replaceAll("'", "");
+  each (body) {
+    for (let char of value) {
+      eval(body)
+    }
   }
 }

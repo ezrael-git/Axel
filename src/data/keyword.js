@@ -1,13 +1,12 @@
-// defined keywords
+let declarating = ["imm", "def", "fn", "meth", "class"];
+let operators = ["+", "-", "/", "*", "="];
+let other = ["end", "return", "private"];
 
-module.exports = [
-  "def",
-  "fn", 
-  "cls",
-  "for",
-  "while",
-  "return",
-  "true",
-  "false", 
-  "nil"
-]
+let bundle = {
+  declarating: declarating,
+  operators: operators,
+  all: declarating.concat(operators).concat(other)
+}
+
+
+module.exports = bundle;

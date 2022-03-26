@@ -315,6 +315,7 @@ module.exports = class Parser {
           console.log("PEEKL " + JSON.stringify(this.peekLine()));
           console.log(this.line);
           console.log(JSON.stringify(this.currentLine()));
+          console.log(JSON.stringify(this.lineTokens));
           while (this.peekLine(1,true)[0].type == "ELIF") {
             this.nextLine();
             while (this.currentLine()[0].type != "END") {

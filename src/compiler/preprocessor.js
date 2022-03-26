@@ -49,7 +49,10 @@ module.exports = class Preprocessor {
   formatEnd (stats) {
     let fmtd = [];
     for (let stat of stats) {
-      fmtd.push(stat.replaceAll("end", "end\n"));
+      let a = stat.replaceAll("end", "end\n");
+      for (let b of a.split('\n')) {
+        fmtd.push(b);
+      }
     }
     return fmtd;
   }

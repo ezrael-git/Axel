@@ -300,6 +300,9 @@ module.exports = class Parser {
           let elif_it = 0;
           let helper = 0;
 
+          console.log("PEEKL " + JSON.stringify(this.peekLine()));
+          console.log(this.line);
+          console.log(JSON.stringify(this.currentLine()));
           while (this.peekLine()[0].type == "ELIF") {
             this.nextLine();
             while (this.currentLine()[0].type != "END") {

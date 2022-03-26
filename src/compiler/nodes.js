@@ -204,6 +204,8 @@ class BinaryOperatorNode {
   }
 
   run (variables,walker) {
+    console.log("Lhs " + JSON.stringify(this.body.lhs));
+    console.log("Rhs " + JSON.stringify(this.body.rhs));
     let lhs = this.body.lhs.run(variables,walker);
     let rhs = this.body.rhs.run(variables,walker);
     if (this.body.op == "+") {

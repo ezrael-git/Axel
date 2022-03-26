@@ -1,0 +1,14 @@
+-- this simple program gets the weather of a small city in pakistan, that is, sukkur
+-- using the HTTPS module included in the standard library
+
+def https = require("standard/https.ax")
+
+path = {
+  "URL" => "weather.com/sukkur/",
+  "method" => "GET"
+}
+
+def response = https.request(path)
+-- or you can use:
+-- def response = https.get("weather.com/sukkur/")
+print(response)

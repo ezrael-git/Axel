@@ -38,11 +38,20 @@ module.exports = class Walker {
   }
 
   toLiteral (obj) {
-    if (obj.constructor.name == "String") {
+    if (obj.constructor.name == "String" && !["true","false","nil"].includes(obj)) {
       return new Literal.TextLiteral(obj);
     }
     else if (obj.constructor.name == "Number") {
       return new Literal.IntegerLiteral(obj);
+    }
+    else if (String(obj) == "true") {
+      return new Literal.TrueLiteral(obj);
+    }
+    else if (String(obj) == "false") {
+      return new Literal.FalseLiteral(obj);
+    }
+    else if (String(obj) == "nil") {
+      return new Literal.NilLiteral(obj);
     }
     else if (["Node", "Literal"].includes(obj.constructor.name)) {
       return obj;
@@ -52,13 +61,20 @@ module.exports = class Walker {
     }
   }
 
+  resolveRun (obj,interpretNode) {
+    while (obj.run != undefined) {
+      obj = interpretNode(obj);
+    }
+    return obj;
+  }
+
   interpretNode (node,type) {
     /*
     Interpret a single node.
     */
 
     if (type == "BinaryOperatorNode") {
-      let result = node.run();
+      let result = this.toLiteral(node.run(this.variables,new Walker()));
       return result;
     }
     else if (type == "FuncAssignNode") {
@@ -104,12 +120,22 @@ module.exports = class Walker {
       return this.toLiteral(node.run());
     }
     else if (type == "PrintNode") {
-      console.log("PN this.variables: " + JSON.stringify(this.variables));
-      let value = node.body.value.run(this.variables,new Walker());
-      console.log("PN VALUE RAW " + JSON.stringify(node.body.value));
-      console.log("PN VALUE UNRAW " + JSON.stringify(value))
-      console.log("PN OUTPUT:");
-      node.run(this.variables,new Walker());
+      let value = node.run(this.variables,new Walker())
+      return value;
+    }
+    else if (["TrueNode","FalseNode","NilNode"].includes(type)) {
+      return this.toLiteral(node.run());
+    }
+    else if (type == "IfChainNode") {
+      let o = node.run(this.variables,new Walker());
+      return this.toLiteral(o);
+    }
+    // literals
+    else if (node.constructor.name.includes("Literal")) {
+      return node.run();
+    }
+    else {
+      throw new Error(`Unknown Node: ${JSON.stringify(node)} \nWith type: ${type}`);
     }
   }
   
@@ -126,11 +152,17 @@ module.exports = class Walker {
       this.program = ast;
     }
     console.log("PG " + JSON.stringify(this.program));
+    let iterated = -1;
+    let outputs = [];
     while (this.peek() != undefined) {
+      iterated += 1;
       let node = this.next();
       console.log("ND " + JSON.stringify(node));
       let type = this.checkType(node);
       let o = this.interpretNode(node,type);
+      outputs.push(o);
     }
+    // return last expression's result
+    return outputs[outputs.length - 1];
   }
 }

@@ -3,6 +3,8 @@ const Scanner = require("./scanner.js");
 let TT_LPAREN = "("
 let TT_RPAREN = ")"
 let TT_EQ = "="
+let TT_COMPARE = "=="
+let TT_COMPAREOPP = "!="
 let TT_PLUS = "+"
 let TT_MINUS = "-"
 let TT_MULTIPLY = "*"
@@ -15,6 +17,12 @@ let TT_DEF = "def"
 let TT_IMM = "imm"
 let TT_END = "end"
 let TT_PRINT = "print"
+let TT_TRUE = "true"
+let TT_FALSE = "false"
+let TT_NIL = "nil"
+let TT_IF = "if"
+let TT_ELIF = "elif"
+let TT_ELSE = "else"
 
 
 
@@ -55,6 +63,20 @@ class Lexer {
     return this.source[pos - chars];
   }
 
+  cleanWhitespace (str) {
+    while (str.startsWith(" ")) {
+      str = str.split('');
+      str[0] = '';
+      str = str.join('');
+    }
+    while (str.endsWith(" ")) {
+      str = str.split('');
+      str[str.length - 1] = '';
+      str = str.join('');
+    }
+    return str;
+  }
+
   process (stats) {
     /*
     Handy wrapper around Lexer.lex. Instead of passing one line at a time to the Lexer.lex method, this method allows you to pass multiple lines and then returns their tokens in an Object.
@@ -85,9 +107,10 @@ class Lexer {
     let lexed = [];
     let sc = this.scanner;
     let skipped = [];
+    let cleanWhitespace = this.cleanWhitespace;
 
     function add (type, starts, ends, tk) {
-      lexed.push({type:type, starts:starts, ends:ends, tk:tk.replaceAll(" ", "")});
+      lexed.push({type:type, starts:starts, ends:ends, tk:cleanWhitespace(tk)});
     }
 
     function lastToken () {
@@ -150,8 +173,15 @@ class Lexer {
         add("DIVIDE", pos, pos, TT_DIVIDE);
       }
       // equality / assignment operator
-      else if (it.endsWith(TT_EQ)) {
+      else if (it.endsWith(TT_EQ) && this.peek(pos) != "=" && this.back(pos) != "=" && this.back(pos) != "!") {
         add("EQUALITY", pos, pos, TT_EQ);
+      }
+      // comparison operator
+      else if (it.endsWith(TT_COMPARE)) {
+        add("COMPARE", pos-1, pos, TT_COMPARE);
+      }
+      else if (it.endsWith(TT_COMPAREOPP)) {
+        add("COMPAREOPP", pos-1, pos, TT_COMPAREOPP);
       }
       // dot operator
       else if (it.endsWith(TT_DOT)) {
@@ -187,6 +217,30 @@ class Lexer {
       // print keyword
       else if (it.endsWith(TT_PRINT) && !this.letters.includes(source[pos-5]) && !this.letters.includes(this.peek(pos))) {
         add("PRINT", pos-4, pos, TT_PRINT);
+      }
+      // true keyword
+      else if (it.endsWith(TT_TRUE) && !this.letters.includes(source[pos-4]) && !this.letters.includes(this.peek(pos))) {
+        add("TRUE", pos-3, pos, TT_TRUE);
+      }
+      // false keyword
+      else if (it.endsWith(TT_FALSE) && !this.letters.includes(source[pos-5]) && !this.letters.includes(this.peek(pos))) {
+        add("FALSE", pos-4, pos, TT_FALSE);
+      }
+      // nil keyword
+      else if (it.endsWith(TT_TRUE) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
+        add("NIL", pos-2, pos, TT_NIL);
+      }
+      // if keyword
+      else if (it.endsWith(TT_IF) && !this.letters.includes(source[pos-2]) && !this.letters.includes(this.peek(pos))) {
+        add("IF", pos-1, pos, TT_IF);
+      }
+      // elif keyword
+      else if (it.endsWith(TT_ELIF) && !this.letters.includes(source[pos-4]) && !this.letters.includes(this.peek(pos))) {
+        add("ELIF", pos-2, pos, TT_ELIF);
+      }
+      // else keyword
+      else if (it.endsWith(TT_ELSE) && !this.letters.includes(source[pos-4]) && !this.letters.includes(this.peek(pos))) {
+        add("ELSE", pos-2, pos, TT_ELSE);
       }
       else {
         // identifiers

@@ -1,6 +1,6 @@
 // scanner.js
 const Keywords = require("../data/keyword.js");
-
+const Literal = require("./literals.js");
 
 module.exports = class Scanner {
   constructor () {
@@ -501,6 +501,38 @@ module.exports = class Scanner {
       }
     }
     return {"flag":false,"starting":starting,"ending":ending,"fn_cords":func_cords};
+  }
+
+  toLiteral (obj) {
+    if (obj.constructor.name == "String" && !["true","false","nil"].includes(obj)) {
+      return new Literal.TextLiteral(obj);
+    }
+    else if (obj.constructor.name == "Number") {
+      return new Literal.IntegerLiteral(obj);
+    }
+    else if (obj == "true") {
+      return new Literal.TrueLiteral(obj);
+    }
+    else if (obj == "false") {
+      return new Literal.FalseLiteral(obj);
+    }
+    else if (obj == "nil") {
+      return new Literal.NilLiteral(obj);
+    }
+    else if (["Node", "Literal"].includes(obj.constructor.name)) {
+      return obj;
+    }
+    else {
+      return obj;
+    }
+  }
+
+  resolveRun (obj,interpretNode) {
+    console.log("IN " + interpretNode.constructor.name);
+    while (obj.run != undefined) {
+      obj = interpretNode(obj);
+    }
+    return obj;
   }
 
 

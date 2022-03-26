@@ -204,12 +204,8 @@ class BinaryOperatorNode {
   }
 
   run (variables,walker) {
-    console.log("Lhs " + JSON.stringify(this.body.lhs));
-    console.log("Rhs " + JSON.stringify(this.body.rhs));
     let lhs = this.body.lhs.run(variables,walker);
     let rhs = this.body.rhs.run(variables,walker);
-    console.log("L " + JSON.stringify(lhs) + lhs.constructor.name);
-    console.log("R " + JSON.stringify(rhs) + rhs.constructor.name);
     if (this.body.op == "+") {
       return lhs + rhs
     } else if (this.body.op == "-") {
@@ -219,10 +215,15 @@ class BinaryOperatorNode {
     } else if (this.body.op == "*") {
       return lhs * rhs
     } else if (this.body.op == "==") {
-      console.log("COMP " + lhs === rhs);
       return lhs === rhs;
     } else if (this.body.op == "!=") {
       return lhs !== rhs
+    } else if (this.body.op == ">") {
+      return lhs > rhs
+    } else if (this.body.op == "<") {
+      return lhs < rhs
+    } else {
+      throw new Error("Unknown binary operator: " + this.body.op);
     }
   }
 }
@@ -276,22 +277,18 @@ class IfNode {
   runCondition (v,w) {
     w.variables = v; // pass global variables to the ifNode interpreter
     let conditionResult = w.interpretNode(this.body.condition,this.body.condition.constructor.name);
-    console.log("ENTERED RC")
-    console.log(JSON.stringify(conditionResult));
     if (conditionResult.run != undefined && !conditionResult.constructor.name.includes("Literal")) {
       conditionResult = conditionResult.run();
     }
-    console.log(JSON.stringify(conditionResult));
 
     if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = String(conditionResult.to_b());
     }
-    console.log(JSON.stringify(conditionResult));
 
     if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = conditionResult.run();
     }
-    console.log(JSON.stringify(conditionResult));
+
     return conditionResult
   }
 

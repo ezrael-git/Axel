@@ -119,7 +119,7 @@ module.exports = class Parser {
     */
     let res = this.lineTokens[this.line + l];
     if (safety == true && res == undefined) {
-      return [{"type":"UNDEFINED"});
+      return [{"type":"UNDEFINED"}];
     } else {
       return res;
     }

@@ -245,6 +245,7 @@ class PrintNode {
     if (this.body.value.constructor.name == "CallNode") {
       value = value.run(variables,walker);
     }
+    console.log(value);
     return scanner.toLiteral(value);
   }
 }
@@ -405,6 +406,7 @@ class IfChainNode {
         console.log("MEM " + member.constructor.name);
         if (condition == "true") {
           let o = member.run(v,w);
+          console.log("O " + o);
           return o;
         }
         else {

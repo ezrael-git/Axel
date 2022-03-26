@@ -60,6 +60,16 @@ module.exports = class Preprocessor {
     return fmtd;
   }
 
+  formatEmpty (stats) {
+    let fmtd = [];
+    for (let s of stats) {
+      if (s.length != 0) {
+        fmtd.push(s);
+      }
+    }
+    return fmtd;
+  }
+
 
 
   process (code) {
@@ -69,6 +79,7 @@ module.exports = class Preprocessor {
     code = this.removeComments(code)
     console.log("part " + code);
     code = this.formatEnd(code);
+    code = this.formatEmpty(code);
     console.log(code);
     return code;
   }

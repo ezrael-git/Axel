@@ -347,6 +347,7 @@ module.exports = class Parser {
 
           // finally we can construct the chain
           let chain = [if_node].concat(elif_nodes).concat(else_node);
+          console.log("CHAIN " + JSON.stringify(chain));
           let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
           node_tree.push(node);
         }

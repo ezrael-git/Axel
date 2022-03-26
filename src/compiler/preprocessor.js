@@ -16,7 +16,7 @@ module.exports = class Preprocessor {
       if (it.endsWith(symbol)) {
         // because we don't want to return the string with the symbol included
         let new_it = it.split('');
-        new_it = it.slice(0,it.length - symbol.length).join('');
+        new_it = new_it.slice(0,it.length - symbol.length).join('');
         return new_it;
       }
     }

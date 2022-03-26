@@ -275,17 +275,22 @@ class IfNode {
   runCondition (v,w) {
     w.variables = v; // pass global variables to the ifNode interpreter
     let conditionResult = w.interpretNode(this.body.condition,this.body.condition.constructor.name);
+    console.log("ENTERED RC")
+    console.log(JSON.stringify(conditionResult));
     if (conditionResult.run != undefined && !conditionResult.constructor.name.includes("Literal")) {
       conditionResult = conditionResult.run();
     }
+    console.log(JSON.stringify(conditionResult));
 
     if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = String(conditionResult.to_b());
     }
+    console.log(JSON.stringify(conditionResult));
 
     else if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = conditionResult.run();
     }
+    console.log(JSON.stringify(conditionResult));
     return conditionResult
   }
 

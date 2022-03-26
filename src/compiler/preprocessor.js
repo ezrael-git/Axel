@@ -27,7 +27,7 @@ module.exports = class Preprocessor {
   removeComments (stats) {
     let fmtd = [];
     for (let stat of stats) {
-      fmtd.push(this.removeAllAfter(stat),"--");
+      fmtd.push(this.removeAllAfter(stat,"--"));
     }
     return fmtd;
   }
@@ -51,6 +51,7 @@ module.exports = class Preprocessor {
     for (let stat of stats) {
       fmtd.push(stat.replaceAll("end", "end\n"));
     }
+    return fmtd;
   }
 
 

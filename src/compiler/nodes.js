@@ -45,7 +45,6 @@ class VarAccessNode {
   
   run (variables,walker) {
     if (variables[this.body.name] == undefined) {
-      console.log("VR " + JSON.stringify(variables));
       throw new Error("Cannot access unknown variable " + this.body.name);
     }
     let value = variables[this.body.name].run(variables,walker);
@@ -113,7 +112,6 @@ class CallNode {
   run (variables,walker) {
     if (variables[this.body.callee] == undefined) {
       throw new Error("Tried to call unknown function: " + this.body.callee);
-      console.log(JSON.stringify(variables));
     }
     let statements = variables[this.body.callee][1];
     let args_requested = variables[this.body.callee][0];
@@ -217,10 +215,15 @@ class BinaryOperatorNode {
     } else if (this.body.op == "*") {
       return lhs * rhs
     } else if (this.body.op == "==") {
-      console.log("COMP " + lhs === rhs);
       return lhs === rhs;
     } else if (this.body.op == "!=") {
       return lhs !== rhs
+    } else if (this.body.op == ">") {
+      return lhs > rhs
+    } else if (this.body.op == "<") {
+      return lhs < rhs
+    } else {
+      throw new Error("Unknown binary operator: " + this.body.op);
     }
   }
 }
@@ -243,6 +246,7 @@ class PrintNode {
     if (this.body.value.constructor.name == "CallNode") {
       value = value.run(variables,walker);
     }
+    console.log(value);
     return scanner.toLiteral(value);
   }
 }
@@ -281,9 +285,10 @@ class IfNode {
       conditionResult = String(conditionResult.to_b());
     }
 
-    else if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
+    if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = conditionResult.run();
     }
+
     return conditionResult
   }
 
@@ -394,8 +399,11 @@ class IfChainNode {
       let type = member.constructor.name;
       if (type == "IfNode" || type == "ElifNode") {
         let condition = member.runCondition(v,w);
+        console.log("COND " + condition);
+        console.log("MEM " + member.constructor.name);
         if (condition == "true") {
           let o = member.run(v,w);
+          console.log("O " + o);
           return o;
         }
         else {
@@ -462,6 +470,24 @@ class NilNode {
   }
 }
 
+class ReturnNode {
+  constructor (value, line, start, end) {
+    this.type = "ReturnExpression";
+    this.body = {
+      value:value,
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  run (v,w) {
+    w.variables = v;
+    let res = w.interpretNode(this.body.value,this.body.value.constructor.name);
+    return res;
+  }
+}
+
 module.exports = {
   VarAssignNode:VarAssignNode,
   VarAccessNode:VarAccessNode,
@@ -479,6 +505,7 @@ module.exports = {
   IfChainNode:IfChainNode,
   TrueNode:TrueNode,
   FalseNode:FalseNode,
-  NilNode:NilNode
+  NilNode:NilNode,
+  ReturnNode:ReturnNode
   
 }

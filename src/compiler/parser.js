@@ -17,6 +17,7 @@ module.exports = class Parser {
     
     this.lineTokens = {};
     this.ast = {};
+    this.scanner = new Scanner();
   }
 
   next (safety=false) {
@@ -113,11 +114,16 @@ module.exports = class Parser {
     return this.lineTokens[this.line]
   }
 
-  peekLine (l=1) {
+  peekLine (l=1, safety=false) {
     /*
     Peek forward in lineTokens without changing this.line
     */
-    return this.lineTokens[this.line + l];
+    let res = this.lineTokens[this.line + l];
+    if (safety == true && res == undefined) {
+      return [{"type":"UNDEFINED"}];
+    } else {
+      return res;
+    }
   }
 
   lookBackLine (l=1) {
@@ -266,11 +272,18 @@ module.exports = class Parser {
             throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
           }
           let body = [];
-          while (this.currentLine()[0].type != "END") {
+          // parse block expressions
+          console.log("FN PEEK " + JSON.stringify(this.peekLine()));
+          while (this.peekLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
-            let node_tree_lite = this.recursiveParse(tokens_lite);
-            body = body.concat(node_tree_lite);
+            console.log("TKS LITE " + JSON.stringify(tokens_lite));
+            let line_node = this.recursiveParse(tokens_lite);
+            console.log(JSON.stringify(line_node));
+            body = body.concat(line_node);
           }
+        
+
+          console.log("BODY " + JSON.stringify(body));
           let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
           node_tree.push(node);
         }
@@ -300,7 +313,11 @@ module.exports = class Parser {
           let elif_it = 0;
           let helper = 0;
 
-          while (this.peekLine()[0].type == "ELIF") {
+          console.log("PEEKL " + JSON.stringify(this.peekLine()));
+          console.log(this.line);
+          console.log(JSON.stringify(this.currentLine()));
+          console.log(JSON.stringify(this.lineTokens));
+          while (this.peekLine(1,true)[0].type == "ELIF") {
             this.nextLine();
             while (this.currentLine()[0].type != "END") {
               if (helper == 0) {
@@ -317,7 +334,7 @@ module.exports = class Parser {
           // now that we have elif nodes, we should look for an else statement
           let else_tokens = {};
           let else_it = 0;
-          if (this.peekLine()[0].type == "ELSE") {
+          if (this.peekLine(1,true)[0].type == "ELSE") {
             this.nextLine();
             while (this.currentLine()[0].type != "END") {
               if (else_it == 0) {
@@ -332,6 +349,7 @@ module.exports = class Parser {
 
           // finally we can construct the chain
           let chain = [if_node].concat(elif_nodes).concat(else_node);
+          console.log("CHAIN " + JSON.stringify(chain));
           let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
           node_tree.push(node);
         }
@@ -392,6 +410,12 @@ module.exports = class Parser {
         // variable accesses
         else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
           let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
+          node_tree.push(node);
+        }
+        else if (type == "RETURN") {
+          let values = this.allAfter();
+          let value_node = this.recursiveParse(values)[0];
+          let node = new Node.ReturnNode(value_node,token.line,token.start,token.end);
           node_tree.push(node);
         }
         // strings

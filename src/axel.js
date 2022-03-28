@@ -26,6 +26,8 @@ class Axel {
     One-for-all interface to execute Axel code. This function acts as a middleman between the code and the compiler, passing the statements into the compiler and executing it in the end.
     */
     statements = statements.replaceAll(';', '\n').trim().split('\n');
+    statements = this.preprocessor.process(statements);
+    console.log("STATS " + statements);
     let tokens = this.lexer.process(statements);
     let ast = this.parser.parse(tokens);
     let o = this.walker.walk(ast);

@@ -128,6 +128,57 @@ class NilLiteral {
   }
 }
 
+class FunctionLiteral {
+  constructor (name, args, body) {
+    this.name = name;
+    this.value = name;
+    this.args = args;
+    this.body = body;
+  }
+
+  run (v,w) {
+    // todo:
+    // add stuff here
+  }
+
+  to_s () {
+    return this.value;
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
+}
+
+class ClassLiteral {
+  constructor (name, body) {
+    this.name = name;
+    this.value = name;
+    this.body = body;
+  }
+
+  run (v,w) {
+    // todo:
+    // add stuff here
+  }
+
+  to_s () {
+    return this.value;
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
+}
+
 
 module.exports = {
   TextLiteral:TextLiteral,

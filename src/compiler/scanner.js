@@ -318,7 +318,7 @@ module.exports = class Scanner {
           add("module:" + name);
         }
 
-        else if (token.type == "end") {
+        else if (token.type == "END") {
           subtract();
         }
       }

@@ -275,11 +275,7 @@ module.exports = class Parser {
           let line = 0;
           let block_tokens = {};
           // collect block tokens
-          const cur_namespace = this.scanner.namespace(lineTokens,this.line);
-          console.log("CN " + cur_namespace);
-          this.nextLine();
-          while (cur_namespace != this.scanner.namespace(lineTokens,this.line)) {
-            if (line == 0) { this.previousLine() }
+          while (this.peekLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
             line += 1;
             block_tokens[line] = tokens_lite;

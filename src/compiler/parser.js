@@ -25,9 +25,10 @@ module.exports = class Parser {
     this.token_iterated = -1;
     this.tokens = [];
     this.line = 0;
+    this.bin_ops = ["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE","COMPAREOPP"]
     
     this.lineTokens = {};
-    this.ast = {};
+    this.ast = [];
     this.scanner = new Scanner();
   }
 
@@ -177,47 +178,57 @@ module.exports = class Parser {
   }
 
   // parse methods
+
+  parseSuccess (node) {
+    this.ast = this.ast.concat(node);
+    return true;
+  }
+
+  parseFailure (tokens,reason) {
+    throw new Error(`Failed to parse TOKENS: ${tokens}\nReason given: ${reason}`);
+  }
+
   parseBinary (type) {
     if (type == "PLUS") {
       let lhs = this.recursiveParse([this.lookBack()]);
       let rhs = this.recursiveParse([this.peek()]);
       let node = new Node.BinaryOperatorNode(lhs,rhs,"+");
-      node_tree.push(node);
+      this.parseSuccess(node);
     }
     // subtraction operator
     else if (type == "MINUS") {
       let lhs = this.recursiveParse([this.lookBack()]);
       let rhs = this.recursiveParse([this.peek()]);
       let node = new Node.BinaryOperatorNode(lhs,rhs,"-");
-      node_tree.push(node);
+      this.parseSuccess(node);
     }
     // multiplication operator
     else if (type == "MULTIPLY") {
       let lhs = this.recursiveParse([this.lookBack()]);
       let rhs = this.recursiveParse([this.peek()]);
       let node = new Node.BinaryOperatorNode(lhs,rhs,"*");
-      node_tree.push(node);
+      this.parseSuccess(node);
     }
     // division operator
     else if (type == "DIVIDE") {
       let lhs = this.recursiveParse([this.lookBack()]);
       let rhs = this.recursiveParse([this.peek()]);
       let node = new Node.BinaryOperatorNode(lhs,rhs,"/");
-      node_tree.push(node);
-        }
-        // comparison operator
-        else if (type == "COMPARE") {
-          let lhs = this.recursiveParse([this.lookBack()])
-          let rhs = this.recursiveParse([this.next()])
-          let node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"==");
-          node_tree.push(node);
-        }
-        else if (type == "COMPAREOPP") {
-          let lhs = this.recursiveParse([this.lookBack()])
-          let rhs = this.recursiveParse([this.next()])
-          let node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"!=");
-          node_tree.push(node);
-        }
+      this.parseSuccess(node);
+    }
+    // comparison operator
+    else if (type == "COMPARE") {
+      let lhs = this.recursiveParse([this.lookBack()])
+      let rhs = this.recursiveParse([this.next()])
+      let node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"==");
+      this.parseSuccess(node);
+    }
+    else if (type == "COMPAREOPP") {
+      let lhs = this.recursiveParse([this.lookBack()])
+      let rhs = this.recursiveParse([this.next()])
+      let node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"!=");
+      this.parseSuccess(node);
+    }
   }
 
 
@@ -242,7 +253,10 @@ module.exports = class Parser {
         console.log("TOKEN " + JSON.stringify(token));
         let type = token.type;
         // handle...
-        // addition operator
+        // binary operations
+        if (this.bin_ops.includes(type)) {
+          this.parseBinary(type);
+        }
 
         // def keyword
         else if (type == "DEFINE") {

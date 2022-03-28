@@ -261,6 +261,14 @@ module.exports = class Scanner {
       Figure out namespace of a given line using tokens
     */
     let cur_namespace = "main"
+    let max = 0;
+    for (let k of lineTokens) {
+      if (parseInt(k) > max) {
+        max = parseInt(k);
+      }
+    }
+    console.log("Max " + max);
+    console.log("Ask " + line);
 
     function add (path) {
       cur_namespace += "/" + path

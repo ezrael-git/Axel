@@ -283,6 +283,8 @@ module.exports = class Scanner {
     let on_line = 0;
     while (on_line != lineTokens.length+1) {
       on_line += 1;
+      console.log("Ol " + on_line);
+      console.log(cur_namespace);
       let line_t = lineTokens[on_line];
       for (let token of line_t) {
 

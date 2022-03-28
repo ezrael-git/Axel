@@ -289,6 +289,7 @@ module.exports = class Scanner {
       for (let token of line_t) {
 
         if (line == on_line) {
+          if (token.type == "END") { subtract() };
           return cur_namespace;
         }
         if (token.type == "CLASS") {

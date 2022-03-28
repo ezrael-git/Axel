@@ -418,6 +418,12 @@ module.exports = class Parser {
           let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
           node_tree.push(node);
         }
+        else if (type == "RETURN") {
+          let values = this.allAfter();
+          let value_node = this.recursiveParse(values)[0];
+          let node = new Node.ReturnNode(value_node,token.line,token.start,token.end);
+          node_tree.push(node);
+        }
         // strings
         else if (type == "STRING") {
           let node = new Node.TextNode(token.tk,token.line,token.start,token.end);

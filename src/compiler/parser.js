@@ -188,7 +188,8 @@ module.exports = class Parser {
     throw new Error(`Failed to parse TOKENS: ${tokens}\nReason given: ${reason}`);
   }
 
-  parseBinary (type) {
+  parseBinary (token) {
+    let type = token.type;
     if (type == "PLUS") {
       let lhs = this.recursiveParse([this.lookBack()]);
       let rhs = this.recursiveParse([this.peek()]);
@@ -231,17 +232,244 @@ module.exports = class Parser {
     }
   }
 
+  parse 
+
+  parseDecl (token) {
+    let type = token.type;
+    if (type == "DEFINE" || type == "IMMUTABLE") {
+      this.parseVarDecl(token);
+    } else if (type == "FUNCTION") {
+      this.parseFuncDecl(token);
+    } else {
+      throw new Error("Unknown value given to parseDecl: " + token.type);
+    }
+  }
+
+  parseToken (token) {
+    /*
+      Parse a single token.
+      Warning: the method might ask for more tokens.
+    */
+    let type = token.type;
+    // handle...
+    // binary operations
+    if (this.bin_ops.includes(type)) {
+      this.parseBinary(type);
+    }
+
+    // def keyword
+    else if (type == "DEFINE") {
+      let name_token = this.next();
+      if (this.next().type != "EQUALITY") {
+        throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
+      }
+      let value_tokens = this.allAfter();
+      // Since recursiveParse returns a full-blown AST generated from a bunch of statements,
+      // we need to get the first element of the AST and assume it's the value. 
+
+      let value_node = this.recursiveParse(value_tokens)[0];
+      let node = new Node.VarAssignNode(name_token.tk,true,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
+      node_tree.push(node);
+    }
+    // imm keyword
+    else if (type == "IMMUTABLE") {
+      let name_token = this.next();
+      if (this.next().type != "EQUALITY") {
+        throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
+      }
+      let value_tokens = this.allAfter();
+      // Since recursiveParse returns a full-blown AST generated from a bunch of statements,
+      // we need to get the first element of the AST and assume it's the value. 
+
+      let value_node = this.recursiveParse(value_tokens)[0];
+      let node = new Node.VarAssignNode(name_token.tk,false,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
+      node_tree.push(node);
+    }
+    // fn keyword
+    else if (type == "FUNCTION") {
+      let identifier_token = this.next();
+      if (this.next().type != "LPAREN") {
+        throw new Error(`Expected TokenType to be LPAREN, got ${this.current().type} instead`);
+      }
+      let args = [];
+      while (this.peek().type == "IDENTIFIER") {
+        let arg_token = this.next();
+        let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
+        args.push(arg_node);
+      }
+      if (this.next().type != "RPAREN") {
+        throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
+      }
+      let body = [];
+      // parse block expressions
+      console.log("FN PEEK " + JSON.stringify(this.peekLine()));
+      while (this.peekLine()[0].type != "END") {
+        let tokens_lite = this.nextLine();
+        console.log("TKS LITE " + JSON.stringify(tokens_lite));
+        let line_node = this.recursiveParse(tokens_lite);
+        console.log(JSON.stringify(line_node));
+        body = body.concat(line_node);
+      }
+    
+
+      console.log("BODY " + JSON.stringify(body));
+      let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
+      node_tree.push(node);
+    }
+    // print keyword
+    else if (type == "PRINT") {
+      let value_tokens = this.allAfter();
+      let value_node = this.recursiveParse(value_tokens)[0];
+      let node = new Node.PrintNode(value_node,value_tokens[0].line,value_tokens[0].start,value_tokens[value_tokens.length-1].end);
+      node_tree.push(node);
+    }
+    // if keyword
+    else if (type == "IF") {
+      const copy_token = token;
+      let condition_tokens = this.allAfter();
+      let condition_node = this.recursiveParse(condition_tokens)[0];
+      let statements = [];
+      while (this.currentLine()[0].type != "END") {
+        let tokens_lite = this.nextLine();
+        let node_tree_lite = this.recursiveParse(tokens_lite);
+        statements = statements.concat(node_tree_lite);
+        if (this.peekLine() == undefined) { break };
+      }
+      let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+      // go through the next few lines checking if there are any elif statements
+      // this is so we can build a proper if-elif-else chain if possible
+      let elif_tokens = {};
+      let elif_it = 0;
+      let helper = 0;
+
+      console.log("PEEKL " + JSON.stringify(this.peekLine()));
+      console.log(this.line);
+      console.log(JSON.stringify(this.currentLine()));
+      console.log(JSON.stringify(this.lineTokens));
+      while (this.peekLine(1,true)[0].type == "ELIF") {
+        this.nextLine();
+        while (this.currentLine()[0].type != "END") {
+          if (helper == 0) {
+            this.previousLine();
+          }
+          let tks_lite = this.nextLine();
+          elif_it += 1; helper += 1;
+          elif_tokens[elif_it] = tks_lite
+        }
+        helper = 0;
+      }
+      let elif_nodes = this.recursiveParse(elif_tokens,false);
+
+      // now that we have elif nodes, we should look for an else statement
+      let else_tokens = {};
+      let else_it = 0;
+      if (this.peekLine(1,true)[0].type == "ELSE") {
+        this.nextLine();
+        while (this.currentLine()[0].type != "END") {
+          if (else_it == 0) {
+            this.previousLine();
+          }
+          let tks_lite = this.nextLine();
+          else_it += 1;
+          else_tokens[else_it] = tks_lite
+        }
+      }
+      let else_node = this.recursiveParse(else_tokens,false);
+
+      // finally we can construct the chain
+      let chain = [if_node].concat(elif_nodes).concat(else_node);
+      console.log("CHAIN " + JSON.stringify(chain));
+      let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
+      node_tree.push(node);
+    }
+    // elif keyword, to be catched by the if line
+    else if (type == "ELIF") {
+      const copy_token = token;
+      let condition_tokens = this.allAfter();
+      let condition_node = this.recursiveParse(condition_tokens)[0];
+      let statements = [];
+      while (this.currentLine()[0].type != "END") {
+        let tokens_lite = this.nextLine();
+        let node_tree_lite = this.recursiveParse(tokens_lite);
+        statements = statements.concat(node_tree_lite);
+        if (this.peekLine() == undefined) { break };
+      }
+      let node = new Node.ElifNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+      node_tree.push(node);
+    }
+    // else keyword, to be catched by the if line
+    else if (type == "ELSE") {
+      let statements = [];
+      const copy_token = token;
+      while (this.currentLine()[0].type != "END") {
+        let tokens_lite = this.nextLine();
+        let node_tree_lite = this.recursiveParse(tokens_lite);
+        statements = statements.concat(node_tree_lite);
+        if (this.peekLine() == undefined) { break };
+      }
+      let node = new Node.ElseNode(statements,copy_token.line,copy_token.start,token.end);
+      node_tree.push(node);
+    }
+    // booleans
+    else if (["TRUE","FALSE","NIL"].includes(type) && this.operatorCheck() == true) {
+      let node;
+      if (type == "TRUE") {
+        node = new Node.TrueNode(token.line,token.start,token.end);
+      } else if (type == "FALSE") {
+        node = new Node.FalseNode(token.line,token.start,token.end);
+      } else {
+        node = new Node.NilNode(token.line,token.start,token.end);
+      }
+      node_tree.push(node);
+    }
+    // function calls
+    else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
+      let identifier_token = token;
+      this.next(); // skip lparen
+      let args = [];
+      while (this.peek().type != "RPAREN") {
+        let arg_token = this.next();
+        let node_tree_lite = this.recursiveParse([arg_token]);
+        args = args.concat(node_tree_lite);
+      }
+      let rparen_token = this.current();
+      let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, rparen_token.end);
+      node_tree.push(node);
+    }
+    // variable accesses
+    else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
+      let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
+      node_tree.push(node);
+    }
+    else if (type == "RETURN") {
+      let values = this.allAfter();
+      let value_node = this.recursiveParse(values)[0];
+      let node = new Node.ReturnNode(value_node,token.line,token.start,token.end);
+      node_tree.push(node);
+    }
+    // strings
+    else if (type == "STRING") {
+      let node = new Node.TextNode(token.tk,token.line,token.start,token.end);
+      node_tree.push(node);
+    }
+    // integers
+    else if (type == "INTEGER" && this.operatorCheck() == true) {
+      let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
+      node_tree.push(node);
+    }
+  }
+
 
   
   
-  parse (lineTokens) {
+  parseProgram (lineTokens) {
     /*
     Parse code and return the AST.Program
     Arguments:
       lineTks must be an Object containing { line : tokens }
     */
     this.lineTokens = lineTokens;
-    let ast = [];
+    this.ast = [];
     while (this.peekLine() != undefined) {
       let tokens = this.nextLine();
       this.tokens = tokens;
@@ -251,235 +479,13 @@ module.exports = class Parser {
       while (this.peek() != undefined) {
         let token = this.next();
         console.log("TOKEN " + JSON.stringify(token));
-        let type = token.type;
-        // handle...
-        // binary operations
-        if (this.bin_ops.includes(type)) {
-          this.parseBinary(type);
-        }
-
-        // def keyword
-        else if (type == "DEFINE") {
-          let name_token = this.next();
-          if (this.next().type != "EQUALITY") {
-            throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
-          }
-          let value_tokens = this.allAfter();
-          // Since recursiveParse returns a full-blown AST generated from a bunch of statements,
-          // we need to get the first element of the AST and assume it's the value. 
-
-          let value_node = this.recursiveParse(value_tokens)[0];
-          let node = new Node.VarAssignNode(name_token.tk,true,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
-          node_tree.push(node);
-        }
-        // imm keyword
-        else if (type == "IMMUTABLE") {
-          let name_token = this.next();
-          if (this.next().type != "EQUALITY") {
-            throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
-          }
-          let value_tokens = this.allAfter();
-          // Since recursiveParse returns a full-blown AST generated from a bunch of statements,
-          // we need to get the first element of the AST and assume it's the value. 
-
-          let value_node = this.recursiveParse(value_tokens)[0];
-          let node = new Node.VarAssignNode(name_token.tk,false,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
-          node_tree.push(node);
-        }
-        // fn keyword
-        else if (type == "FUNCTION") {
-          let identifier_token = this.next();
-          if (this.next().type != "LPAREN") {
-            throw new Error(`Expected TokenType to be LPAREN, got ${this.current().type} instead`);
-          }
-          let args = [];
-          while (this.peek().type == "IDENTIFIER") {
-            let arg_token = this.next();
-            let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
-            args.push(arg_node);
-          }
-          if (this.next().type != "RPAREN") {
-            throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
-          }
-          let body = [];
-          // parse block expressions
-          console.log("FN PEEK " + JSON.stringify(this.peekLine()));
-          while (this.peekLine()[0].type != "END") {
-            let tokens_lite = this.nextLine();
-            console.log("TKS LITE " + JSON.stringify(tokens_lite));
-            let line_node = this.recursiveParse(tokens_lite);
-            console.log(JSON.stringify(line_node));
-            body = body.concat(line_node);
-          }
-        
-
-          console.log("BODY " + JSON.stringify(body));
-          let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
-          node_tree.push(node);
-        }
-        // print keyword
-        else if (type == "PRINT") {
-          let value_tokens = this.allAfter();
-          let value_node = this.recursiveParse(value_tokens)[0];
-          let node = new Node.PrintNode(value_node,value_tokens[0].line,value_tokens[0].start,value_tokens[value_tokens.length-1].end);
-          node_tree.push(node);
-        }
-        // if keyword
-        else if (type == "IF") {
-          const copy_token = token;
-          let condition_tokens = this.allAfter();
-          let condition_node = this.recursiveParse(condition_tokens)[0];
-          let statements = [];
-          while (this.currentLine()[0].type != "END") {
-            let tokens_lite = this.nextLine();
-            let node_tree_lite = this.recursiveParse(tokens_lite);
-            statements = statements.concat(node_tree_lite);
-            if (this.peekLine() == undefined) { break };
-          }
-          let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
-          // go through the next few lines checking if there are any elif statements
-          // this is so we can build a proper if-elif-else chain if possible
-          let elif_tokens = {};
-          let elif_it = 0;
-          let helper = 0;
-
-          console.log("PEEKL " + JSON.stringify(this.peekLine()));
-          console.log(this.line);
-          console.log(JSON.stringify(this.currentLine()));
-          console.log(JSON.stringify(this.lineTokens));
-          while (this.peekLine(1,true)[0].type == "ELIF") {
-            this.nextLine();
-            while (this.currentLine()[0].type != "END") {
-              if (helper == 0) {
-                this.previousLine();
-              }
-              let tks_lite = this.nextLine();
-              elif_it += 1; helper += 1;
-              elif_tokens[elif_it] = tks_lite
-            }
-            helper = 0;
-          }
-          let elif_nodes = this.recursiveParse(elif_tokens,false);
-
-          // now that we have elif nodes, we should look for an else statement
-          let else_tokens = {};
-          let else_it = 0;
-          if (this.peekLine(1,true)[0].type == "ELSE") {
-            this.nextLine();
-            while (this.currentLine()[0].type != "END") {
-              if (else_it == 0) {
-                this.previousLine();
-              }
-              let tks_lite = this.nextLine();
-              else_it += 1;
-              else_tokens[else_it] = tks_lite
-            }
-          }
-          let else_node = this.recursiveParse(else_tokens,false);
-
-          // finally we can construct the chain
-          let chain = [if_node].concat(elif_nodes).concat(else_node);
-          console.log("CHAIN " + JSON.stringify(chain));
-          let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
-          node_tree.push(node);
-        }
-        // elif keyword, to be catched by the if line
-        else if (type == "ELIF") {
-          const copy_token = token;
-          let condition_tokens = this.allAfter();
-          let condition_node = this.recursiveParse(condition_tokens)[0];
-          let statements = [];
-          while (this.currentLine()[0].type != "END") {
-            let tokens_lite = this.nextLine();
-            let node_tree_lite = this.recursiveParse(tokens_lite);
-            statements = statements.concat(node_tree_lite);
-            if (this.peekLine() == undefined) { break };
-          }
-          let node = new Node.ElifNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
-          node_tree.push(node);
-        }
-        // else keyword, to be catched by the if line
-        else if (type == "ELSE") {
-          let statements = [];
-          const copy_token = token;
-          while (this.currentLine()[0].type != "END") {
-            let tokens_lite = this.nextLine();
-            let node_tree_lite = this.recursiveParse(tokens_lite);
-            statements = statements.concat(node_tree_lite);
-            if (this.peekLine() == undefined) { break };
-          }
-          let node = new Node.ElseNode(statements,copy_token.line,copy_token.start,token.end);
-          node_tree.push(node);
-        }
-        // booleans
-        else if (["TRUE","FALSE","NIL"].includes(type) && this.operatorCheck() == true) {
-          let node;
-          if (type == "TRUE") {
-            node = new Node.TrueNode(token.line,token.start,token.end);
-          } else if (type == "FALSE") {
-            node = new Node.FalseNode(token.line,token.start,token.end);
-          } else {
-            node = new Node.NilNode(token.line,token.start,token.end);
-          }
-          node_tree.push(node);
-        }
-        // function calls
-        else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
-          let identifier_token = token;
-          this.next(); // skip lparen
-          let args = [];
-          while (this.peek().type != "RPAREN") {
-            let arg_token = this.next();
-            let node_tree_lite = this.recursiveParse([arg_token]);
-            args = args.concat(node_tree_lite);
-          }
-          let rparen_token = this.current();
-          let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, rparen_token.end);
-          node_tree.push(node);
-        }
-        // variable accesses
-        else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
-          let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
-          node_tree.push(node);
-        }
-        else if (type == "RETURN") {
-          let values = this.allAfter();
-          let value_node = this.recursiveParse(values)[0];
-          let node = new Node.ReturnNode(value_node,token.line,token.start,token.end);
-          node_tree.push(node);
-        }
-        // strings
-        else if (type == "STRING") {
-          let node = new Node.TextNode(token.tk,token.line,token.start,token.end);
-          node_tree.push(node);
-        }
-        // integers
-        else if (type == "INTEGER" && this.operatorCheck() == true) {
-          let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
-          node_tree.push(node);
-        }
-      }
-  
-      ast = ast.concat(node_tree);
-    }
-    return ast;
+        this.parseToken(token);
+      };
+ 
+    return this.ast;
   }
 
-  wrap (ast) {
-    /*
-    Wrap the AST from Parser.parse nicely
-    */
-    let new_ast = {};
-    new_ast["Program"] = ast;
-    let tokens = 0;
-    for (let line_number in this.lineTokens) {
-      tokens += this.lineTokens[line_number].length;
-    }
-    let name = "main.ax";
-    new_ast["tokens"] = tokens;
-    new_ast["name"] = name;
-    return new_ast;
-  }
+
     
 
 

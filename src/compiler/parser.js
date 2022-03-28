@@ -21,13 +21,10 @@ class Expression {
 
 module.exports = class Parser {
   constructor () {
-    this.variables = {};
     this.token_iterated = -1;
     this.tokens = [];
-    this.line = 0;
     this.bin_ops = ["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE","COMPAREOPP"]
     
-    this.lineTokens = {};
     this.ast = [];
     this.scanner = new Scanner();
   }
@@ -44,7 +41,10 @@ module.exports = class Parser {
     return n;
   }
 
-  allAfter () {
+  allAfter (limit=5) {
+    /*
+    Get all tokens after the current one
+    */
     this.token_iterated += 1;
     let n = this.tokens.slice(this.token_iterated,this.tokens.length);
     this.token_iterated = this.tokens.length;
@@ -52,6 +52,9 @@ module.exports = class Parser {
   }
 
   allAfterSort (types) {
+    /*
+    Get all the next tokens, with the option to sort
+    */
     let sorted = [];
     for (let token of this.tokens.slice(this.token_iterated,this.tokens.length)) {
       if (types.includes(token.type)) {
@@ -62,6 +65,9 @@ module.exports = class Parser {
   }
 
   allBeforeSort (types) {
+    /*
+    Get all the next tokens, with the option to sort
+    */
     let sorted = [];
     for (let token of this.tokens.slice(0,this.token_iterated)) {
       if (types.includes(token.type)) {
@@ -87,7 +93,7 @@ module.exports = class Parser {
     return this.tokens[this.token_iterated];
   }
 
-  peek (safety=false) { // fix
+  peek (safety=false) {
     /*
     Get next token without incrementing token_iterated
     */
@@ -103,56 +109,13 @@ module.exports = class Parser {
     }
   }
 
-  lookBack (tokens=1) { // fix
+  lookBack (tokens=1) {
     /*
     Get previous token without de-incrementing token_iterated
     */
-    return this.tokens[this.token_iterated - 1];
+    return this.tokens[this.token_iterated - tokens];
   }
   
-  nextLine () {
-    /*
-    Get next line in lineTokens
-    */
-    this.line += 1;
-    return this.lineTokens[this.line]
-  }
-  
-  previousLine () {
-    /*
-    Get previous line in lineTokens
-    */
-    this.line -= 1;
-    return this.lineTokens[this.line]
-  }
-
-  peekLine (l=1, safety=false) {
-    /*
-    Peek forward in lineTokens without changing this.line
-    */
-    let res = this.lineTokens[this.line + l];
-    if (safety == true && res == undefined) {
-      return [{"type":"UNDEFINED"}];
-    } else {
-      return res;
-    }
-  }
-
-  lookBackLine (l=1) {
-    /*
-    Peek backwards in lineTokens without changing this.line
-    */
-    return this.lineTokens[this.line - l];
-  }
-  
-  currentLine () {
-    /*
-    Get current line in lineTokens
-    */
-    let o = this.lineTokens[this.line]
-    return o;
-  }
-
 
   recursiveParse (tokens) {
     /*
@@ -163,6 +126,9 @@ module.exports = class Parser {
   }
 
   operatorCheck () {
+    /*
+    Check if the next operator is a bin op
+    */
     if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE", "COMPAREOPP"].includes(this.peek(true).type)) {
       return true; // good to go!
     }
@@ -173,6 +139,17 @@ module.exports = class Parser {
 
   // parse methods
 
+  guard(kind) {
+    return this.peek().kind === kind ? this.next() : null;
+  }
+
+  expect(kind, where) {
+    let token = this.guard(kind);
+    if (!token) { throw new Exception(`Error in ${where}: expected ${kind}, got ${this.peek().kind}`) };
+    return token;
+  } 
+
+
   parseSuccess (node) {
     this.ast = this.ast.concat(node);
     return true;
@@ -182,7 +159,7 @@ module.exports = class Parser {
     throw new Error(`Failed to parse TOKENS: ${tokens}\nReason given: ${reason}`);
   }
 
-  parseBinary (token) {
+  parseBinOp (token) {
     let type = token.type;
     if (type == "PLUS") {
       let lhs = this.recursiveParse([this.lookBack()]);
@@ -483,12 +460,11 @@ module.exports = class Parser {
 
   
   
-  parseProgram (lineTokens) {
+  parseStatements (tokens) {
     /*
-    Parse multiple lines and return the AST.Program
-    Arguments:
-      lineTks must be an Object containing { line : tokens }
+    Parse multiple statements
     */
+
     this.lineTokens = lineTokens;
     this.ast = [];
     while (this.peekLine() != undefined) {

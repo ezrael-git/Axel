@@ -470,6 +470,24 @@ class NilNode {
   }
 }
 
+class ReturnNode {
+  constructor (value, line, start, end) {
+    this.type = "ReturnExpression";
+    this.body = {
+      value:value,
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  run (v,w) {
+    w.variables = v;
+    let res = w.interpretNode(this.body.value,this.body.value.constructor.name);
+    return res;
+  }
+}
+
 module.exports = {
   VarAssignNode:VarAssignNode,
   VarAccessNode:VarAccessNode,
@@ -487,6 +505,7 @@ module.exports = {
   IfChainNode:IfChainNode,
   TrueNode:TrueNode,
   FalseNode:FalseNode,
-  NilNode:NilNode
+  NilNode:NilNode,
+  ReturnNode:ReturnNode
   
 }

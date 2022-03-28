@@ -287,15 +287,15 @@ module.exports = class Scanner {
       }
 
       else if (stat.startsWith("if")) {
-        add("if")
+        add("if:" + on_line)
       }
 
       else if (stat.startsWith("elif")) {
-        add("elif")
+        add("elif:" + on_line)
       }
 
       else if (stat.startsWith("else")) {
-        add("else")
+        add("else:" + on_line)
       }
 
       else if (stat.startsWith("module")) {

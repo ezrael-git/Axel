@@ -17,6 +17,7 @@ module.exports = class Parser {
     
     this.lineTokens = {};
     this.ast = {};
+    this.scanner = new Scanner();
   }
 
   next (safety=false) {
@@ -274,11 +275,14 @@ module.exports = class Parser {
           let line = 0;
           let block_tokens = {};
           // collect block tokens
-          while (this.currentLine()[0].type != "END") {
+          const cur_namespace = this.scanner.namespace(lineTokens,line);
+          this.nextLine();
+          while (cur_namespace != this.scanner.namespace(lineTokens,line)) {
             let tokens_lite = this.nextLine();
             line += 1;
             block_tokens[line] = tokens_lite;
           }
+          console.log("BT " + JSON.stringify(block_tokens));
           // parse block tokens
           let block_nodes = this.recursiveParse(block_tokens,false);
           body.concat(block_nodes);

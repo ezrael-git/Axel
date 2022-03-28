@@ -273,7 +273,7 @@ module.exports = class Parser {
           }
           let body = [];
           // parse block expressions
-          console.log("FN PEEK " + JSON.stringify(this.peekLine());
+          console.log("FN PEEK " + JSON.stringify(this.peekLine()));
           while (this.peekLine()[0].type != "END") {
             let tokens_lite = this.nextLine();
             console.log("TKS LITE " + JSON.stringify(tokens_lite));

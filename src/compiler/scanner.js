@@ -262,7 +262,7 @@ module.exports = class Scanner {
     */
     let cur_namespace = "main"
     let max = 0;
-    for (let k of lineTokens) {
+    for (let k in lineTokens) {
       if (parseInt(k) > max) {
         max = parseInt(k);
       }

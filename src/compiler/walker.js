@@ -130,6 +130,10 @@ module.exports = class Walker {
       let o = node.run(this.variables,new Walker());
       return this.toLiteral(o);
     }
+    else if (type == "ReturnNode") {
+      let value = node.run(this.variables,new Walker());
+      return value;
+    }
     // literals
     else if (node.constructor.name.includes("Literal")) {
       return node.run();

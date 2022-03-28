@@ -13,6 +13,7 @@ let TT_DOT = "."
 let TT_COMMA = ","
 
 let TT_FN = "fn"
+let TT_RETURN = "return"
 let TT_DEF = "def"
 let TT_IMM = "imm"
 let TT_END = "end"
@@ -241,6 +242,10 @@ class Lexer {
       // else keyword
       else if (it.endsWith(TT_ELSE) && !this.letters.includes(source[pos-4]) && !this.letters.includes(this.peek(pos))) {
         add("ELSE", pos-2, pos, TT_ELSE);
+      }
+      // return keyword
+      else if (it.endsWith(TT_RETURN) && !this.letters.includes(source[pos-6]) && !this.letters.includes(this.peek(pos))) {
+        add("RETURN", pos-5, pos, TT_RETURN);
       }
       else {
         // identifiers

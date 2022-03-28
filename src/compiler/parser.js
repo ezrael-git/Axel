@@ -279,7 +279,7 @@ module.exports = class Parser {
             console.log("TKS LITE " + JSON.stringify(tokens_lite));
             let line_node = this.recursiveParse(tokens_lite);
             console.log(JSON.stringify(line_node));
-            body.concat(line_node);
+            body = body.concat(line_node);
           }
         
 

@@ -284,7 +284,7 @@ module.exports = class Parser {
             line += 1;
             block_tokens[line] = tokens_lite;
           }
-          if (block_tokens.length > 0) { block_tokens.length=block_tokens.length-1; this.previousLine(); }
+        
           console.log("BT " + JSON.stringify(block_tokens));
           // parse block tokens
           let block_nodes = this.recursiveParse(block_tokens,false);

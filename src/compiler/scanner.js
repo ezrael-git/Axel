@@ -286,9 +286,16 @@ module.exports = class Scanner {
         add("function:" + name);
       }
 
-      else if (stat.startsWith("meth")) {
-        let name = stat.split(' ')[1];
-        add("method:" + name);
+      else if (stat.startsWith("if")) {
+        add("if")
+      }
+
+      else if (stat.startsWith("elif")) {
+        add("elif")
+      }
+
+      else if (stat.startsWith("else")) {
+        add("else")
       }
 
       else if (stat.startsWith("module")) {
@@ -534,6 +541,8 @@ module.exports = class Scanner {
     }
     return obj;
   }
+
+
 
 
 }

@@ -256,7 +256,10 @@ module.exports = class Scanner {
     }
   }
 
-  namespace (stats, line) {
+  namespace (lineTokens, line) {
+    /*
+      Figure out namespace of a given line using tokens
+    */
     let cur_namespace = "main"
 
     function add (path) {
@@ -270,41 +273,44 @@ module.exports = class Scanner {
     }
 
     let on_line = 0;
-    for (let stat of stats) {
+    while (on_line != lineTokens.length+1) {
       on_line += 1;
-      stat = this.cleanse_whitespace(stat);
-      if (line == on_line) {
-        return cur_namespace;
-      }
-      if (stat.startsWith("class")) {
-        let name = stat.split(' ')[1];
-        add("class:" + name);
-      }
+      let line_t = lineTokens[on_line];
+      for (let token of line_t) {
 
-      else if (stat.startsWith("fn")) {
-        let name = stat.split(' ')[1];
-        add("function:" + name);
-      }
+        if (line == on_line) {
+          return cur_namespace;
+        }
+        if (token.type == "CLASS") {
+          let name = token.tk;
+          add("class:" + name);
+        }
 
-      else if (stat.startsWith("if")) {
-        add("if:" + on_line)
-      }
+        else if (token.type == "FUNCTION") {
+          let name = token.tk;
+          add("function:" + name);
+        }
 
-      else if (stat.startsWith("elif")) {
-        add("elif:" + on_line)
-      }
+        else if (token.type == "IF") {
+          add("if:" + on_line)
+        }
 
-      else if (stat.startsWith("else")) {
-        add("else:" + on_line)
-      }
+        else if (token.type == "ELIF") {
+          add("elif:" + on_line)
+        }
 
-      else if (stat.startsWith("module")) {
-        let name = stat.split(' ')[1];
-        add("module:" + name);
-      }
+        else if (token.type == "ELSE") {
+          add("else:" + on_line)
+        }
 
-      else if (stat == "end") {
-        subtract();
+        else if (token.type == "MODULE") {
+          let name = token.tk;
+          add("module:" + name);
+        }
+
+        else if (token.type == "end") {
+          subtract();
+        }
       }
     }
 

@@ -120,13 +120,6 @@ module.exports = class Parser {
   }
   
 
-  recursiveParse (tokens) {
-    /*
-    Parse tokens from a new instance of the Parser
-    */
-    let parser = new Parser();
-    parser.parseStatement(tokens);
-  }
 
   operatorCheck () {
     /*
@@ -239,27 +232,19 @@ module.exports = class Parser {
 
   parseFuncDecl (token) {
     let type = token.type;
-    let identifier_token = this.next();
-    if (this.next().type != "LPAREN") {
-      throw new Error(`Expected TokenType to be LPAREN, got ${this.current().type} instead`);
-    }
+    let identifier_token = this.expect('IDENTIFIER');
+    this.expect('LPAREN');
+
     let args = [];
-    while (this.peek().type == "IDENTIFIER") {
-      let arg_token = this.next();
+    let tkn;
+    while ((tkn = this.guard('IDENTIFIER'))) {
       let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
       args.push(arg_node);
+      if (!this.guard("COMMA")) { break };
     }
-    if (this.next().type != "RPAREN") {
-      throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
-    }
-    let body = [];
-    // parse block expressions
-    while (this.peekLine()[0].type != "END") {
-      let tokens_lite = this.nextLine();
-      let line_node = this.recursiveParse(tokens_lite);
-      body = body.concat(line_node);
-    }
-    
+    this.expect('RPAREN');
+
+    let body = this.parseBlock(this.token);
 
     console.log("BODY " + JSON.stringify(body));
     let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
@@ -421,6 +406,16 @@ module.exports = class Parser {
     return node;
   }
 
+  parseBlock (token) {
+    if (token.type != "DO") {
+      throw new Error(`Error in parseBlock(): expected token.type "DO", got ${token.type} instead`);
+    }
+    this.parseStatements();
+    // fix: add node for blocks
+    return node;
+  }
+
+
   parseStatement (token) {
     /*
       Parse a single token.
@@ -464,6 +459,11 @@ module.exports = class Parser {
       this.parseVarAccess(token);
     }
 
+    // blocks
+    else if (type == "DO") {
+      this.parseBlock(token);
+    }
+
     // strings
     else if (type == "STRING") {
       this.parseString(token);
@@ -480,19 +480,29 @@ module.exports = class Parser {
     }
   }
 
-  parseStatements (tokens) {
+  parseStatements () {
     /*
-    Parse statements from tokens
+    Parse the next statements from tokens
     */
-    this.tokens = tokens;
-    this.token_iterated = -1;
-    this.ast = [];
     
     while (this.peek() != undefined) {
       let token = this.next();
       console.log("TOKEN " + JSON.stringify(token));
       this.parseStatement(token);
     }
+    return this.ast;
+  }
+
+  parseProgram (tokens) {
+    /* 
+    Wrapper around parseStatements. This is made for the whole program instead of just a few statements.
+    Interface function.
+    */
+    this.tokens = tokens;
+    this.token_iterated = -1;
+    this.ast = [];
+
+    this.parseStatements();
     return this.ast;
   }
 

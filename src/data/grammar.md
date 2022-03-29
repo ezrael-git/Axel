@@ -22,7 +22,7 @@ do
 end
 ```
 
-
+Let's get to the language's structure/grammar.
 ```ebnf
 program := {<statements>} ;
 statements := {<statement>} ;

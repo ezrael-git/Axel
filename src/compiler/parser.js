@@ -23,11 +23,14 @@ module.exports = class Parser {
   constructor () {
     this.token_iterated = -1;
     this.tokens = [];
-    this.bin_ops = ["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE","COMPAREOPP"]
+    this.bin_ops = ["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE","COMPAREOPP"];
+    this.booleans = ["TRUE", "FALSE", "NIL"];
     
     this.ast = [];
     this.scanner = new Scanner();
   }
+
+  // iterating methods
 
   next (safety=false) {
     /*
@@ -137,17 +140,24 @@ module.exports = class Parser {
     }
   }
 
-  // parse methods
-
   guard(kind) {
     return this.peek().kind === kind ? this.next() : null;
   }
 
-  expect(kind, where) {
+  expect(kind, where=undefined) {
+    if (where == undefined) {
+      where = this.token_iterated;
+    }
     let token = this.guard(kind);
     if (!token) { throw new Exception(`Error in ${where}: expected ${kind}, got ${this.peek().kind}`) };
     return token;
-  } 
+  }
+
+  skip () {
+    this.token_iterated += 1;
+  }
+
+  // parse methods
 
 
   parseSuccess (node) {
@@ -156,51 +166,53 @@ module.exports = class Parser {
   }
 
   parseFailure (tokens,reason) {
-    throw new Error(`Failed to parse TOKENS: ${tokens}\nReason given: ${reason}`);
+    throw new Error(`Failed to parse ${tokens.length} token(s): ${JSON.stringify(tokens)}\nReason given: ${reason}`);
   }
 
   parseBinOp (token) {
     let type = token.type;
+    let node;
     if (type == "PLUS") {
       let lhs = this.recursiveParse([this.lookBack()]);
       let rhs = this.recursiveParse([this.peek()]);
-      let node = new Node.BinaryOperatorNode(lhs,rhs,"+");
+      node = new Node.BinaryOperatorNode(lhs,rhs,"+");
       this.parseSuccess(node);
     }
     // subtraction operator
     else if (type == "MINUS") {
       let lhs = this.recursiveParse([this.lookBack()]);
       let rhs = this.recursiveParse([this.peek()]);
-      let node = new Node.BinaryOperatorNode(lhs,rhs,"-");
+      node = new Node.BinaryOperatorNode(lhs,rhs,"-");
       this.parseSuccess(node);
     }
     // multiplication operator
     else if (type == "MULTIPLY") {
       let lhs = this.recursiveParse([this.lookBack()]);
       let rhs = this.recursiveParse([this.peek()]);
-      let node = new Node.BinaryOperatorNode(lhs,rhs,"*");
+      node = new Node.BinaryOperatorNode(lhs,rhs,"*");
       this.parseSuccess(node);
     }
     // division operator
     else if (type == "DIVIDE") {
       let lhs = this.recursiveParse([this.lookBack()]);
       let rhs = this.recursiveParse([this.peek()]);
-      let node = new Node.BinaryOperatorNode(lhs,rhs,"/");
+      node = new Node.BinaryOperatorNode(lhs,rhs,"/");
       this.parseSuccess(node);
     }
     // comparison operator
     else if (type == "COMPARE") {
       let lhs = this.recursiveParse([this.lookBack()])
       let rhs = this.recursiveParse([this.next()])
-      let node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"==");
+      node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"==");
       this.parseSuccess(node);
     }
     else if (type == "COMPAREOPP") {
       let lhs = this.recursiveParse([this.lookBack()])
       let rhs = this.recursiveParse([this.next()])
-      let node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"!=");
+      node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"!=");
       this.parseSuccess(node);
     }
+    return node;
   }
 
   parseVarDecl (token) {
@@ -222,6 +234,7 @@ module.exports = class Parser {
     let value_node = this.recursiveParse(value_tokens)[0];
     let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
     this.parseSuccess(node);
+    return node;
   }
 
   parseFuncDecl (token) {
@@ -251,17 +264,20 @@ module.exports = class Parser {
     console.log("BODY " + JSON.stringify(body));
     let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
     this.parseSuccess(node);
+    return node;
   }
 
   parseDecl (token) {
     let type = token.type;
+    let node;
     if (type == "DEFINE" || type == "IMMUTABLE") {
-      this.parseVarDecl(token);
+      node = this.parseVarDecl(token);
     } else if (type == "FUNCTION") {
-      this.parseFuncDecl(token);
+      node = this.parseFuncDecl(token);
     } else {
       throw new Error("Unknown value given to parseDecl: " + token.type);
     }
+    return node;
   }
 
   parseIf (token) {
@@ -318,6 +334,7 @@ module.exports = class Parser {
     let chain = [if_node].concat(elif_nodes).concat(else_node);
     let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
     this.parseSuccess(node);
+    return node;
   }
 
   parseElif (token) {
@@ -333,6 +350,7 @@ module.exports = class Parser {
     }
     let node = new Node.ElifNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
     this.parseSuccess(node);
+    return node;
   }
 
   parseElse (token) {
@@ -346,6 +364,7 @@ module.exports = class Parser {
     }
     let node = new Node.ElseNode(statements,copy_token.line,copy_token.start,token.end);
     this.parseSuccess(node);
+    return node;
   }
 
   parsePrint (token) {
@@ -353,9 +372,56 @@ module.exports = class Parser {
     let value_node = this.recursiveParse(value_tokens)[0];
     let node = new Node.PrintNode(value_node,value_tokens[0].line,value_tokens[0].start,value_tokens[value_tokens.length-1].end);
     this.parseSuccess(node);
+    return node;
   }
 
-  parseToken (token) {
+  parseBool (token) {
+    let node;
+    let type = token.type;
+    if (type == "TRUE") {
+      node = new Node.TrueNode(token.line,token.start,token.end);
+    } else if (type == "FALSE") {
+      node = new Node.FalseNode(token.line,token.start,token.end);
+    } else {
+      node = new Node.NilNode(token.line,token.start,token.end);
+    }
+    this.parseSuccess(node);
+    return node;
+  }
+
+  parseFuncCall (token) {
+    let identifier_token = token;
+    this.expect('LPAREN');
+    let args = [];
+    while ((arg_token = this.guard("IDENTIFIER"))) {
+      let node_tree_lite = this.parseStatement(arg_token);
+      args = args.concat(node_tree_lite);
+    }
+    this.expect('RPAREN');
+    let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, this.current().end);
+    this.parseSuccess(node);
+    return node;
+  }
+
+  parseVarAccess (token) {
+    let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
+    this.parseSuccess(node);
+    return node;
+  }
+
+  parseString (token) {
+    let node = new Node.TextNode(token.tk,token.line,token.start,token.end);
+    this.parseSuccess(node);
+    return node;
+  }
+
+  parseInteger (token) {
+    let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
+    this.parseSuccess(node);
+    return node;
+  }
+
+  parseStatement (token) {
     /*
       Parse a single token.
       Warning: the method might ask for more tokens.
@@ -378,101 +444,58 @@ module.exports = class Parser {
     }
 
     // if keyword
+    // elif-else aren't mentioned here because they're handled by the if statement parser
     else if (type == "IF") {
       this.parseIf(token);
     }
 
-    // elif keyword, to be catched by the if line
-    else if (type == "ELIF") {
-      this.parseElif(token);
-    }
-    // else keyword, to be catched by the if line
-    else if (type == "ELSE") {
-      this.parseElse(token);
-    }
-    /* todo: work on this
     // booleans
-    else if (["TRUE","FALSE","NIL"].includes(type) && this.operatorCheck() == true) {
-      let node;
-      if (type == "TRUE") {
-        node = new Node.TrueNode(token.line,token.start,token.end);
-      } else if (type == "FALSE") {
-        node = new Node.FalseNode(token.line,token.start,token.end);
-      } else {
-        node = new Node.NilNode(token.line,token.start,token.end);
-      }
-      node_tree.push(node);
+    else if (this.booleans.includes(type) && this.operatorCheck() == true) {
+      this.parseBool(token);
     }
+
     // function calls
     else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
-      let identifier_token = token;
-      this.next(); // skip lparen
-      let args = [];
-      while (this.peek().type != "RPAREN") {
-        let arg_token = this.next();
-        let node_tree_lite = this.recursiveParse([arg_token]);
-        args = args.concat(node_tree_lite);
-      }
-      let rparen_token = this.current();
-      let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, rparen_token.end);
-      node_tree.push(node);
+      this.parseFuncCall(token);
     }
+
     // variable accesses
     else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
-      let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
-      node_tree.push(node);
+      this.parseVarAccess(token);
     }
-    else if (type == "RETURN") {
-      let values = this.allAfter();
-      let value_node = this.recursiveParse(values)[0];
-      let node = new Node.ReturnNode(value_node,token.line,token.start,token.end);
-      node_tree.push(node);
-    }
+
     // strings
     else if (type == "STRING") {
-      let node = new Node.TextNode(token.tk,token.line,token.start,token.end);
-      node_tree.push(node);
+      this.parseString(token);
     }
+
     // integers
     else if (type == "INTEGER" && this.operatorCheck() == true) {
-      let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
-      node_tree.push(node);
+      this.parseInteger(token);
     }
-    */
+
+    // parse failure
+    else {
+      this.parseFailure([token],"unknown token");
+    }
   }
 
-  parseStatement (tokens) {
+  parseStatements (tokens) {
     /*
-    Parse a single line
+    Parse statements from tokens
     */
-    let tokens = this.nextLine();
     this.tokens = tokens;
     this.token_iterated = -1;
+    this.ast = [];
     
     while (this.peek() != undefined) {
       let token = this.next();
       console.log("TOKEN " + JSON.stringify(token));
-      this.parseToken(token);
+      this.parseStatement(token);
     }
     return this.ast;
   }
 
-
-  
-  
-  parseStatements (tokens) {
-    /*
-    Parse multiple statements
-    */
-
-    this.lineTokens = lineTokens;
-    this.ast = [];
-    while (this.peekLine() != undefined) {
-      this.parseStatement(tokens);
-    }
- 
-    return this.ast;
-  }
 
 
     

@@ -240,6 +240,7 @@ module.exports = class Parser {
     return node;
   }
 
+
   parseIf (token) {
     const copy_token = token;
     token = this.next();
@@ -463,7 +464,9 @@ module.exports = class Parser {
 
     // parse failure
     else {
-      this.parseFailure([token],"unknown token");
+      //this.parseFailure([token],"unknown token");
+      // skip
+      return false;
     }
   }
 

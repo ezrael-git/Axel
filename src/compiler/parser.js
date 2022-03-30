@@ -351,6 +351,7 @@ module.exports = class Parser {
     let identifier_token = token;
     this.expect('LPAREN');
     let args = [];
+    let arg_token;
     while ((arg_token = this.guard("IDENTIFIER"))) {
       let node_tree_lite = this.parseStatement(arg_token);
       args = args.concat(node_tree_lite);

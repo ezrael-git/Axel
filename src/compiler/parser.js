@@ -134,7 +134,7 @@ module.exports = class Parser {
   }
 
   guard(kind) {
-    return this.peek().kind === kind ? this.next() : null;
+    return this.peek().type === type ? this.next() : null;
   }
 
   expect(kind, where=undefined) {
@@ -142,7 +142,7 @@ module.exports = class Parser {
       where = this.token_iterated;
     }
     let token = this.guard(kind);
-    if (!token) { throw new Exception(`Error in ${where}: expected ${kind}, got ${this.peek().kind}`) };
+    if (!token) { throw new Error(`Error in ${where}: expected ${kind}, got ${this.peek().kind}`) };
     return token;
   }
 

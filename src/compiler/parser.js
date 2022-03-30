@@ -102,7 +102,7 @@ module.exports = class Parser {
   }
 
   protect () {
-    return this.peek().type != undefined ? this.next() : null;
+    return this.peek() != undefined ? this.next() : null;
   }
 
   guard(kind) {

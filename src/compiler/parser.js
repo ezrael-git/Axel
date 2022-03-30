@@ -245,6 +245,8 @@ module.exports = class Parser {
     const copy_token = token;
     token = this.next();
     let condition_node = this.parseStatement(token,["DO"]);
+    this.previous();
+    console.log("CURT " + this.current());
     let statements = this.parseBlock(this.current());
 
     let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
@@ -466,7 +468,7 @@ module.exports = class Parser {
     else {
       //this.parseFailure([token],"unknown token");
       // skip
-      return false;
+      return "SKIP"
     }
   }
 
@@ -482,8 +484,10 @@ module.exports = class Parser {
       let node = this.parseStatement(token);
       console.log("RESULT NODE " + node.constructor.name);
       // block safety
-      if (node == null) {
+      if (node === null) {
         break;
+      } else if (node === "SKIP") {
+        continue;
       } else {
         generated.push(node);
       }

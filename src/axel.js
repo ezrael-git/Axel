@@ -29,7 +29,7 @@ class Axel {
     statements = this.preprocessor.process(statements);
     console.log("STATS " + statements);
     let tokens = this.lexer.process(statements);
-    let ast = this.parser.parse(tokens);
+    let ast = this.parser.parseProgram(tokens);
     let o = this.walker.walk(ast);
     return "return " + o;
   }

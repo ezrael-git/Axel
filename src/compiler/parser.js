@@ -226,9 +226,9 @@ module.exports = class Parser {
     if (this.next().type != "EQUALITY") {
       throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
     }
-    let value_tokens = this.allAfter();
+    let value_token = this.next();
 
-    let value_node = this.recursiveParse(value_tokens)[0];
+    let value_node = this.parseStatement(value_token);
     let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
     this.parseSuccess(node);
     return node;

@@ -326,9 +326,8 @@ module.exports = class Parser {
   }
 
   parsePrint (token) {
-    let value_tokens = this.allAfter();
-    let value_node = this.recursiveParse(value_tokens)[0];
-    let node = new Node.PrintNode(value_node,value_tokens[0].line,value_tokens[0].start,value_tokens[value_tokens.length-1].end);
+    let value_node = this.parseStatement(token);
+    let node = new Node.PrintNode(value_node, token.line, token.start, token.end);
     this.parseSuccess(node);
     return node;
   }

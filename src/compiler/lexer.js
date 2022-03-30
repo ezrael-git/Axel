@@ -16,6 +16,7 @@ let TT_FN = "fn"
 let TT_RETURN = "return"
 let TT_DEF = "def"
 let TT_IMM = "imm"
+let TT_DO = "do"
 let TT_END = "end"
 let TT_PRINT = "print"
 let TT_TRUE = "true"
@@ -212,6 +213,10 @@ class Lexer {
       else if (it.endsWith(TT_IMM) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ") {
         add("IMMUTABLE", pos-2, pos, TT_DEF);
       }
+      // do keyword
+      else if (it.endsWith(TT_DO) && !this.letters.includes(source[pos-2]) && !this.letters.includes(this.peek(pos))) {
+        add("DO", pos-1, pos, TT_DO);
+      }
       // end keyword
       else if (it.endsWith(TT_END) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
         add("END", pos-2, pos, TT_END);
@@ -248,6 +253,7 @@ class Lexer {
       else if (it.endsWith(TT_RETURN) && !this.letters.includes(source[pos-6]) && !this.letters.includes(this.peek(pos))) {
         add("RETURN", pos-5, pos, TT_RETURN);
       }
+
       else {
         // identifiers
         if (lastToken() != undefined) {

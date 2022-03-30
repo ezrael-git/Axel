@@ -404,7 +404,7 @@ module.exports = class Parser {
     }
     // binary operations
     if (this.bin_ops.includes(type)) {
-      let res = this.parseBinary(token);
+      let res = this.parseBinOp(token);
       return res;
     }
 

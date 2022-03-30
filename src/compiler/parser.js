@@ -242,18 +242,11 @@ module.exports = class Parser {
 
   parseIf (token) {
     const copy_token = token;
-    let condition_tokens = this.allAfter();
-    let condition_node = this.recursiveParse(condition_tokens)[0];
-    let statements = [];
-
-    while (this.currentLine()[0].type != "END") {
-      let tokens_lite = this.nextLine();
-      let node_tree_lite = this.recursiveParse(tokens_lite);
-      statements = statements.concat(node_tree_lite);
-      if (this.peekLine() == undefined) { break };
-    }
+    let condition_node = this.parseStatement(token,["DO"]);
+    let statements = this.parseBlock(this.current());
 
     let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+    /* fix
     // go through the next few lines checking if there are any elif statements
     // this is so we can build a proper if-elif-else chain if possible
     let elif_tokens = {};
@@ -290,6 +283,7 @@ module.exports = class Parser {
     }
     let else_node = this.recursiveParse(else_tokens);
 
+    */
     // finally we can construct the chain
     let chain = [if_node].concat(elif_nodes).concat(else_node);
     let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
@@ -390,7 +384,7 @@ module.exports = class Parser {
   }
 
 
-  parseStatement (token) {
+  parseStatement (token, invalid=[]) {
     /*
       Parse a single token.
       Warning: the method might ask for more tokens.
@@ -400,6 +394,9 @@ module.exports = class Parser {
     // handle...
     // block ends
     if (type == "END") {
+      return null;
+    }
+    if (invalid.includes(type)) {
       return null;
     }
     // binary operations

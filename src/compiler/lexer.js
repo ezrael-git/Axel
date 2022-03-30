@@ -86,12 +86,13 @@ class Lexer {
     Returns:
       Object
     */
-    let collection = {};
+    let collection = [];
     let line = 0;
     for (let stat of stats) {
       line += 1;
-      collection[line] = this.lex(stat).lexed;
+      collection = collection.concat(this.lex(stat));
     }
+    console.log("COL " + JSON.stringify(collection));
     return collection;
   }
 
@@ -278,7 +279,7 @@ class Lexer {
 
 
     }
-    return {"lexed":lexed,"skipped":skipped}
+    return lexed
 
   }
   

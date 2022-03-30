@@ -410,8 +410,8 @@ module.exports = class Parser {
     if (token.type != "DO") {
       throw new Error(`Error in parseBlock(): expected token.type "DO", got ${token.type} instead`);
     }
-    this.parseStatements();
-    // fix: add node for blocks
+    let block = this.parseStatements();
+    let node = 
     return node;
   }
 
@@ -423,55 +423,69 @@ module.exports = class Parser {
     */
     let type = token.type;
     // handle...
+    // block ends
+    if (type == "END") {
+      return null;
+    }
     // binary operations
     if (this.bin_ops.includes(type)) {
-      this.parseBinary(token);
+      let res = this.parseBinary(token);
+      return res;
     }
 
     // declarations
     else if (["FUNCTION","DEFINE","IMMUTABLE"].includes(type)) {
-      this.parseDecl(token);
+      let res = this.parseDecl(token);
+      return res;
     }
 
     // print keyword
     else if (type == "PRINT") {
-      this.parsePrint(token);
+      let res = this.parsePrint(token);
+      return res;
     }
 
     // if keyword
     // elif-else aren't mentioned here because they're handled by the if statement parser
     else if (type == "IF") {
-      this.parseIf(token);
+      let res = this.parseIf(token);
+      return res;
     }
 
     // booleans
     else if (this.booleans.includes(type) && this.operatorCheck() == true) {
-      this.parseBool(token);
+      let res = this.parseBool(token);
+      return res;
     }
 
     // function calls
     else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
-      this.parseFuncCall(token);
+      let res = this.parseFuncCall(token);
+      return res;
     }
 
     // variable accesses
     else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
-      this.parseVarAccess(token);
+      let res = this.parseVarAccess(token);
+      return res;
     }
 
     // blocks
     else if (type == "DO") {
-      this.parseBlock(token);
+      let res = this.parseBlock(token);
+      return res;
     }
 
     // strings
     else if (type == "STRING") {
-      this.parseString(token);
+      let res = this.parseString(token);
+      return res;
     }
 
     // integers
     else if (type == "INTEGER" && this.operatorCheck() == true) {
-      this.parseInteger(token);
+      let res = this.parseInteger(token);
+      return res;
     }
 
     // parse failure
@@ -484,13 +498,20 @@ module.exports = class Parser {
     /*
     Parse the next statements from tokens
     */
+    let generated = [];
     
     while (this.peek() != undefined) {
       let token = this.next();
       console.log("TOKEN " + JSON.stringify(token));
-      this.parseStatement(token);
+      let node = this.parseStatement(token);
+      // block safety
+      if (node == null) {
+        break;
+      } else {
+        generated.push(node);
+      }
     }
-    return this.ast;
+    return generated;
   }
 
   parseProgram (tokens) {

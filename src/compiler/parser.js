@@ -229,7 +229,7 @@ module.exports = class Parser {
     let value_token = this.next();
 
     let value_node = this.parseStatement(value_token);
-    let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
+    let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_token.end);
     this.parseSuccess(node);
     return node;
   }

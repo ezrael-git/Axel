@@ -481,7 +481,7 @@ module.exports = class Parser {
     while ((token = this.protect())) {
       console.log("TOKEN " + JSON.stringify(token));
       let node = this.parseStatement(token,invalid);
-      console.log("RESULT NODE " + node.constructor.name);
+      console.log("RESULT NODE " + JSON.stringify(node));
       // block safety
       if (node === null) {
         break;

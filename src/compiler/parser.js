@@ -244,8 +244,7 @@ module.exports = class Parser {
   parseIf (token) {
     const copy_token = token;
     token = this.next();
-    let condition_node = this.parseStatement(token,["DO"]);
-    this.previous();
+    let condition_node = this.parseStatements(["DO"]);
     console.log("CURT " + this.current());
     let statements = this.parseBlock(this.current());
 
@@ -472,7 +471,7 @@ module.exports = class Parser {
     }
   }
 
-  parseStatements () {
+  parseStatements (invalid=[]) {
     /*
     Parse the next statements from tokens
     */
@@ -481,7 +480,7 @@ module.exports = class Parser {
     let token;
     while ((token = this.protect())) {
       console.log("TOKEN " + JSON.stringify(token));
-      let node = this.parseStatement(token);
+      let node = this.parseStatement(token,invalid);
       console.log("RESULT NODE " + node.constructor.name);
       // block safety
       if (node === null) {

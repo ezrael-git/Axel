@@ -133,6 +133,10 @@ module.exports = class Parser {
     }
   }
 
+  protect () {
+    return this.peek().type != undefined ? this.next() : null;
+  }
+
   guard(kind) {
     return this.peek().type === kind ? this.next() : null;
   }
@@ -421,6 +425,7 @@ module.exports = class Parser {
       Warning: the method might ask for more tokens.
     */
     let type = token.type;
+    console.log("PS type " + type + "and line " + token.line);
     // handle...
     // block ends
     if (type == "END") {
@@ -499,8 +504,8 @@ module.exports = class Parser {
     */
     let generated = [];
     
-    while (this.peek() != undefined) {
-      let token = this.next();
+    let token;
+    while ((token = this.protect())) {
       console.log("TOKEN " + JSON.stringify(token));
       let node = this.parseStatement(token);
       // block safety

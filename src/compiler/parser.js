@@ -411,8 +411,7 @@ module.exports = class Parser {
       throw new Error(`Error in parseBlock(): expected token.type "DO", got ${token.type} instead`);
     }
     let block = this.parseStatements();
-    let node = 
-    return node;
+    return block; // array of block statements
   }
 
 

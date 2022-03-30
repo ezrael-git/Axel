@@ -236,8 +236,8 @@ module.exports = class Parser {
     this.expect('LPAREN');
 
     let args = [];
-    let tkn;
-    while ((tkn = this.guard('IDENTIFIER'))) {
+    let arg_token;
+    while ((arg_token = this.guard('IDENTIFIER'))) {
       let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
       args.push(arg_node);
       if (!this.guard("COMMA")) { break };

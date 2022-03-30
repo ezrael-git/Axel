@@ -138,42 +138,42 @@ module.exports = class Parser {
     let type = token.type;
     let node;
     if (type == "PLUS") {
-      let lhs = this.recursiveParse([this.lookBack()]);
-      let rhs = this.recursiveParse([this.peek()]);
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs,rhs,"+");
       this.parseSuccess(node);
     }
     // subtraction operator
     else if (type == "MINUS") {
-      let lhs = this.recursiveParse([this.lookBack()]);
-      let rhs = this.recursiveParse([this.peek()]);
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs,rhs,"-");
       this.parseSuccess(node);
     }
     // multiplication operator
     else if (type == "MULTIPLY") {
-      let lhs = this.recursiveParse([this.lookBack()]);
-      let rhs = this.recursiveParse([this.peek()]);
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs,rhs,"*");
       this.parseSuccess(node);
     }
     // division operator
     else if (type == "DIVIDE") {
-      let lhs = this.recursiveParse([this.lookBack()]);
-      let rhs = this.recursiveParse([this.peek()]);
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs,rhs,"/");
       this.parseSuccess(node);
     }
     // comparison operator
     else if (type == "COMPARE") {
-      let lhs = this.recursiveParse([this.lookBack()])
-      let rhs = this.recursiveParse([this.next()])
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"==");
       this.parseSuccess(node);
     }
     else if (type == "COMPAREOPP") {
-      let lhs = this.recursiveParse([this.lookBack()])
-      let rhs = this.recursiveParse([this.next()])
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"!=");
       this.parseSuccess(node);
     }

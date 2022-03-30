@@ -247,8 +247,11 @@ module.exports = class Parser {
       if (!this.guard("COMMA")) { break };
     }
     this.expect('RPAREN');
+    this.expect('DO');
+    this.previous();
 
-    let body = this.parseStatements(this.token);
+    console.log("THIS.TOKEN ATM " + this.token.type);
+    let body = this.parseStatement(this.token);
 
 
     console.log("BODY " + JSON.stringify(body));

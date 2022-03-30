@@ -248,7 +248,8 @@ module.exports = class Parser {
     }
     this.expect('RPAREN');
 
-    let body = this.parseBlock(this.token);
+    let body = this.parseStatements(this.token);
+
 
     console.log("BODY " + JSON.stringify(body));
     let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
@@ -425,7 +426,7 @@ module.exports = class Parser {
       Warning: the method might ask for more tokens.
     */
     let type = token.type;
-    console.log("PS type " + type + "and line " + token.line);
+    console.log("PS type " + type + " and line " + token.line);
     // handle...
     // block ends
     if (type == "END") {
@@ -508,6 +509,7 @@ module.exports = class Parser {
     while ((token = this.protect())) {
       console.log("TOKEN " + JSON.stringify(token));
       let node = this.parseStatement(token);
+      console.log("RESULT NODE " + node.constructor.name);
       // block safety
       if (node == null) {
         break;

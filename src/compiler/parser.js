@@ -23,6 +23,7 @@ module.exports = class Parser {
   constructor () {
     this.token_iterated = -1;
     this.tokens = [];
+    this.token = {}; // current token
     this.bin_ops = ["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE","COMPAREOPP"];
     this.booleans = ["TRUE", "FALSE", "NIL"];
     
@@ -41,44 +42,10 @@ module.exports = class Parser {
     if (n == undefined && safety == true) {
       return {0:0}
     }
+    this.token = n;
     return n;
   }
 
-  allAfter (limit=5) {
-    /*
-    Get all tokens after the current one
-    */
-    this.token_iterated += 1;
-    let n = this.tokens.slice(this.token_iterated,this.tokens.length);
-    this.token_iterated = this.tokens.length;
-    return n;
-  }
-
-  allAfterSort (types) {
-    /*
-    Get all the next tokens, with the option to sort
-    */
-    let sorted = [];
-    for (let token of this.tokens.slice(this.token_iterated,this.tokens.length)) {
-      if (types.includes(token.type)) {
-        sorted.push(token);
-      }
-    }
-    return sorted;
-  }
-
-  allBeforeSort (types) {
-    /*
-    Get all the next tokens, with the option to sort
-    */
-    let sorted = [];
-    for (let token of this.tokens.slice(0,this.token_iterated)) {
-      if (types.includes(token.type)) {
-        sorted.push(token);
-      }
-    }
-    return sorted;
-  }
 
   previous () {
     /*
@@ -86,6 +53,7 @@ module.exports = class Parser {
     */
     this.token_iterated -= 1;
     let n = this.tokens[this.token_iterated];
+    this.token = n;
     return n;
   }
 

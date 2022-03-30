@@ -287,6 +287,7 @@ module.exports = class Parser {
     let else_node = this.recursiveParse(else_tokens);
 
     */
+    let elif_nodes = []; let else_nodes = [];
     // finally we can construct the chain
     let chain = [if_node].concat(elif_nodes).concat(else_node);
     let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);

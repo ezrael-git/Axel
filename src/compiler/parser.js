@@ -134,7 +134,7 @@ module.exports = class Parser {
   }
 
   guard(kind) {
-    return this.peek().type === type ? this.next() : null;
+    return this.peek().type === kind ? this.next() : null;
   }
 
   expect(kind, where=undefined) {

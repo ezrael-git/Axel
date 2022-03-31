@@ -139,36 +139,36 @@ module.exports = class Parser {
     let node;
     if (type == "PLUS") {
       let lhs = this.parseStatement(this.lookBack());
-      let rhs = this.parseStatement(this.peek());
+      let rhs = this.parseStatement(this.next());
       node = new Node.BinaryOperatorNode(lhs,rhs,"+");
     }
     // subtraction operator
     else if (type == "MINUS") {
       let lhs = this.parseStatement(this.lookBack());
-      let rhs = this.parseStatement(this.peek());
+      let rhs = this.parseStatement(this.next());
       node = new Node.BinaryOperatorNode(lhs,rhs,"-");
     }
     // multiplication operator
     else if (type == "MULTIPLY") {
       let lhs = this.parseStatement(this.lookBack());
-      let rhs = this.parseStatement(this.peek());
+      let rhs = this.parseStatement(this.next());
       node = new Node.BinaryOperatorNode(lhs,rhs,"*");
     }
     // division operator
     else if (type == "DIVIDE") {
       let lhs = this.parseStatement(this.lookBack());
-      let rhs = this.parseStatement(this.peek());
+      let rhs = this.parseStatement(this.next());
       node = new Node.BinaryOperatorNode(lhs,rhs,"/");
     }
     // comparison operator
     else if (type == "COMPARE") {
       let lhs = this.parseStatement(this.lookBack());
-      let rhs = this.parseStatement(this.peek());
+      let rhs = this.parseStatement(this.next());
       node = new Node.BinaryOperatorNode(lhs,rhs,"==");
     }
     else if (type == "COMPAREOPP") {
       let lhs = this.parseStatement(this.lookBack());
-      let rhs = this.parseStatement(this.peek());
+      let rhs = this.parseStatement(this.next());
       node = new Node.BinaryOperatorNode(lhs,rhs,"!=");
     }
     return node;

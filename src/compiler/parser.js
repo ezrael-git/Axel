@@ -141,41 +141,35 @@ module.exports = class Parser {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs,rhs,"+");
-      this.parseSuccess(node);
     }
     // subtraction operator
     else if (type == "MINUS") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs,rhs,"-");
-      this.parseSuccess(node);
     }
     // multiplication operator
     else if (type == "MULTIPLY") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs,rhs,"*");
-      this.parseSuccess(node);
     }
     // division operator
     else if (type == "DIVIDE") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs,rhs,"/");
-      this.parseSuccess(node);
     }
     // comparison operator
     else if (type == "COMPARE") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"==");
-      this.parseSuccess(node);
     }
     else if (type == "COMPAREOPP") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.peek());
       node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"!=");
-      this.parseSuccess(node);
     }
     return node;
   }
@@ -198,7 +192,6 @@ module.exports = class Parser {
 
     let value_node = this.parseStatement(value_token);
     let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_token.end);
-    this.parseSuccess(node);
     return node;
   }
 
@@ -223,7 +216,6 @@ module.exports = class Parser {
 
     console.log("BODY " + JSON.stringify(body));
     let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
-    this.parseSuccess(node);
     return node;
   }
 
@@ -291,7 +283,6 @@ module.exports = class Parser {
     // finally we can construct the chain
     let chain = [if_node].concat(elif_nodes).concat(else_node);
     let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
-    this.parseSuccess(node);
     return node;
   }
 
@@ -307,7 +298,6 @@ module.exports = class Parser {
       if (this.peekLine() == undefined) { break };
     }
     let node = new Node.ElifNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
-    this.parseSuccess(node);
     return node;
   }
 
@@ -321,7 +311,6 @@ module.exports = class Parser {
       if (this.peekLine() == undefined) { break };
     }
     let node = new Node.ElseNode(statements,copy_token.line,copy_token.start,token.end);
-    this.parseSuccess(node);
     return node;
   }
 
@@ -329,7 +318,6 @@ module.exports = class Parser {
     token = this.next();
     let value_node = this.parseStatement(token);
     let node = new Node.PrintNode(value_node, token.line, token.start, token.end);
-    this.parseSuccess(node);
     return node;
   }
 
@@ -343,7 +331,6 @@ module.exports = class Parser {
     } else {
       node = new Node.NilNode(token.line,token.start,token.end);
     }
-    this.parseSuccess(node);
     return node;
   }
 
@@ -358,25 +345,21 @@ module.exports = class Parser {
     }
     this.expect('RPAREN');
     let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, this.current().end);
-    this.parseSuccess(node);
     return node;
   }
 
   parseVarAccess (token) {
     let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
-    this.parseSuccess(node);
     return node;
   }
 
   parseString (token) {
     let node = new Node.TextNode(token.tk,token.line,token.start,token.end);
-    this.parseSuccess(node);
     return node;
   }
 
   parseInteger (token) {
     let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
-    this.parseSuccess(node);
     return node;
   }
 
@@ -505,7 +488,8 @@ module.exports = class Parser {
     this.token_iterated = -1;
     this.ast = [];
 
-    this.parseStatements();
+    let ast = this.parseStatements();
+    this.ast = ast;
     return this.ast;
   }
 

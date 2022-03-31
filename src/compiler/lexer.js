@@ -89,7 +89,6 @@ class Lexer {
     */
     let collection = [];
     for (let stat of stats) {
-      this.line += 1;
       collection = collection.concat(this.lex(stat));
     }
     console.log("COL " + JSON.stringify(collection));
@@ -110,9 +109,11 @@ class Lexer {
     let sc = this.scanner;
     let skipped = [];
     let cleanWhitespace = this.cleanWhitespace;
+    this.line += 1;
+    let line = this.line;
 
     function add (type, starts, ends, tk) {
-      lexed.push({type:type, starts:starts, ends:ends, tk:cleanWhitespace(tk), line:this.line});
+      lexed.push({type:type, starts:starts, ends:ends, tk:cleanWhitespace(tk), line:line});
     }
 
     function lastToken () {

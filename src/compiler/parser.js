@@ -93,7 +93,7 @@ module.exports = class Parser {
     /*
     Check if the next operator is a bin op
     */
-    if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE", "COMPAREOPP"].includes(this.peek(true).type)) {
+    if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE", "COMPAREOPP", "EQUAL"].includes(this.peek(true).type)) {
       return true; // good to go!
     }
     else {
@@ -176,15 +176,15 @@ module.exports = class Parser {
 
   parseVarDecl (token) {
     let type = token.type;
-    if (!["DEFINE","IMMUTABLE"].includes(type)) {
+    if (type != "IDENTIFIER" || this.peek(true).type != "EQUALITY") {
       throw new Error("Unknown value given to parseVarDecl: " + type);
     }
-    let mutable = false;
-    if (type == "DEFINE") {
-      mutable = true;
+    let mutable = true;
+    if (this.scanner.uppercase.includes(mutable[0])) {
+      mutable = false;
     }
 
-    let name_token = this.next();
+    let name_token = token;
     if (this.next().type != "EQUALITY") {
       throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
     }
@@ -222,7 +222,7 @@ module.exports = class Parser {
   parseDecl (token) {
     let type = token.type;
     let node;
-    if (type == "DEFINE" || type == "IMMUTABLE") {
+    if (type == "IDENTIFIER" && this.peek(true).type == "EQUAL") {
       node = this.parseVarDecl(token);
     } else if (type == "FUNCTION") {
       node = this.parseFuncDecl(token);
@@ -394,8 +394,14 @@ module.exports = class Parser {
     }
 
     // declarations
-    else if (["FUNCTION","DEFINE","IMMUTABLE"].includes(type)) {
+    else if (["FUNCTION"].includes(type)) {
       let res = this.parseDecl(token);
+      return res;
+    }
+
+    // variables
+    else if (type == "IDENTIFIER" && this.peek(true).type == "EQUAL") {
+      let res = this.parseVarEdit(token);
       return res;
     }
 

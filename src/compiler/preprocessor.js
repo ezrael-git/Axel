@@ -60,6 +60,15 @@ module.exports = class Preprocessor {
     return fmtd;
   }
 
+  formatDo (stats) {
+    let fmtd = [];
+    for (let stat of stats) {
+      let a = stat.replaceAll("elif", "end elif").replaceAll("else", "end else");
+      fmtd.push(a);
+    }
+    return fmtd;
+  }
+
   formatEmpty (stats) {
     let fmtd = [];
     for (let s of stats) {
@@ -78,6 +87,7 @@ module.exports = class Preprocessor {
     */
     code = this.removeComments(code)
     console.log("part " + code);
+    code = this.formatDo(code);
     code = this.formatEnd(code);
     code = this.formatEmpty(code);
     console.log(code);

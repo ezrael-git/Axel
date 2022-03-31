@@ -164,12 +164,12 @@ module.exports = class Parser {
     else if (type == "COMPARE") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.peek());
-      node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"==");
+      node = new Node.BinaryOperatorNode(lhs,rhs,"==");
     }
     else if (type == "COMPAREOPP") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.peek());
-      node = new Node.BinaryOperatorNode(lhs[0],rhs[0],"!=");
+      node = new Node.BinaryOperatorNode(lhs,rhs,"!=");
     }
     return node;
   }

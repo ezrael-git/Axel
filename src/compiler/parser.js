@@ -239,45 +239,27 @@ module.exports = class Parser {
     let statements = this.parseBlock(this.current());
 
     let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
-    /* fix
+
     // go through the next few lines checking if there are any elif statements
     // this is so we can build a proper if-elif-else chain if possible
     let elif_tokens = {};
     let elif_it = 0;
     let helper = 0;
+    let elif_nodes = [];
 
-    while (this.peekLine(1,true)[0].type == "ELIF") {
-      this.nextLine();
-      while (this.currentLine()[0].type != "END") {
-        if (helper == 0) {
-          this.previousLine();
-        }
-        let tks_lite = this.nextLine();
-        elif_it += 1; helper += 1;
-        elif_tokens[elif_it] = tks_lite
-      }
-      helper = 0;
+    let tkn;
+    while ( (tkn = this.guard("ELIF")) ) {
+      let elif_node = this.parseElif(tkn);
+      elif_nodes = elif_nodes.concat(elif_node);
     }
-    let elif_nodes = this.recursiveParse(elif_tokens);
 
     // now that we have elif nodes, we should look for an else statement
-    let else_tokens = {};
-    let else_it = 0;
-    if (this.peekLine(1,true)[0].type == "ELSE") {
-      this.nextLine();
-      while (this.currentLine()[0].type != "END") {
-        if (else_it == 0) {
-          this.previousLine();
-        }
-        let tks_lite = this.nextLine();
-        else_it += 1;
-        else_tokens[else_it] = tks_lite
-      }
+    let else_node = [];
+    if (this.peek(true).type == "ELSE") {
+      let res = this.parseElse(this.next());
+      else_node = else_node.concat(res);
     }
-    let else_node = this.recursiveParse(else_tokens);
 
-    */
-    let elif_nodes = []; let else_node = [];
     // finally we can construct the chain
     let chain = [if_node].concat(elif_nodes).concat(else_node);
     let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
@@ -286,28 +268,19 @@ module.exports = class Parser {
 
   parseElif (token) {
     const copy_token = token;
-    let condition_tokens = this.allAfter();
-    let condition_node = this.recursiveParse(condition_tokens)[0];
-    let statements = [];
-    while (this.currentLine()[0].type != "END") {
-      let tokens_lite = this.nextLine();
-      let node_tree_lite = this.recursiveParse(tokens_lite);
-      statements = statements.concat(node_tree_lite);
-      if (this.peekLine() == undefined) { break };
-    }
+    token = this.next();
+    let condition_node = this.parseStatements(["DO"])[0];
+    let statements = this.parseBlock(this.current());
+
     let node = new Node.ElifNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
     return node;
   }
 
   parseElse (token) {
-    let statements = [];
     const copy_token = token;
-    while (this.currentLine()[0].type != "END") {
-      let tokens_lite = this.nextLine();
-      let node_tree_lite = this.recursiveParse(tokens_lite);
-      statements = statements.concat(node_tree_lite);
-      if (this.peekLine() == undefined) { break };
-    }
+    this.expect('DO');
+    let statements = this.parseBlock(this.current());
+
     let node = new Node.ElseNode(statements,copy_token.line,copy_token.start,token.end);
     return node;
   }

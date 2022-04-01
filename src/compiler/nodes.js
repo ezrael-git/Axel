@@ -206,6 +206,9 @@ class BinaryOperatorNode {
   run (variables,walker) {
     let lhs = this.body.lhs.run(variables,walker);
     let rhs = this.body.rhs.run(variables,walker);
+    if (lhs.constructor.name != rhs.constructor.name) {
+      throw new Error(`At line ${this.body.lhs.line}:\nCannot perform ${this.opToS()} on a ${lhs.constructor.name} and ${rhs.constructor.name}`);
+    }
     if (this.body.op == "+") {
       return lhs + rhs
     } else if (this.body.op == "-") {
@@ -224,6 +227,28 @@ class BinaryOperatorNode {
       return lhs < rhs
     } else {
       throw new Error("Unknown binary operator: " + this.body.op);
+    }
+  }
+
+  opToS () {
+    switch (this.body.op) {
+      case "+":
+        return "ADDITION";
+        break
+      case "-":
+        return "SUBTRACTION";
+        break;
+      case "*":
+        return "MULTIPLICATION";
+        break;
+      case "/":
+        return "DIVISION";
+        break;
+      case "==":
+        return "COMPARISON";
+        break;
+      case "!=":
+        return "COMPARISON";
     }
   }
 }

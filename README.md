@@ -24,19 +24,6 @@ Designed to be simple, flexible, and elegant, while being as fast as JavaScript.
 I was bored.
 Also I wanted a language containing Ruby's syntax, Python's flexibility and JavaScript's speed.
 
-Oh, and did I tell you that you can use JavaScript code in an Axel file? The `Ax2JS` standard library provides this functionality. For example:
-```js
-import standard.ax2js as Ax2JS
-fn say (sentence)
-  Ax2JS.from_js(`console.log(sentence)`)
-end
-
-say("Hello World!")
-```
-The output:
-```
->>> Hello World!
-```
 Let's get to the installation and the syntax.
 
 
@@ -89,7 +76,7 @@ You can define a function in Axel using the `fn` keyword.
 
 
 ```rust
-fn greet ()
+fn greet () do
   log("hello world");
 end
 ```
@@ -99,12 +86,12 @@ Tiny note: the parentheses after the function name isn't necessary, but it's rec
 ## Classes
 Classes are made using the `cls` keyword.
 ```
-cls Person
-  initialize (name)
+cls Person do
+  initialize (name) do
     @name = name
   end
 
-  say (sentence)
+  say (sentence) do
     log("#{@name} says '#{sentence}'")
   end
 end

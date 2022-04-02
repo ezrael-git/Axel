@@ -8,12 +8,12 @@ module.exports = class Scanner {
     this.imports = [];
     this.functions = [];
 
-    this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+    this.uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     this.lowercase = [];
-    for (let lett of this.letters) {
+    for (let lett of this.uppercase) {
       this.lowercase.push(lett.toLowerCase());
     }
-    this.letters = this.letters.concat(this.lowercase)
+    this.letters = this.uppercase.concat(this.lowercase);
     this.digits = "0123456789".split('');
   }
 

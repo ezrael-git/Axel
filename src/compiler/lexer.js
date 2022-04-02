@@ -16,6 +16,7 @@ let TT_FN = "fn"
 let TT_RETURN = "return"
 let TT_DEF = "def"
 let TT_IMM = "imm"
+let TT_DO = "do"
 let TT_END = "end"
 let TT_PRINT = "print"
 let TT_TRUE = "true"
@@ -86,12 +87,11 @@ class Lexer {
     Returns:
       Object
     */
-    let collection = {};
-    let line = 0;
+    let collection = [];
     for (let stat of stats) {
-      line += 1;
-      collection[line] = this.lex(stat).lexed;
+      collection = collection.concat(this.lex(stat));
     }
+    console.log("COL " + JSON.stringify(collection));
     return collection;
   }
 
@@ -109,9 +109,11 @@ class Lexer {
     let sc = this.scanner;
     let skipped = [];
     let cleanWhitespace = this.cleanWhitespace;
+    this.line += 1;
+    let line = this.line;
 
     function add (type, starts, ends, tk) {
-      lexed.push({type:type, starts:starts, ends:ends, tk:cleanWhitespace(tk)});
+      lexed.push({type:type, starts:starts, ends:ends, tk:cleanWhitespace(tk), line:line});
     }
 
     function lastToken () {
@@ -211,6 +213,10 @@ class Lexer {
       else if (it.endsWith(TT_IMM) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ") {
         add("IMMUTABLE", pos-2, pos, TT_DEF);
       }
+      // do keyword
+      else if (it.endsWith(TT_DO) && !this.letters.includes(source[pos-2]) && !this.letters.includes(this.peek(pos))) {
+        add("DO", pos-1, pos, TT_DO);
+      }
       // end keyword
       else if (it.endsWith(TT_END) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
         add("END", pos-2, pos, TT_END);
@@ -247,6 +253,7 @@ class Lexer {
       else if (it.endsWith(TT_RETURN) && !this.letters.includes(source[pos-6]) && !this.letters.includes(this.peek(pos))) {
         add("RETURN", pos-5, pos, TT_RETURN);
       }
+
       else {
         // identifiers
         if (lastToken() != undefined) {
@@ -278,7 +285,7 @@ class Lexer {
 
 
     }
-    return {"lexed":lexed,"skipped":skipped}
+    return lexed
 
   }
   

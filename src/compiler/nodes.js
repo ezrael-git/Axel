@@ -111,13 +111,21 @@ class CallNode {
   
   run (variables,walker) {
     if (variables[this.body.callee] == undefined) {
-      throw new Error("Tried to call unknown function: " + this.body.callee);
+      throw new Error(`At line ${this.body.line}:\nTried to call unknown function: ${this.body.callee}`);
     }
-    let statements = variables[this.body.callee][1];
-    let args_requested = variables[this.body.callee][0];
+    let function = variables[this.body.callee];
+    if (function.constructor.name != "FunctionLiteral") {
+      throw new Error(`At line ${this.body.line}:\nParseError: Tried to call a ${function.constructor.name}, whereas a FunctionLiteral was expected`);
+    }
+
+    let statements = function.body;
+    let args_requested = function.args;
     let args_given = this.body.args;
-    if (args_requested.length != args_given.length) {
-      throw new Error(`In line ${this.body.line}:\nMissing arg(s): ${args_given.length} were given, ${args_requested.length} were requested`)
+    let combo = args_requested - args_given;
+    if (combo > 0) {
+      throw new Error(`At line ${this.body.line}:\nArgumentError: Missing args (${combo})`);
+    } else if (combo < 0) {
+      throw new Error(`At line ${this.body.line}:\nArgumentError: Too many args were given (expected ${args_requested}, got ${args_given}`);
     }
 
     let argPos = -1;

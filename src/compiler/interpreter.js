@@ -1,4 +1,4 @@
-// walker.js
+// interpreter.js
 // interpret nodes and ASTs
 
 const Literal = require("./literals.js");
@@ -12,32 +12,54 @@ module.exports = class Walker {
   }
   
   next () {
+    /*
+    Move to next node
+    */
     this.node += 1;
     return this.program[this.node];
   }
   
   previous () {
+    /*
+    Move to previous node
+    */
     this.node -= 1;
     return this.program[this.node];
   }
   
   current () {
+    /*
+    Get current node
+    */
     return this.program[this.node];
   }
   
   peek (nodes=1) {
+    /*
+    Peek the next node
+    */
     return this.program[this.node+nodes];
   }
   
   lookBack (nodes=1) {
+    /*
+    Peek the previous node
+    */
     return this.program[this.node-nodes];
   }
   
   checkType (obj) {
+    /*
+    Get an object's constructor name / type
+    */
     return obj.constructor.name;
   }
 
   toLiteral (obj) {
+    /*
+    Convert an object to a run-able object, usually a Literal.
+    If the argument object is a node or already run-able, it returns it without making any changes.
+    */
     if (obj.constructor.name == "String" && !["true","false","nil"].includes(obj)) {
       return new Literal.TextLiteral(obj);
     }
@@ -61,9 +83,12 @@ module.exports = class Walker {
     }
   }
 
-  resolveRun (obj,interpretNode) {
+  resolveRun (obj) {
+    /*
+    Run an object until the final, non-runable value is returned
+    */
     while (obj.run != undefined) {
-      obj = interpretNode(obj);
+      obj = this.interpretNode(obj);
     }
     return obj;
   }

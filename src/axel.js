@@ -3,7 +3,7 @@ const fs = require("fs");
 const Preprocessor = require("./compiler/preprocessor.js");
 const Lexer = require("./compiler/lexer.js");
 const Parser = require("./compiler/parser.js");
-const Walker = require("./compiler/walker.js");
+const Interpreter = require("./compiler/interpreter.js");
 
 class Axel {
 
@@ -11,7 +11,7 @@ class Axel {
     this.preprocessor = new Preprocessor();
     this.lexer = new Lexer();
     this.parser = new Parser();
-    this.walker = new Walker();
+    this.interpreter = new Interpreter();
     /*
     this.stdblib = fs.readFileSync("./standard/stdblib.js",
     {encoding:'utf8', flag:'r'}
@@ -27,10 +27,10 @@ class Axel {
     */
     statements = statements.replaceAll(';', '\n').trim().split('\n');
     statements = this.preprocessor.process(statements);
-    console.log("STATS " + statements);
+
     let tokens = this.lexer.process(statements);
     let ast = this.parser.parseProgram(tokens);
-    let o = this.walker.walk(ast);
+    let o = this.interpreter.walk(ast);
     return "return " + o;
   }
 

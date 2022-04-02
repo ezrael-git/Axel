@@ -105,11 +105,22 @@ module.exports = class Parser {
     return this.peek() != undefined ? this.next() : null;
   }
 
-  guard(kind) {
+  guard (kind) {
+    /*
+    Returns the next token if the next token matches the guard, else null.
+    */
     return this.peek().type === kind ? this.next() : null;
   }
 
-  expect(kind, where=undefined) {
+  unlessGuard (kind) {
+    /*
+    Opposite of this.guard.
+    Returns the next token if the next token does NOT match the kind, else returns null.
+    */
+    return this.peek().type !== kind ? this.next() : null;
+  }
+
+  expect (kind, where=undefined) {
     if (where == undefined) {
       where = this.token_iterated;
     }
@@ -310,7 +321,7 @@ module.exports = class Parser {
     this.expect('LPAREN');
     let args = [];
     let arg_token;
-    while ((arg_token = this.guard("IDENTIFIER"))) {
+    while ((arg_token = this.unlessGuard("RPAREN"))) {
       let node_tree_lite = this.parseStatement(arg_token);
       args = args.concat(node_tree_lite);
     }

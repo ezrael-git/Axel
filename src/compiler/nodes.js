@@ -113,13 +113,13 @@ class CallNode {
     if (variables[this.body.callee] == undefined) {
       throw new Error(`At line ${this.body.line}:\nTried to call unknown function: ${this.body.callee}`);
     }
-    let function = variables[this.body.callee];
-    if (function.constructor.name != "FunctionLiteral") {
-      throw new Error(`At line ${this.body.line}:\nParseError: Tried to call a ${function.constructor.name}, whereas a FunctionLiteral was expected`);
+    let func = variables[this.body.callee];
+    if (func.constructor.name != "FunctionLiteral") {
+      throw new Error(`At line ${this.body.line}:\nParseError: Tried to call a ${func.constructor.name}, whereas a FunctionLiteral was expected`);
     }
 
-    let statements = function.body;
-    let args_requested = function.args;
+    let statements = func.body;
+    let args_requested = func.args;
     let args_given = this.body.args;
     let combo = args_requested - args_given;
     if (combo > 0) {

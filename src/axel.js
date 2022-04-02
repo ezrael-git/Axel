@@ -23,7 +23,7 @@ class Axel {
     let m = [];
     for (let stat of stats) {
       if (stat.startsWith("#")) {
-        m.push(stat);
+        m.push(stat.replaceAll("#",""));
       }
     }
     return m;

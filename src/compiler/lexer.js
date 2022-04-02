@@ -26,6 +26,9 @@ let TT_IF = "if"
 let TT_ELIF = "elif"
 let TT_ELSE = "else"
 
+let TT_AND = "&&"
+let TT_OR = "||"
+
 
 
 class Lexer {

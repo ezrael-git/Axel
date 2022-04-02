@@ -4,7 +4,7 @@
 const Literal = require("./literals.js");
 
 
-module.exports = class Walker {
+module.exports = class Interpreter {
   constructor () {
     this.program = [];
     this.node = -1;
@@ -93,44 +93,38 @@ module.exports = class Walker {
     return obj;
   }
 
-  interpretNode (node,type) {
+  interpretNode (node) {
     /*
     Interpret a single node.
     */
+    let type = node.constructor.name;
 
     if (type == "BinaryOperatorNode") {
-      let result = this.toLiteral(node.run(this.variables,new Walker()));
+      let result = this.toLiteral(node.run(this.variables,new Interpreter()));
       return result;
     }
     else if (type == "FuncAssignNode") {
       let name = node.body.name;
       let stats = node.body.statements;
       let args = node.body.args;
-      this.variables[name] = [args,stats];
+      this.variables[name] = new Literal.FunctionLiteral(name,args,stats);
       return new Literal.TextLiteral(name);
     }
     else if (type == "CallNode") {
-      let o = node.run(this.variables,new Walker());
+      let o = node.run(this.variables,new Interpreter());
       return this.toLiteral(o);
     }
     else if (type == "VarAssignNode") {
       let name = node.body.name;
-      console.log("varassignnode type " + node.body.value.constructor.name);
-      let value = node.body.value.run(this.variables,new Walker());
+      let value = node.body.value.run(this.variables,new Interpreter());
 
-      console.log("varassignnode runned value " + JSON.stringify(value) + "and type " + value.constructor.name);
       value = this.toLiteral(value);
-      console.log("after toliteral value " + JSON.stringify(value));
       let mutable = node.body.mutable;
-      if (this.variables[name] == undefined) {
-        this.variables[name] = value;
-        console.log("added " + name + " to this.variables");
-        return value;
-      } else if (mutable == true) {
+      if (this.variables[name] == undefined || mutable == true) {
         this.variables[name] = value;
         return value;
       } else {
-        throw new Error("Cannot change a constant variable");
+        throw new Error(`At line ${this.body.line}:\nCannot change a constant variable`);
       }
     }
     else if (type == "VarAccessNode") {
@@ -138,25 +132,25 @@ module.exports = class Walker {
       if (this.variables[name] != undefined) {
         return this.variables[name];
       } else {
-        throw new Error("Cannot access unknown variable " + name)
+        throw new Error(`At line ${this.body.line}:\nCannot access unknown variable ${name}`)
       }
     }
     else if (type == "TextNode" || type == "IntegerNode") {
       return this.toLiteral(node.run());
     }
     else if (type == "PrintNode") {
-      let value = node.run(this.variables,new Walker())
+      let value = node.run(this.variables,new Interpreter())
       return value;
     }
     else if (["TrueNode","FalseNode","NilNode"].includes(type)) {
       return this.toLiteral(node.run());
     }
     else if (type == "IfChainNode") {
-      let o = node.run(this.variables,new Walker());
+      let o = node.run(this.variables,new Interpreter());
       return this.toLiteral(o);
     }
     else if (type == "ReturnNode") {
-      let value = node.run(this.variables,new Walker());
+      let value = node.run(this.variables,new Interpreter());
       return value;
     }
     // literals
@@ -170,16 +164,11 @@ module.exports = class Walker {
   
   
   
-  walk (ast, wrapped=false) {
+  walk (ast) {
     /*
     Interpret a whole AST. Basically this.interpretNode in a while loop.
     */
-    if (wrapped == true) {
-      let program = ast["Program"];
-      this.program = program;
-    } else {
-      this.program = ast;
-    }
+    this.program = ast;
     console.log("PG " + JSON.stringify(this.program));
     let iterated = -1;
     let outputs = [];
@@ -187,8 +176,7 @@ module.exports = class Walker {
       iterated += 1;
       let node = this.next();
       console.log("ND " + JSON.stringify(node));
-      let type = this.checkType(node);
-      let o = this.interpretNode(node,type);
+      let o = this.interpretNode(node);
       outputs.push(o);
     }
     // return last expression's result

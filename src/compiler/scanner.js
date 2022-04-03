@@ -553,7 +553,7 @@ module.exports = class Scanner {
   }
 
   resolveRun (obj,interpreter) {
-    console.log("IN " + interpretNode.constructor.name);
+    console.log("IN " + interpreter.interpretNode.constructor.name);
     while (obj.run != undefined) {
       obj = interpreter.interpretNode(obj);
     }

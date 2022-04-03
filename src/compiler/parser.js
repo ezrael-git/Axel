@@ -4,6 +4,7 @@
 const Node = require("./nodes.js");
 const Literal = require("./literals.js");
 const Scanner = require("./scanner.js");
+const ErrorHandler = require("./error_handler.js");
 
 
 
@@ -196,6 +197,10 @@ module.exports = class Parser {
     }
 
     let name_token = token;
+    // enforce variable name policy
+    // no numbers allowed and name mustn't be of an existing keyword
+    // the former is to preserve readability, the latter is to prevent avoidable errors
+    this.scanner.enforceVarPol(name_token.tk);
     this.expect("EQUALITY");
     let value_token = this.next();
 

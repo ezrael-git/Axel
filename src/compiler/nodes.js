@@ -427,6 +427,7 @@ class IfChainNode {
     if (this.body.chain[0].type != "IfExpression") {
       throw new Error("IfChain's first member should be an IfExpression, not " + JSON.stringify(this.body.chain[0]));
     }
+    let conditions = [];
     for (let member of this.body.chain) {
       pos += 1;
       let type = member.constructor.name;
@@ -440,6 +441,7 @@ class IfChainNode {
           return o;
         }
         else {
+          conditions.push(condition);
           continue;
         }
       }
@@ -451,6 +453,7 @@ class IfChainNode {
         throw new Error("Unknown type in ifNodeChain: " + type);
       }
     }
+    return conditions[conditions.length - 1];
   }
 }
 

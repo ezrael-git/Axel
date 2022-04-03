@@ -200,7 +200,7 @@ module.exports = class Parser {
     // enforce variable name policy
     // no numbers allowed and name mustn't be of an existing keyword
     // the former is to preserve readability, the latter is to prevent avoidable errors
-    this.scanner.enforceVarPol(name_token.tk);
+    this.scanner.enforceVarPol(name_token);
     this.expect("EQUALITY");
     let value_token = this.next();
 

@@ -281,7 +281,7 @@ class PrintNode {
     }
     // -- new start
     console.log("before rr " + JSON.stringify(value));
-    value = scanner.resolveRun(value);
+    value = scanner.resolveRun(value,walker);
     console.log("after rr " + JSON.stringify(value));
     // -- new end
     console.log(value);

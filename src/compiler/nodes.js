@@ -279,6 +279,11 @@ class PrintNode {
     if (this.body.value.constructor.name == "CallNode") {
       value = value.run(variables,walker);
     }
+    // -- new start
+    console.log("before rr " + JSON.stringify(value));
+    value = this.scanner.resolveRun(value);
+    console.log("after rr " + JSON.stringify(value));
+    // -- new end
     console.log(value);
     return scanner.toLiteral(value);
   }

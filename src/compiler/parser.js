@@ -367,7 +367,9 @@ module.exports = class Parser {
     let elem;
     while ( ( elem = this.unlessGuard('RBRACKET') ) ) {
       let reformed = this.parseStatement(elem);
-      elements.push(reformed);
+      if (reformed != "SKIP") {
+        elements.push(reformed);
+      }
     }
 
     let node = new Node.ListNode(elements,token.line,token.start,token.end);

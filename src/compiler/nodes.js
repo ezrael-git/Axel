@@ -47,7 +47,11 @@ class VarAccessNode {
     if (variables[this.body.name] == undefined) {
       throw new Error("Cannot access unknown variable " + this.body.name);
     }
-    let value = variables[this.body.name].run(variables,walker);
+    let raw = variables[this.body.name]
+    let value = raw;
+    if (raw.run != undefined) {
+      value = variables[this.body.name].run(variables,walker);
+    }
     return value;
   }
 }

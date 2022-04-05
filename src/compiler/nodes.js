@@ -111,13 +111,21 @@ class CallNode {
   
   run (variables,walker) {
     if (variables[this.body.callee] == undefined) {
-      throw new Error("Tried to call unknown function: " + this.body.callee);
+      throw new Error(`At line ${this.body.line}:\nTried to call unknown function: ${this.body.callee}`);
     }
-    let statements = variables[this.body.callee][1];
-    let args_requested = variables[this.body.callee][0];
+    let func = variables[this.body.callee];
+    if (func.constructor.name != "FunctionLiteral") {
+      throw new Error(`At line ${this.body.line}:\nParseError: Tried to call a ${func.constructor.name}, whereas a FunctionLiteral was expected`);
+    }
+
+    let statements = func.body;
+    let args_requested = func.args;
     let args_given = this.body.args;
-    if (args_requested.length != args_given.length) {
-      throw new Error(`In line ${this.body.line}:\nMissing arg(s): ${args_given.length} were given, ${args_requested.length} were requested`)
+    let combo = args_requested - args_given;
+    if (combo > 0) {
+      throw new Error(`At line ${this.body.line}:\nArgumentError: Missing args (${combo})`);
+    } else if (combo < 0) {
+      throw new Error(`At line ${this.body.line}:\nArgumentError: Too many args were given (expected ${args_requested}, got ${args_given}`);
     }
 
     let argPos = -1;
@@ -271,6 +279,9 @@ class PrintNode {
     if (this.body.value.constructor.name == "CallNode") {
       value = value.run(variables,walker);
     }
+    // -- new start
+    value = scanner.resolveRun(value,walker);
+    // -- new end
     console.log(value);
     return scanner.toLiteral(value);
   }
@@ -419,6 +430,7 @@ class IfChainNode {
     if (this.body.chain[0].type != "IfExpression") {
       throw new Error("IfChain's first member should be an IfExpression, not " + JSON.stringify(this.body.chain[0]));
     }
+    let conditions = [];
     for (let member of this.body.chain) {
       pos += 1;
       let type = member.constructor.name;
@@ -432,6 +444,7 @@ class IfChainNode {
           return o;
         }
         else {
+          conditions.push(condition);
           continue;
         }
       }
@@ -443,6 +456,7 @@ class IfChainNode {
         throw new Error("Unknown type in ifNodeChain: " + type);
       }
     }
+    return conditions[conditions.length - 1];
   }
 }
 
@@ -451,7 +465,7 @@ class TrueNode {
   constructor (line,start,end) {
     this.type = "BooleanExpression";
     this.body = {
-      value:"true",
+      value:true,
       line:line,
       start:start,
       end:end
@@ -467,7 +481,7 @@ class FalseNode {
   constructor (line,start,end) {
     this.type = "BooleanExpression";
     this.body = {
-      value:"false",
+      value:false,
       line:line,
       start:start,
       end:end
@@ -513,6 +527,22 @@ class ReturnNode {
   }
 }
 
+class ListNode {
+  constructor (elements, line, start, end) {
+    this.type = "ListExpression";
+    this.body = {
+      value:elements,
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  run (v,w) {
+    return this.body.value;
+  }
+}
+
 module.exports = {
   VarAssignNode:VarAssignNode,
   VarAccessNode:VarAccessNode,
@@ -531,6 +561,7 @@ module.exports = {
   TrueNode:TrueNode,
   FalseNode:FalseNode,
   NilNode:NilNode,
-  ReturnNode:ReturnNode
+  ReturnNode:ReturnNode,
+  ListNode:ListNode
   
 }

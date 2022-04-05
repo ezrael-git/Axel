@@ -60,11 +60,22 @@ module.exports = class Preprocessor {
     return fmtd;
   }
 
-  formatDo (stats) {
+  formatIf (stats) {
     let fmtd = [];
     for (let stat of stats) {
       let a = stat.replaceAll("elif", "end elif").replaceAll("else", "end else");
       fmtd.push(a);
+    }
+    return fmtd;
+  }
+
+  formatDo (stats) {
+    let fmtd = [];
+    for (let stat of stats) {
+      if (stat.includes("fn") || stat.includes("if") || stat.includes("elif") || stat.includes("else")) {
+        stat += " do";
+      }
+      fmtd.push(stat);
     }
     return fmtd;
   }
@@ -87,6 +98,7 @@ module.exports = class Preprocessor {
     */
     code = this.removeComments(code)
     console.log("part " + code);
+    code = this.formatIf(code);
     code = this.formatDo(code);
     code = this.formatEnd(code);
     code = this.formatEmpty(code);

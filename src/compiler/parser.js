@@ -4,6 +4,7 @@
 const Node = require("./nodes.js");
 const Literal = require("./literals.js");
 const Scanner = require("./scanner.js");
+const ErrorHandler = require("./error_handler.js");
 
 
 
@@ -105,11 +106,22 @@ module.exports = class Parser {
     return this.peek() != undefined ? this.next() : null;
   }
 
-  guard(kind) {
+  guard (kind) {
+    /*
+    Returns the next token if the next token matches the guard, else null.
+    */
     return this.peek().type === kind ? this.next() : null;
   }
 
-  expect(kind, where=undefined) {
+  unlessGuard (kind) {
+    /*
+    Opposite of this.guard.
+    Returns the next token if the next token does NOT match the kind, else returns null.
+    */
+    return this.peek().type !== kind ? this.next() : null;
+  }
+
+  expect (kind, where=undefined) {
     if (where == undefined) {
       where = this.token_iterated;
     }
@@ -185,6 +197,10 @@ module.exports = class Parser {
     }
 
     let name_token = token;
+    // enforce variable name policy
+    // no numbers allowed and name mustn't be of an existing keyword
+    // the former is to preserve readability, the latter is to prevent avoidable errors
+    this.scanner.enforceVarPol(name_token);
     this.expect("EQUALITY");
     let value_token = this.next();
 
@@ -310,7 +326,7 @@ module.exports = class Parser {
     this.expect('LPAREN');
     let args = [];
     let arg_token;
-    while ((arg_token = this.guard("IDENTIFIER"))) {
+    while ((arg_token = this.unlessGuard("RPAREN"))) {
       let node_tree_lite = this.parseStatement(arg_token);
       args = args.concat(node_tree_lite);
     }
@@ -358,9 +374,18 @@ module.exports = class Parser {
     if (invalid.includes(type)) {
       return null;
     }
+
+
     // binary operations
     if (this.bin_ops.includes(type)) {
       let res = this.parseBinOp(token);
+      return res;
+    }
+
+    // catch early binary operations
+    else if (this.bin_ops.includes(this.peek(true).type)) {
+      let token_li = this.next();
+      let res = this.parseBinOp(token_li);
       return res;
     }
 

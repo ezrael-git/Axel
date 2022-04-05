@@ -1,6 +1,7 @@
 // scanner.js
 const Keywords = require("../data/keyword.js");
 const Literal = require("./literals.js");
+const ErrorHandler = require("./error_handler.js");
 
 module.exports = class Scanner {
   constructor () {
@@ -551,12 +552,23 @@ module.exports = class Scanner {
     }
   }
 
-  resolveRun (obj,interpretNode) {
-    console.log("IN " + interpretNode.constructor.name);
+  resolveRun (obj,interpreter) {
+    console.log("IN " + interpreter.interpretNode.constructor.name);
     while (obj.run != undefined) {
-      obj = interpretNode(obj);
+      obj = interpreter.interpretNode(obj);
     }
     return obj;
+  }
+
+  enforceVarPol (name) {
+    for (let l of name.tk) {
+      if (this.digits.includes(l)) {
+        ErrorHandler.throw("ParseError", name.line, "Variable names must not contain a digit");
+      }
+    }
+    if (["print"].includes(name.tk)) {
+      ErrorHandler.throw("ParseError", name.line, "Variable names must not be an already reserved keyword");
+    }
   }
 
 

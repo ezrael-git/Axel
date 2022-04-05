@@ -203,11 +203,8 @@ module.exports = class Parser {
     this.scanner.enforceVarPol(name_token);
     this.expect("EQUALITY");
     let value_token = this.next();
-    console.log("VALUE TOKEN " + JSON.stringify(value_token));
-    console.log("PEEK " + JSON.stringify(this.peek()));
 
     let value_node = this.parseStatement(value_token);
-    console.log("VALUE NODE " + JSON.stringify(value_node))
     let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_token.end);
     return node;
   }
@@ -361,25 +358,6 @@ module.exports = class Parser {
     return block; // array of block statements
   }
 
-  resolveSkip (token) {
-    // *new
-    /* why?
-    this is to avoid problems where binary operators are required. like:
-    {"type":"DeclarationExpression","body":{"name":"a","mutable":true,"line":1,"value_type":"String","value":"SKIP"}}
-    */
-
-    let res;
-    while (true) {
-      res = this.parseStatement(token);
-      if (res != "SKIP") {
-        return res;
-      }
-      else {
-        continue;
-      }
-    }
-  }
-
 
   parseStatement (token, invalid=[]) {
     /*
@@ -396,20 +374,20 @@ module.exports = class Parser {
     if (invalid.includes(type)) {
       return null;
     }
+
+
     // binary operations
     if (this.bin_ops.includes(type)) {
       let res = this.parseBinOp(token);
       return res;
     }
 
-    // (new*) catch early binops
+    // catch early binary operations
     else if (this.bin_ops.includes(this.peek(true).type)) {
-      console.log("ENTERED EARLY BINOP")
       let token_li = this.next();
       let res = this.parseBinOp(token_li);
       return res;
     }
-    // (*new)
 
     // function declarations
     else if (["FUNCTION"].includes(type)) {

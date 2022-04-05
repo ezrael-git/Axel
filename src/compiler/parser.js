@@ -358,6 +358,22 @@ module.exports = class Parser {
     return block; // array of block statements
   }
 
+  parseList (token) {
+    if (token.type != "LBRACKET") {
+      throw new Error(`Error in parseList(): expected token.type "LBRACKET", got ${token.type} instead`);
+    }
+
+    let elements = [];
+    let elem;
+    while ( ( elem = this.unlessGuard('RBRACKET') ) ) {
+      let reformed = this.parseStatement(elem);
+      elements.push(reformed);
+    }
+
+    let node = new Node.ListNode(elements,token.line,token.start,token.end);
+    return node;
+  }
+
 
   parseStatement (token, invalid=[]) {
     /*
@@ -429,6 +445,12 @@ module.exports = class Parser {
     // variable accesses
     else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
       let res = this.parseVarAccess(token);
+      return res;
+    }
+
+    // lists
+    else if (type == "LBRACKET") {
+      let res = this.parseList(token);
       return res;
     }
 

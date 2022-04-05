@@ -358,6 +358,25 @@ module.exports = class Parser {
     return block; // array of block statements
   }
 
+  resolveSkip (token) {
+    // *new
+    /* why?
+    this is to avoid problems where binary operators are required. like:
+    {"type":"DeclarationExpression","body":{"name":"a","mutable":true,"line":1,"value_type":"String","value":"SKIP"}}
+    */
+
+    let res;
+    while (true) {
+      res = this.parseStatement(token);
+      if (res != "SKIP") {
+        return res;
+      }
+      else {
+        continue;
+      }
+    }
+  }
+
 
   parseStatement (token, invalid=[]) {
     /*
@@ -377,6 +396,13 @@ module.exports = class Parser {
     // binary operations
     if (this.bin_ops.includes(type)) {
       let res = this.parseBinOp(token);
+      return res;
+    }
+
+    // (new*) catch early binops
+    else if (this.bin_ops.includes(this.peek())) {
+      let token_li = this.next();
+      let res = this.parseBinOp(token_li);
       return res;
     }
 

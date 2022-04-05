@@ -207,6 +207,7 @@ module.exports = class Parser {
     console.log("PEEK " + JSON.stringify(this.peek()));
 
     let value_node = this.parseStatement(value_token);
+    console.log("VALUE NODE " + JSON.stringify(value_node))
     let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_token.end);
     return node;
   }

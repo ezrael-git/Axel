@@ -465,7 +465,7 @@ class TrueNode {
   constructor (line,start,end) {
     this.type = "BooleanExpression";
     this.body = {
-      value:"true",
+      value:true,
       line:line,
       start:start,
       end:end
@@ -481,7 +481,7 @@ class FalseNode {
   constructor (line,start,end) {
     this.type = "BooleanExpression";
     this.body = {
-      value:"false",
+      value:false,
       line:line,
       start:start,
       end:end

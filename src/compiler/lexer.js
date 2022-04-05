@@ -2,6 +2,8 @@
 const Scanner = require("./scanner.js");
 let TT_LPAREN = "("
 let TT_RPAREN = ")"
+let TT_LBRACKET = "["
+let TT_RBRACKET = "]"
 let TT_EQ = "="
 let TT_COMPARE = "=="
 let TT_COMPAREOPP = "!="
@@ -11,6 +13,9 @@ let TT_MULTIPLY = "*"
 let TT_DIVIDE = "/"
 let TT_DOT = "."
 let TT_COMMA = ","
+let TT_AND = "&&"
+let TT_OR = "||"
+let TT_ARROW = "=>"
 
 let TT_FN = "fn"
 let TT_RETURN = "return"
@@ -25,9 +30,6 @@ let TT_NIL = "nil"
 let TT_IF = "if"
 let TT_ELIF = "elif"
 let TT_ELSE = "else"
-
-let TT_AND = "&&"
-let TT_OR = "||"
 
 
 
@@ -161,6 +163,14 @@ class Lexer {
         let fullString = sc.getUntil(source,pos,changingString);
         add("STRING", pos, fullString.curPos, fullString.string);
         pos = fullString.curPos;
+      }
+      // brackets ([])
+      else if (it.endsWith(TT_LBRACKET) || it.endsWith(TT_RBRACKET)) {
+        if (it.endsWith(TT_LBRACKET)) {
+          add("LBRACKET", pos, pos, TT_LBRACKET);
+        } else {
+          add("RBRACKET", pos, pos, TT_RBRACKET);
+        }
       }
       // addition operator
       else if (it.endsWith(TT_PLUS)) {

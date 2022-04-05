@@ -203,6 +203,8 @@ module.exports = class Parser {
     this.scanner.enforceVarPol(name_token);
     this.expect("EQUALITY");
     let value_token = this.next();
+    console.log("VALUE TOKEN " + JSON.stringify(value_token));
+    console.log("PEEK " + JSON.stringify(this.peek()));
 
     let value_node = this.parseStatement(value_token);
     let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_token.end);

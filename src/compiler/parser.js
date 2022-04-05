@@ -403,7 +403,7 @@ module.exports = class Parser {
     }
 
     // (new*) catch early binops
-    else if (this.bin_ops.includes(this.peek())) {
+    else if (this.bin_ops.includes(this.peek().type)) {
       console.log("ENTERED EARLY BINOP")
       let token_li = this.next();
       let res = this.parseBinOp(token_li);

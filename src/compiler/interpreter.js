@@ -153,6 +153,10 @@ module.exports = class Interpreter {
       let value = node.run(this.variables,new Interpreter());
       return value;
     }
+    else if (type == "ListNode") {
+      let value = node.run();
+      return value;
+    }
     // literals
     else if (node.constructor.name.includes("Literal")) {
       return node.run();

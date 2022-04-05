@@ -527,6 +527,22 @@ class ReturnNode {
   }
 }
 
+class ListNode {
+  constructor (elements, line, start, end) {
+    this.type = "ListExpression";
+    this.body = {
+      value:elements,
+      line:line,
+      start:start,
+      end:end
+    }
+  }
+
+  run (v,w) {
+    return this.body.value;
+  }
+}
+
 module.exports = {
   VarAssignNode:VarAssignNode,
   VarAccessNode:VarAccessNode,
@@ -545,6 +561,7 @@ module.exports = {
   TrueNode:TrueNode,
   FalseNode:FalseNode,
   NilNode:NilNode,
-  ReturnNode:ReturnNode
+  ReturnNode:ReturnNode,
+  ListNode:ListNode
   
 }

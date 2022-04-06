@@ -228,7 +228,7 @@ module.exports = class Parser {
 
 
     console.log("BODY " + JSON.stringify(body));
-    let node = new Literal.FunctionLiteral(identifier_token.tk,args,body,token.line);
+    let node = new Literal.FuncDecLiteral(identifier_token.tk,args,body,token.line);
     return node;
   }
 

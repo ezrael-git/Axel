@@ -22,6 +22,7 @@ class BaseLiteral {
     return !!this.value;
   }
 }
+// data types
 
 class StringLiteral {
   constructor (value,line) {
@@ -70,6 +71,20 @@ class IntegerLiteral {
     return !!this.value;
   }
 }
+
+class ArrayLiteral {
+  constructor (elements,line) {
+    this.type = "ArrayExpression"
+    this.value = elements;
+    this.elements = elements;
+    this.line = line;
+  }
+
+  run () {
+    return this.elements;
+  }
+}
+
 
 class TrueLiteral {
   constructor (line) {
@@ -142,33 +157,24 @@ class NilLiteral {
   }
 }
 
-class FuncDecLiteral {
-  constructor (name, args, statements,line) {
-    this.type = "DeclarationExpression"
-    this.value = this.name;
-    this.args = args;
-    this.statements = statements;
+// keywords
+
+class PrintLiteral {
+  constructor (value,line) {
+    this.type = "PrintExpression"
+    this.value = value;
     this.line = line;
   }
 
-  run (v,w) {
-    return this.value;
-  }
-
-  to_s () {
-    return this.value;
-  }
-
-  to_i () {
-    return parseInt(this.value);
-  }
-
-  to_b () {
-    return !!this.value;
+  run (v,i) {
+    let value = this.value.run(v,i);
+    value = Scanner.resolveRun(value,walker);
+    console.log(value);
+    return value;
   }
 }
 
-
+// objects
 
 class FunctionLiteral {
   constructor (name, args, statements,line) {
@@ -276,20 +282,6 @@ class VariableLiteral {
   }
 }
 
-class VarDecLiteral {
-  constructor (name,value,mutable,line) {
-    this.type = "DeclarationExpression"
-    this.name = name;
-    this.value = value;
-    this.mutable = mutable;
-    this.line = line;
-  }
-
-  run () {
-    return null;
-  }
-}
-
 class BinaryOperatorLiteral {
   constructor (lhs, rhs, op, line) {
     this.type = "BinaryExpression"
@@ -351,6 +343,8 @@ class BinaryOperatorLiteral {
   }
 }
 
+// ifs
+
 class IfLiteral {
   constructor (condition,statements,line) {
     this.type = "IfExpression"
@@ -392,33 +386,6 @@ class ElseLiteral {
   }
 }
 
-class ArrayLiteral {
-  constructor (elements,line) {
-    this.type = "ArrayExpression"
-    this.value = elements;
-    this.elements = elements;
-    this.line = line;
-  }
-
-  run () {
-    return this.elements;
-  }
-}
-
-class PrintLiteral {
-  constructor (value,line) {
-    this.type = "PrintExpression"
-    this.value = value;
-    this.line = line;
-  }
-
-  run (v,i) {
-    let value = this.value.run(v,i);
-    value = Scanner.resolveRun(value,walker);
-    console.log(value);
-    return value;
-  }
-}
 
 
 
@@ -430,10 +397,8 @@ module.exports = {
   FalseLiteral:FalseLiteral,
   NilLiteral:NilLiteral,
   FunctionLiteral:FunctionLiteral,
-  FuncDecLiteral:FuncDecLiteral,
   CallLiteral:CallLiteral,
   VariableLiteral:VariableLiteral,
-  VarDecLiteral:VarDecLiteral,
   BinaryOperatorLiteral:BinaryOperatorLiteral,
   IfLiteral:IfLiteral,
   ElifLiteral:ElifLiteral,

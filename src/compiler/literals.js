@@ -19,7 +19,7 @@ class BaseLiteral {
   }
 }
 
-class TextLiteral {
+class StringLiteral {
   constructor (value) {
     this.value = value;
   }
@@ -152,6 +152,11 @@ class FunctionLiteral {
     return !!this.value;
   }
 }
+
+class CallLiteral {
+}
+
+class Variable
 
 
 

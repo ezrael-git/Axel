@@ -194,7 +194,7 @@ module.exports = class Parser {
     let value_token = this.next();
 
     let value_node = this.parseStatement(value_token);
-    let node = new Literal.VarDecLiteral(name_token.tk,value_node,mutable,token.line);
+    let node = new Node.VarAssignNode(name_token.tk,value_node,mutable,token.line);
     return node;
   }
 
@@ -218,7 +218,7 @@ module.exports = class Parser {
 
 
     console.log("BODY " + JSON.stringify(body));
-    let node = new Literal.FuncDecLiteral(identifier_token.tk,args,body,token.line);
+    let node = new Node.FuncAssignNode(identifier_token.tk,args,body,token.line);
     return node;
   }
 

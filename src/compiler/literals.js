@@ -168,7 +168,7 @@ class PrintLiteral {
 
   run (v,i) {
     let value = this.value.run(v,i);
-    value = Scanner.resolveRun(value,walker);
+    value = Scanner.resolveRun(value,i);
     console.log(value);
     return value;
   }
@@ -265,7 +265,7 @@ class VariableLiteral {
 
   run (v,i) {
     let res = v[this.value];
-    res = Scanner.resolveRun(res);
+    res = Scanner.resolveRun(res,i);
     return res;
   }
 

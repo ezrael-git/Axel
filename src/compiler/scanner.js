@@ -552,7 +552,7 @@ module.exports = class Scanner {
     }
   }
 
-  resolveRun (obj,interpreter) {
+  static resolveRun (obj,interpreter) {
     console.log("IN " + interpreter.interpretNode.constructor.name);
     while (obj.run != undefined) {
       obj = interpreter.interpretNode(obj);
@@ -560,7 +560,7 @@ module.exports = class Scanner {
     return obj;
   }
 
-  enforceVarPol (name) {
+  static enforceVarPol (name) {
     for (let l of name.tk) {
       if (this.digits.includes(l)) {
         ErrorHandler.throw("ParseError", name.line, "Variable names must not contain a digit");

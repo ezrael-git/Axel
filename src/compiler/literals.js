@@ -310,6 +310,56 @@ class BinaryOperatorLiteral {
   }
 }
 
+class IfLiteral {
+  constructor (condition,statements,line) {
+    this.value = condition;
+    this.condition = condition;
+    this.statements = statements;
+    this.line = line;
+  }
+
+  run (v,i) {
+    // fix
+  }
+}
+
+class ElifLiteral {
+  constructor (condition,statements,line) {
+    this.value = condition;
+    this.condition = condition;
+    this.statements = statements;
+    this.line = line;
+  }
+
+  run (v,i) {
+    // fix
+  }
+}
+
+class ElseLiteral {
+  constructor (statements,line) {
+    this.value = statements;
+    this.statements = statements;
+    this.line = line;
+  }
+
+  run (v,i) {
+    // fix
+  }
+}
+
+class ArrayLiteral {
+  constructor (elements,line) {
+    this.value = elements;
+    this.elements = elements;
+    this.line = line;
+  }
+
+  run () {
+    return this.elements;
+  }
+}
+
 
 
 
@@ -323,5 +373,9 @@ module.exports = {
   CallLiteral:CallLiteral,
   VariableLiteral:VariableLiteral,
   VarDecLiteral:VarDecLiteral,
-  BinaryOperatorLiteral:BinaryOperatorLiteral
+  BinaryOperatorLiteral:BinaryOperatorLiteral,
+  IfLiteral:IfLiteral,
+  ElifLiteral:ElifLiteral,
+  ElseLiteral:ElseLiteral,
+  ArrayLiteral:ArrayLiteral
 }

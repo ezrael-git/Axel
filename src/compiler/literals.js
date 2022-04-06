@@ -135,11 +135,11 @@ class NilLiteral {
 }
 
 class FunctionLiteral {
-  constructor (name, args, body) {
-    this.name = name;
-    this.value = name;
+  constructor (name, args, statements,line) {
+    this.value = this.name;
     this.args = args;
-    this.body = body; // statements
+    this.statements = statements;
+    this.line = line;
   }
 
   run (v,w) {
@@ -214,6 +214,10 @@ class CallLiteral {
 class VariableLiteral {
   constructor (value) {
     this.value = value;
+  }
+
+  run (v,i) {
+    
   }
 
   to_s () {

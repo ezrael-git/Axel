@@ -7,17 +7,12 @@ class VarAssignNode {
   /*
   Node for when a variable is declared, or assigned to.
   */
-  constructor (name, mutable, value_type, value, line, start, end) {
+  constructor (name, mutable, value, line) {
     this.type = "DeclarationExpression";
-    this.body = {
-      name:name,
-      mutable:mutable,
-      line:line,
-      start:start,
-      end:end,
-      value_type:value_type,
-      value:value
-    }
+    this.name = name;
+    this.mutable = mutable;
+    this.value = value;
+    this.line = line;
   }
   
   run (variables) {
@@ -34,15 +29,12 @@ class FuncAssignNode {
   /*
   For when a function is declared.
   */
-  constructor (name, line, start, end, args, statements) {
+  constructor (name, args, statements, line) {
     this.type = "DeclarationExpression";
-    this.body = {};
-    this.body["statements"] = statements;
-    this.body["name"] = name;
-    this.body["args"] = args;
-    this.body["start"] = start;
-    this.body["end"] = end;
-    this.body["line"] = line;
+    this.name = name;
+    this.args = args;
+    this.statements = statements;
+    this.line = line;
   }
   
   run (variables) {

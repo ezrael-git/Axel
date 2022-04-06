@@ -1,4 +1,5 @@
 // literals.js
+const Scanner = require("./scanner.js");
 
 class BaseLiteral {
   /* base class */

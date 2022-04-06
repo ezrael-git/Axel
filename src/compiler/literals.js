@@ -212,12 +212,15 @@ class CallLiteral {
 }
 
 class VariableLiteral {
-  constructor (value) {
+  constructor (value,line) {
     this.value = value;
+    this.line = line;
   }
 
   run (v,i) {
-    
+    let res = v[this.value];
+    res = this.scanner.resolveRun(res);
+    return res;
   }
 
   to_s () {
@@ -233,40 +236,50 @@ class VariableLiteral {
   }
 }
 
-class BinaryOperator {
-  constructor (lhs, rhs, op) {
-    this.type = "BinaryExpression";
-    this.body = {
-      lhs:lhs,
-      rhs:rhs,
-      op:op
-    }
+class VarDecLiteral {
+  constructor (value,line) {
+    this.value = value;
+    this.line = line;
   }
 
-  run (variables,walker) {
-    let lhs = this.body.lhs.run(variables,walker);
-    let rhs = this.body.rhs.run(variables,walker);
+  run () {
+    return null;
+  }
+}
+
+class BinaryOperatorLiteral {
+  constructor (lhs, rhs, op) {
+    this.value = op;
+    this.op = op;
+    this.lhs = lhs;
+    this.rhs = rhs;
+  }
+
+  run (v,i) {
+    let lhs = this.body.lhs.run(v,i);
+    let rhs = this.body.rhs.run(v,i);
+    let op = this.op;
     if (lhs.constructor.name != rhs.constructor.name) {
-      throw new Error(`At line ${this.body.lhs.line}:\nCannot perform ${this.opToS()} on a ${lhs.constructor.name} and ${rhs.constructor.name}`);
+      throw new Error(`At line ${this.lhs.line}:\nCannot perform ${this.opToS()} on a ${lhs.constructor.name} and ${rhs.constructor.name}`);
     }
-    if (this.body.op == "+") {
+    if (op == "+") {
       return lhs + rhs
-    } else if (this.body.op == "-") {
+    } else if (op == "-") {
       return lhs - rhs
-    } else if (this.body.op == "/") {
+    } else if (op == "/") {
       return lhs / rhs
-    } else if (this.body.op == "*") {
+    } else if (op == "*") {
       return lhs * rhs
-    } else if (this.body.op == "==") {
+    } else if (op == "==") {
       return lhs === rhs;
-    } else if (this.body.op == "!=") {
+    } else if (op == "!=") {
       return lhs !== rhs
-    } else if (this.body.op == ">") {
+    } else if (op == ">") {
       return lhs > rhs
-    } else if (this.body.op == "<") {
+    } else if (op == "<") {
       return lhs < rhs
     } else {
-      throw new Error("Unknown binary operator: " + this.body.op);
+      throw new Error("Unknown binary operator: " + this.op);
     }
   }
 
@@ -304,5 +317,7 @@ module.exports = {
   NilLiteral:NilLiteral,
   FunctionLiteral:FunctionLiteral,
   CallLiteral:CallLiteral,
-  VariableLiteral:VariableLiteral
+  VariableLiteral:VariableLiteral,
+  VarDecLiteral:VarDecLiteral,
+  BinaryOperatorLiteral:BinaryOperatorLiteral
 }

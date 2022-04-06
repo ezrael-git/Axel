@@ -1,7 +1,6 @@
 // parser.js
 // generate AST
 
-const Node = require("./nodes.js");
 const Literal = require("./literals.js");
 const Scanner = require("./scanner.js");
 const ErrorHandler = require("./error_handler.js");

@@ -379,7 +379,7 @@ class PrintLiteral {
 
 
 module.exports = {
-  TextLiteral:TextLiteral,
+  StringLiteral:StringLiteral,
   IntegerLiteral:IntegerLiteral,
   TrueLiteral:TrueLiteral,
   FalseLiteral:FalseLiteral,

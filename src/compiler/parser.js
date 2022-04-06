@@ -152,36 +152,36 @@ module.exports = class Parser {
     if (type == "PLUS") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"+");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"+",token.line);
     }
     // subtraction operator
     else if (type == "MINUS") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"-");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"-",token.line);
     }
     // multiplication operator
     else if (type == "MULTIPLY") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"*");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"*",token.line);
     }
     // division operator
     else if (type == "DIVIDE") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"/");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"/",token.line);
     }
     // comparison operator
     else if (type == "COMPARE") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"==");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"==",token.line);
     }
     else if (type == "COMPAREOPP") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"!=");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"!=",token.line);
     }
     return node;
   }
@@ -205,7 +205,7 @@ module.exports = class Parser {
     let value_token = this.next();
 
     let value_node = this.parseStatement(value_token);
-    let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_token.end);
+    let node = new Literal.VarDecLiteral(name_token.tk,value_node,mutable,token.line);
     return node;
   }
 
@@ -229,7 +229,7 @@ module.exports = class Parser {
 
 
     console.log("BODY " + JSON.stringify(body));
-    let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
+    let node = new Literal.FunctionLiteral(identifier_token.tk,args,body,token.line);
     return node;
   }
 
@@ -254,7 +254,7 @@ module.exports = class Parser {
     console.log("CURT " + this.current());
     let statements = this.parseBlock(this.current());
 
-    let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+    let if_node = new Literal.IfLiteral(condition_node,statements,copy_token.line);
 
     // go through the next few lines checking if there are any elif statements
     // this is so we can build a proper if-elif-else chain if possible
@@ -278,7 +278,7 @@ module.exports = class Parser {
 
     // finally we can construct the chain
     let chain = [if_node].concat(elif_nodes).concat(else_node);
-    let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
+    let node = new Literal.IfChainLiteral(chain,chain[0].line);
     return node;
   }
 
@@ -288,7 +288,7 @@ module.exports = class Parser {
     let condition_node = this.parseStatements(["DO"])[0];
     let statements = this.parseBlock(this.current());
 
-    let node = new Node.ElifNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+    let node = new Literal.ElifLiteral(condition_node,statements,copy_token.line);
     return node;
   }
 
@@ -297,14 +297,14 @@ module.exports = class Parser {
     this.expect('DO');
     let statements = this.parseBlock(this.current());
 
-    let node = new Node.ElseNode(statements,copy_token.line,copy_token.start,token.end);
+    let node = new Literal.ElseLiteral(statements,copy_token.line);
     return node;
   }
 
   parsePrint (token) {
     token = this.next();
     let value_node = this.parseStatement(token);
-    let node = new Node.PrintNode(value_node, token.line, token.start, token.end);
+    let node = new Literal.PrintLiteral(value_node, token.line);
     return node;
   }
 
@@ -312,11 +312,11 @@ module.exports = class Parser {
     let node;
     let type = token.type;
     if (type == "TRUE") {
-      node = new Node.TrueNode(token.line,token.start,token.end);
+      node = new Literal.TrueLiteral(token.line);
     } else if (type == "FALSE") {
-      node = new Node.FalseNode(token.line,token.start,token.end);
+      node = new Literal.FalseLiteral(token.line);
     } else {
-      node = new Node.NilNode(token.line,token.start,token.end);
+      node = new Literal.NilLiteral(token.line);
     }
     return node;
   }
@@ -331,22 +331,22 @@ module.exports = class Parser {
       args = args.concat(node_tree_lite);
     }
     this.expect('RPAREN');
-    let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, this.current().end);
+    let node = new Literal.CallLiteral(identifier_token.tk, args, token.line);
     return node;
   }
 
   parseVarAccess (token) {
-    let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
+    let node = new Literal.VariableLiteral(token.tk,token.line);
     return node;
   }
 
   parseString (token) {
-    let node = new Node.TextNode(token.tk,token.line,token.start,token.end);
+    let node = new Literal.StringLiteral(token.tk,token.line);
     return node;
   }
 
   parseInteger (token) {
-    let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
+    let node = new Literal.IntegerLiteral(token.tk,token.line);
     return node;
   }
 
@@ -358,7 +358,7 @@ module.exports = class Parser {
     return block; // array of block statements
   }
 
-  parseList (token) {
+  parseArray (token) {
     if (token.type != "LBRACKET") {
       throw new Error(`Error in parseList(): expected token.type "LBRACKET", got ${token.type} instead`);
     }
@@ -372,7 +372,7 @@ module.exports = class Parser {
       }
     }
 
-    let node = new Node.ListNode(elements,token.line,token.start,token.end);
+    let node = new Literal.ArrayLiteral(elements,token.line);
     return node;
   }
 
@@ -450,9 +450,9 @@ module.exports = class Parser {
       return res;
     }
 
-    // lists
+    // arrays
     else if (type == "LBRACKET") {
-      let res = this.parseList(token);
+      let res = this.parseArray(token);
       return res;
     }
 

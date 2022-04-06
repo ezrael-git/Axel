@@ -560,7 +560,7 @@ module.exports = class Scanner {
     return obj;
   }
 
-  static enforceVarPol (name) {
+  enforceVarPol (name) {
     for (let l of name.tk) {
       if (this.digits.includes(l)) {
         ErrorHandler.throw("ParseError", name.line, "Variable names must not contain a digit");

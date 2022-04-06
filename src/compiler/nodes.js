@@ -7,7 +7,7 @@ class VarAssignNode {
   /*
   Node for when a variable is declared, or assigned to.
   */
-  constructor (name, mutable, value, line) {
+  constructor (name, value, mutable, line) {
     this.type = "DeclarationExpression";
     this.name = name;
     this.mutable = mutable;

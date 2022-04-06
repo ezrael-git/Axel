@@ -251,11 +251,12 @@ class VarDecLiteral {
 }
 
 class BinaryOperatorLiteral {
-  constructor (lhs, rhs, op) {
+  constructor (lhs, rhs, op, line) {
     this.value = op;
     this.op = op;
     this.lhs = lhs;
     this.rhs = rhs;
+    this.line = line;
   }
 
   run (v,i) {

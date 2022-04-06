@@ -1,6 +1,6 @@
 // literals.js
 const Scanner = require("./scanner.js");
-console.log(Scanner.constructor.name);
+console.log(JSON.stringify(Scanner));
 
 class BaseLiteral {
   /* base class */

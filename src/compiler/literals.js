@@ -1,6 +1,6 @@
 // literals.js
+
 const Scanner = require("./scanner.js");
-console.log(JSON.stringify(Scanner));
 
 class BaseLiteral {
   /* base class */
@@ -413,11 +413,10 @@ class PrintLiteral {
   }
 
   run (v,i) {
-    let scanner = new Scanner();
     let value = this.value.run(v,i);
-    value = scanner.resolveRun(value,walker);
+    value = Scanner.resolveRun(value,walker);
     console.log(value);
-    return scanner.toLiteral(value);
+    return value;
   }
 }
 

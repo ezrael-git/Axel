@@ -3,6 +3,7 @@
 class BaseLiteral {
   /* base class */
   constructor (value,line) {
+    this.type = "BaseExpression"
     this.value = value;
     this.line = line;
   }
@@ -22,6 +23,7 @@ class BaseLiteral {
 
 class StringLiteral {
   constructor (value,line) {
+    this.type = "StringExpression"
     this.value = value;
     this.line = line;
   }
@@ -45,6 +47,7 @@ class StringLiteral {
 
 class IntegerLiteral {
   constructor (value,line) {
+    this.type = "IntegerExpression"
     this.value = value;
     this.line = line;
   }
@@ -68,6 +71,7 @@ class IntegerLiteral {
 
 class TrueLiteral {
   constructor (line) {
+    this.type = "BooleanExpression"
     this.value = true;
     this.line = line;
   }
@@ -90,6 +94,7 @@ class TrueLiteral {
 }
 class FalseLiteral {
   constructor (line) {
+    this.type = "BooleanExpression"
     this.value = false;
     this.line = line;
   }
@@ -113,6 +118,7 @@ class FalseLiteral {
 
 class NilLiteral {
   constructor (line) {
+    this.type = "BooleanExpression"
     this.value = nil;
     this.line = line;
   }
@@ -134,8 +140,9 @@ class NilLiteral {
   }
 }
 
-class FunctionLiteral {
+class FuncDecLiteral {
   constructor (name, args, statements,line) {
+    this.type = "DeclarationExpression"
     this.value = this.name;
     this.args = args;
     this.statements = statements;
@@ -143,11 +150,39 @@ class FunctionLiteral {
   }
 
   run (v,w) {
-    return this.name;
+    return this.value;
   }
 
   to_s () {
-    return this.name;
+    return this.value;
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
+}
+
+
+
+class FunctionLiteral {
+  constructor (name, args, statements,line) {
+    this.type = "FunctionExpression"
+    this.value = name
+    this.args = args;
+    this.statements = statements;
+    this.line = line;
+  }
+
+  run (v,w) {
+    return this.value;
+  }
+
+  to_s () {
+    return this.value;
   }
 
   to_i () {
@@ -161,6 +196,7 @@ class FunctionLiteral {
 
 class CallLiteral {
   constructor (value, args, line) {
+    this.type = "CallExpression"
     this.value = value;
     this.line = line;
     this.args = args;
@@ -213,6 +249,7 @@ class CallLiteral {
 
 class VariableLiteral {
   constructor (value,mutable,line) {
+    this.type = "VariableExpression"
     this.value = value;
     this.mutable = mutable;
     this.line = line;
@@ -239,6 +276,7 @@ class VariableLiteral {
 
 class VarDecLiteral {
   constructor (name,value,mutable,line) {
+    this.type = "DeclarationExpression"
     this.name = name;
     this.value = value;
     this.mutable = mutable;
@@ -252,6 +290,7 @@ class VarDecLiteral {
 
 class BinaryOperatorLiteral {
   constructor (lhs, rhs, op, line) {
+    this.type = "BinaryExpression"
     this.value = op;
     this.op = op;
     this.lhs = lhs;
@@ -312,6 +351,7 @@ class BinaryOperatorLiteral {
 
 class IfLiteral {
   constructor (condition,statements,line) {
+    this.type = "IfExpression"
     this.value = condition;
     this.condition = condition;
     this.statements = statements;
@@ -325,6 +365,7 @@ class IfLiteral {
 
 class ElifLiteral {
   constructor (condition,statements,line) {
+    this.type = "ElifExpression"
     this.value = condition;
     this.condition = condition;
     this.statements = statements;
@@ -338,6 +379,7 @@ class ElifLiteral {
 
 class ElseLiteral {
   constructor (statements,line) {
+    this.type = "ElseExpression"
     this.value = statements;
     this.statements = statements;
     this.line = line;
@@ -350,6 +392,7 @@ class ElseLiteral {
 
 class ArrayLiteral {
   constructor (elements,line) {
+    this.type = "ArrayExpression"
     this.value = elements;
     this.elements = elements;
     this.line = line;
@@ -362,6 +405,7 @@ class ArrayLiteral {
 
 class PrintLiteral {
   constructor (value,line) {
+    this.type = "PrintExpression"
     this.value = value;
     this.line = line;
   }
@@ -385,6 +429,7 @@ module.exports = {
   FalseLiteral:FalseLiteral,
   NilLiteral:NilLiteral,
   FunctionLiteral:FunctionLiteral,
+  FuncDecLiteral:FuncDecLiteral,
   CallLiteral:CallLiteral,
   VariableLiteral:VariableLiteral,
   VarDecLiteral:VarDecLiteral,
@@ -392,5 +437,6 @@ module.exports = {
   IfLiteral:IfLiteral,
   ElifLiteral:ElifLiteral,
   ElseLiteral:ElseLiteral,
-  ArrayLiteral:ArrayLiteral
+  ArrayLiteral:ArrayLiteral,
+  PrintLiteral:PrintLiteral
 }

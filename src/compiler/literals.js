@@ -212,8 +212,9 @@ class CallLiteral {
 }
 
 class VariableLiteral {
-  constructor (value,line) {
+  constructor (value,mutable,line) {
     this.value = value;
+    this.mutable = mutable;
     this.line = line;
   }
 
@@ -237,8 +238,9 @@ class VariableLiteral {
 }
 
 class VarDecLiteral {
-  constructor (value,line) {
+  constructor (value,mutable,line) {
     this.value = value;
+    this.mutable = mutable;
     this.line = line;
   }
 

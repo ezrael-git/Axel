@@ -238,7 +238,8 @@ class VariableLiteral {
 }
 
 class VarDecLiteral {
-  constructor (value,mutable,line) {
+  constructor (name,value,mutable,line) {
+    this.name = name;
     this.value = value;
     this.mutable = mutable;
     this.line = line;

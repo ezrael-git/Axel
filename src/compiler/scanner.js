@@ -555,7 +555,7 @@ module.exports = class Scanner {
   static resolveRun (obj,interpreter) {
     console.log("IN " + interpreter.interpretNode.constructor.name);
     while (obj.run != undefined) {
-      obj = interpreter.interpretNode(obj);
+      obj = obj.run(interpreter.variables, interpreter);
       console.log("new obj " + obj.constructor.name);
     }
     return obj;

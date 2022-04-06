@@ -61,7 +61,7 @@ module.exports = class Interpreter {
     If the argument object is a node or already run-able, it returns it without making any changes.
     */
     if (obj.constructor.name == "String" && !["true","false","nil"].includes(obj)) {
-      return new Literal.TextLiteral(obj);
+      return new Literal.StringLiteral(obj);
     }
     else if (obj.constructor.name == "Number") {
       return new Literal.IntegerLiteral(obj);

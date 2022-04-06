@@ -556,6 +556,7 @@ module.exports = class Scanner {
     console.log("IN " + interpreter.interpretNode.constructor.name);
     while (obj.run != undefined) {
       obj = interpreter.interpretNode(obj);
+      console.log("new obj " + obj.constructor.name);
     }
     return obj;
   }

@@ -265,7 +265,7 @@ class VariableLiteral {
 
   run (v,i) {
     let res = v[this.value];
-    res = this.scanner.resolveRun(res);
+    res = Scanner.resolveRun(res);
     return res;
   }
 

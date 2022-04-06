@@ -2,20 +2,10 @@
 // generate AST
 
 const Literal = require("./literals.js");
+const Node = require("./nodes.js");
 const Scanner = require("./scanner.js");
 const ErrorHandler = require("./error_handler.js");
 
-
-
-class Expression {
-  constructor (value) {
-    this.value = value;
-  }
-
-  run () {
-    return this.value
-  }
-}
 
 
 

@@ -154,9 +154,41 @@ class FunctionLiteral {
 }
 
 class CallLiteral {
+  constructor (value, args) {
+    this.value = value;
+    this.args = args;
+  }
+
+  to_s () {
+    return this.value;
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
 }
 
-class Variable
+class VariableLiteral {
+  constructor (value) {
+    this.value = value;
+  }
+
+  to_s () {
+    return this.value;
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
+}
 
 
 
@@ -167,5 +199,7 @@ module.exports = {
   TrueLiteral:TrueLiteral,
   FalseLiteral:FalseLiteral,
   NilLiteral:NilLiteral,
-  FunctionLiteral:FunctionLiteral
+  FunctionLiteral:FunctionLiteral,
+  CallLiteral:CallLiteral,
+  VariableLiteral:VariableLiteral
 }

@@ -2,8 +2,9 @@
 
 class BaseLiteral {
   /* base class */
-  constructor (value) {
+  constructor (value,line) {
     this.value = value;
+    this.line = line;
   }
 
   to_s () {
@@ -20,8 +21,9 @@ class BaseLiteral {
 }
 
 class StringLiteral {
-  constructor (value) {
+  constructor (value,line) {
     this.value = value;
+    this.line = line;
   }
 
   run () {
@@ -42,8 +44,9 @@ class StringLiteral {
 }
 
 class IntegerLiteral {
-  constructor (value) {
+  constructor (value,line) {
     this.value = value;
+    this.line = line;
   }
 
   run () {
@@ -64,8 +67,9 @@ class IntegerLiteral {
 }
 
 class TrueLiteral {
-  constructor () {
-    this.value = "true";
+  constructor (line) {
+    this.value = true;
+    this.line = line;
   }
 
   run () {
@@ -85,8 +89,9 @@ class TrueLiteral {
   }
 }
 class FalseLiteral {
-  constructor () {
-    this.value = "false";
+  constructor (line) {
+    this.value = false;
+    this.line = line;
   }
 
   run () {
@@ -107,8 +112,9 @@ class FalseLiteral {
 }
 
 class NilLiteral {
-  constructor () {
-    this.value = "nil";
+  constructor (line) {
+    this.value = nil;
+    this.line = line;
   }
 
   run () {
@@ -154,9 +160,42 @@ class FunctionLiteral {
 }
 
 class CallLiteral {
-  constructor (value, args) {
+  constructor (value, args, line) {
     this.value = value;
+    this.line = line;
     this.args = args;
+  }
+
+  run (v,i) {
+    if (variables[this.body.callee] == undefined) {
+      throw new Error(`At line ${this.line}:\nTried to call unknown function: ${this.body.callee}`);
+    }
+    let func = variables[this.body.callee];
+    if (func.constructor.name != "FunctionLiteral") {
+      throw new Error(`At line ${this.line}:\nParseError: Tried to call a ${func.constructor.name}, whereas a FunctionLiteral was expected`);
+    }
+
+    let statements = func.statements;
+    let args_requested = func.args;
+    let args_given = this.args;
+    let combo = args_requested - args_given;
+    if (combo > 0) {
+      throw new Error(`At line ${this.line}:\nArgumentError: Missing args (${combo})`);
+    } else if (combo < 0) {
+      throw new Error(`At line ${this.line}:\nArgumentError: Too many args were given (expected ${args_requested}, got ${args_given}`);
+    }
+
+    let argPos = -1;
+    let scanner = new Scanner();
+    // iterate over given args and introduce them as variables in the function scope
+    for (let arg of args_given) {
+      argPos += 1;
+      let name = args_requested[argPos].name;
+      let value = arg.run(variables,walker);
+      i.variables[name] = scanner.toLiteral(value);
+    }
+    let output = i.walk(statements);
+    return output;
   }
 
   to_s () {
@@ -187,6 +226,66 @@ class VariableLiteral {
 
   to_b () {
     return !!this.value;
+  }
+}
+
+class BinaryOperator {
+  constructor (lhs, rhs, op) {
+    this.type = "BinaryExpression";
+    this.body = {
+      lhs:lhs,
+      rhs:rhs,
+      op:op
+    }
+  }
+
+  run (variables,walker) {
+    let lhs = this.body.lhs.run(variables,walker);
+    let rhs = this.body.rhs.run(variables,walker);
+    if (lhs.constructor.name != rhs.constructor.name) {
+      throw new Error(`At line ${this.body.lhs.line}:\nCannot perform ${this.opToS()} on a ${lhs.constructor.name} and ${rhs.constructor.name}`);
+    }
+    if (this.body.op == "+") {
+      return lhs + rhs
+    } else if (this.body.op == "-") {
+      return lhs - rhs
+    } else if (this.body.op == "/") {
+      return lhs / rhs
+    } else if (this.body.op == "*") {
+      return lhs * rhs
+    } else if (this.body.op == "==") {
+      return lhs === rhs;
+    } else if (this.body.op == "!=") {
+      return lhs !== rhs
+    } else if (this.body.op == ">") {
+      return lhs > rhs
+    } else if (this.body.op == "<") {
+      return lhs < rhs
+    } else {
+      throw new Error("Unknown binary operator: " + this.body.op);
+    }
+  }
+
+  opToS () {
+    switch (this.body.op) {
+      case "+":
+        return "ADDITION";
+        break
+      case "-":
+        return "SUBTRACTION";
+        break;
+      case "*":
+        return "MULTIPLICATION";
+        break;
+      case "/":
+        return "DIVISION";
+        break;
+      case "==":
+        return "COMPARISON";
+        break;
+      case "!=":
+        return "COMPARISON";
+    }
   }
 }
 

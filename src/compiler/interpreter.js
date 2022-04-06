@@ -2,7 +2,7 @@
 // interpret nodes and ASTs
 
 const Literal = require("./literals.js");
-
+const Scanner = require("./scanner.js");
 
 module.exports = class Interpreter {
   constructor () {
@@ -99,65 +99,77 @@ module.exports = class Interpreter {
     */
     let type = node.constructor.name;
 
-    if (type == "BinaryOperatorNode") {
+    // handle...
+    // binary expressions
+    if (type == "BinaryOperatorLiteral") {
       let result = this.toLiteral(node.run(this.variables,new Interpreter()));
       return result;
     }
+    // function assignment
     else if (type == "FuncAssignNode") {
-      let name = node.body.name;
-      let stats = node.body.statements;
-      let args = node.body.args;
-      this.variables[name] = new Literal.FunctionLiteral(name,args,stats);
-      return new Literal.TextLiteral(name);
+      let name = node.name;
+      let stats = node.statements;
+      let args = node.args;
+      this.variables[name] = new Literal.FunctionLiteral(name,args,stats,node.line);
+      return new Literal.StringLiteral(name,node.line);
     }
-    else if (type == "CallNode") {
+    // function calls
+    else if (type == "CallLiteral") {
       let o = node.run(this.variables,new Interpreter());
       return this.toLiteral(o);
     }
+    // variable assignment
     else if (type == "VarAssignNode") {
-      let name = node.body.name;
-      let value = node.body.value.run(this.variables,new Interpreter());
+      let name = node.name;
+      let value = node.value.run(this.variables,new Interpreter());
 
       value = this.toLiteral(value);
-      let mutable = node.body.mutable;
+      let mutable = node.mutable;
       if (this.variables[name] == undefined || mutable == true) {
         this.variables[name] = value;
         return value;
       } else {
-        throw new Error(`At line ${this.body.line}:\nCannot change a constant variable`);
+        throw new Error(`At line ${node.line}:\nCannot change a constant variable`);
       }
     }
-    else if (type == "VarAccessNode") {
-      let name = node.body.name;
+    // variable accesses
+    else if (type == "VariableLiteral") {
+      let name = node.name;
       if (this.variables[name] != undefined) {
         return this.variables[name];
       } else {
-        throw new Error(`At line ${this.body.line}:\nCannot access unknown variable ${name}`)
+        throw new Error(`At line ${node.line}:\nCannot access unknown variable ${name}`)
       }
     }
-    else if (type == "TextNode" || type == "IntegerNode") {
+    // strings/integers
+    else if (type == "StringLiteral" || type == "IntegerLiteral") {
       return this.toLiteral(node.run());
     }
-    else if (type == "PrintNode") {
+    // print keyword
+    else if (type == "PrintLiteral") {
       let value = node.run(this.variables,new Interpreter())
       return value;
     }
-    else if (["TrueNode","FalseNode","NilNode"].includes(type)) {
+    // boolean literals
+    else if (["TrueLiteral","FalseLiteral","NilLiteral"].includes(type)) {
       return this.toLiteral(node.run());
     }
-    else if (type == "IfChainNode") {
+    // if chain
+    else if (type == "IfChainLiteral") {
       let o = node.run(this.variables,new Interpreter());
       return this.toLiteral(o);
     }
-    else if (type == "ReturnNode") {
+    // return expressions
+    else if (type == "ReturnLiteral") {
       let value = node.run(this.variables,new Interpreter());
       return value;
     }
-    else if (type == "ListNode") {
+    // arrays
+    else if (type == "ArrayLiteral") {
       let value = node.run();
       return value;
     }
-    // literals
+    // other literals
     else if (node.constructor.name.includes("Literal")) {
       return node.run();
     }

@@ -360,6 +360,21 @@ class ArrayLiteral {
   }
 }
 
+class PrintLiteral {
+  constructor (value,line) {
+    this.value = value;
+    this.line = line;
+  }
+
+  run (v,i) {
+    let scanner = new Scanner();
+    let value = this.value.run(v,i);
+    value = scanner.resolveRun(value,walker);
+    console.log(value);
+    return scanner.toLiteral(value);
+  }
+}
+
 
 
 

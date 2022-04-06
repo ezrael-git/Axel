@@ -1,13 +1,13 @@
 // scanner.js
 const Keywords = require("../data/keyword.js");
-const Literal = require("./literals.js");
 const ErrorHandler = require("./error_handler.js");
 
 module.exports = class Scanner {
-  constructor () {
+  constructor (literal) {
     this.variables = [];
     this.imports = [];
     this.functions = [];
+    this.literal = literal;
 
     this.uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     this.lowercase = [];

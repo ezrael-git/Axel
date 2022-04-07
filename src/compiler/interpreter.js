@@ -87,7 +87,7 @@ module.exports = class Interpreter {
     Run an object until the final, non-runable value is returned
     */
     while (obj.run != undefined) {
-      obj = this.interpretNode(obj);
+      obj = obj.run(this.variables, new Interpreter());
     }
     return obj;
   }

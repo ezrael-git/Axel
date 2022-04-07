@@ -22,7 +22,7 @@ class VarAssignNode {
     if (mode == 0) {
       variables[this.name] = this.value;
     } else {
-      variables = value;
+      variables = this.value;
     }
     return variables;
   }

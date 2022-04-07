@@ -49,11 +49,9 @@ module.exports = class Interpreter {
     return this.program[this.node-nodes];
   }
   
-  checkType (obj) {
-    /*
-    Get an object's constructor name / type
-    */
-    return obj.constructor.name;
+  addVar (val) {
+    let res = this.toLiteral(val);
+    this.variables.push(res);
   }
 
   toLiteral (obj) {

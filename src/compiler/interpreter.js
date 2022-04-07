@@ -154,7 +154,7 @@ module.exports = class Interpreter {
       return this.toLiteral(node.run());
     }
     // if chain
-    else if (type == "IfChainLiteral") {
+    else if (type == "ChainLiteral") {
       let o = node.run(this.variables,new Interpreter());
       return this.toLiteral(o);
     }

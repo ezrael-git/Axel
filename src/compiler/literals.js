@@ -211,10 +211,10 @@ class CallLiteral {
   }
 
   run (v,i) {
-    if (variables[this.body.callee] == undefined) {
-      throw new Error(`At line ${this.line}:\nTried to call unknown function: ${this.body.callee}`);
+    if (v[this.body.callee] == undefined) {
+      throw new Error(`At line ${this.line}:\nTried to call unknown function: ${this.value}`);
     }
-    let func = variables[this.body.callee];
+    let func = v[this.body.callee];
     if (func.constructor.name != "FunctionLiteral") {
       throw new Error(`At line ${this.line}:\nParseError: Tried to call a ${func.constructor.name}, whereas a FunctionLiteral was expected`);
     }
@@ -236,7 +236,7 @@ class CallLiteral {
       argPos += 1;
       let name = args_requested[argPos].name;
       let value = arg.run(variables,walker);
-      i.variables[name] = scanner.toLiteral(value);
+      i.variables[name] = i.scanner.toLiteral(value);
     }
     let output = i.walk(statements);
     return output;

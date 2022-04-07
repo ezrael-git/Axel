@@ -339,7 +339,7 @@ module.exports = class Parser {
   }
 
   parseInteger (token) {
-    let node = new Literal.IntegerLiteral(token.tk,token.line);
+    let node = new Literal.IntegerLiteral(parseInt(token.tk),token.line);
     return node;
   }
 

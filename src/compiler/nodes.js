@@ -15,7 +15,7 @@ class VarAssignNode {
     this.line = line;
   }
   
-  run (variables, mode=0) {
+  run (variables, mode=1) {
     /* 
     Takes in an Object containing the variables for the program and returns an edited version of it containing the information of the variable.
     */

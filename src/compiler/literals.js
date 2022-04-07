@@ -236,6 +236,7 @@ class CallLiteral {
       console.log("Arg " + JSON.stringify(arg));
       argPos += 1;
       let name = args_requested[argPos].name;
+      console.log("name " + name);
       let value = arg.run(v,i);
       i.variables[name] = i.toLiteral(value);
     }

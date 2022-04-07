@@ -233,6 +233,7 @@ class CallLiteral {
     let scanner = new Scanner();
     // iterate over given args and introduce them as variables in the function scope
     for (let arg of args_given) {
+      console.log("Arg " + JSON.stringify(arg));
       argPos += 1;
       let name = args_requested[argPos].name;
       let value = arg.run(v,i);

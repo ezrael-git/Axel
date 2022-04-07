@@ -508,6 +508,18 @@ class ChainLiteral {
   }
 }
 
+class ArgLiteral {
+  constructor (name,line) {
+    this.type = "ArgExpression";
+    this.name = name;
+    this.line = line;
+  }
+
+  run () {
+    return this.name;
+  }
+}
+
 
 
 
@@ -527,5 +539,6 @@ module.exports = {
   ElseLiteral:ElseLiteral,
   ChainLiteral:ChainLiteral,
   ArrayLiteral:ArrayLiteral,
-  PrintLiteral:PrintLiteral
+  PrintLiteral:PrintLiteral,
+  ArgLiteral:ArgLiteral
 }

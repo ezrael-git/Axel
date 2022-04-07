@@ -325,7 +325,11 @@ module.exports = class Parser {
   }
 
   parseVarAccess (token) {
-    let node = new Literal.VariableLiteral(token.tk,token.line);
+    let mutable = true;
+    if (this.scanner.uppercase.includes(token.tk[0])) {
+      mutable = false;
+    }
+    let node = new Literal.VariableLiteral(token.tk,mutable,token.line);
     return node;
   }
 

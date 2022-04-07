@@ -235,7 +235,7 @@ class CallLiteral {
     for (let arg of args_given) {
       argPos += 1;
       let name = args_requested[argPos].name;
-      let value = arg.run(variables,walker);
+      let value = arg.run(v,i);
       i.variables[name] = i.toLiteral(value);
     }
     let output = i.walk(statements);

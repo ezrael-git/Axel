@@ -206,7 +206,7 @@ module.exports = class Parser {
     let args = [];
     let arg_token;
     while ((arg_token = this.guard('IDENTIFIER'))) {
-      let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
+      let arg_node = new Literal.ArgLiteral(arg_token.tk,arg_token.line);
       args.push(arg_node);
       if (!this.guard("COMMA")) { break };
     }

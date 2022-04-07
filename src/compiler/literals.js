@@ -293,8 +293,8 @@ class BinaryOperatorLiteral {
   }
 
   run (v,i) {
-    let lhs = this.body.lhs.run(v,i);
-    let rhs = this.body.rhs.run(v,i);
+    let lhs = this.lhs.run(v,i);
+    let rhs = this.rhs.run(v,i);
     let op = this.op;
     if (lhs.constructor.name != rhs.constructor.name) {
       throw new Error(`At line ${this.lhs.line}:\nCannot perform ${this.opToS()} on a ${lhs.constructor.name} and ${rhs.constructor.name}`);

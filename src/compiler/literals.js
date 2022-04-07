@@ -525,6 +525,7 @@ module.exports = {
   IfLiteral:IfLiteral,
   ElifLiteral:ElifLiteral,
   ElseLiteral:ElseLiteral,
+  ChainLiteral:ChainLiteral,
   ArrayLiteral:ArrayLiteral,
   PrintLiteral:PrintLiteral
 }

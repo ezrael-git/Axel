@@ -267,7 +267,7 @@ module.exports = class Parser {
 
     // finally we can construct the chain
     let chain = [if_node].concat(elif_nodes).concat(else_node);
-    let node = new Literal.IfChainLiteral(chain,chain[0].line);
+    let node = new Literal.ChainLiteral(chain,chain[0].line);
     return node;
   }
 

@@ -354,9 +354,43 @@ class IfLiteral {
     this.line = line;
   }
 
-  run (v,i) {
-    // fix
+  runStatements (v,i) {
+    let c = -1;
+    for (let stat of this.statements) {
+      c += 1;
+      let o = stat.run(v,i);
+      if (c == this.statements.length-1) {
+        return o;
+      }
+    }
   }
+
+  runCondition (v,i) {
+    i.variables = v; // pass global variables to the ifNode interpreter
+    let conditionResult = i.interpretNode(this.condition);
+    conditionResult = i.resolveRun(conditionResult);
+
+    if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
+      conditionResult = String(conditionResult.to_b());
+    }
+
+    if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
+      conditionResult = conditionResult.run();
+    }
+
+    return conditionResult
+  }
+
+  run (v,i) {
+    let conditionResult = this.runCondition(v,i);
+    if (conditionResult == true) {
+      let o = this.runStatements(v,i);
+      return o;
+    } else {
+      return false;
+    }
+  }
+
 }
 
 class ElifLiteral {
@@ -368,8 +402,41 @@ class ElifLiteral {
     this.line = line;
   }
 
+  runStatements (v,i) {
+    let c = -1;
+    for (let stat of this.statements) {
+      c += 1;
+      let o = stat.run(v,i);
+      if (c == this.statements.length-1) {
+        return o;
+      }
+    }
+  }
+
+  runCondition (v,i) {
+    i.variables = v; // pass global variables to the ifNode interpreter
+    let conditionResult = i.interpretNode(this.condition);
+    conditionResult = i.resolveRun(conditionResult);
+
+    if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
+      conditionResult = String(conditionResult.to_b());
+    }
+
+    if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
+      conditionResult = conditionResult.run();
+    }
+
+    return conditionResult
+  }
+
   run (v,i) {
-    // fix
+    let conditionResult = this.runCondition(v,i);
+    if (conditionResult == true) {
+      let o = this.runStatements(v,i);
+      return o;
+    } else {
+      return false;
+    }
   }
 }
 
@@ -381,8 +448,63 @@ class ElseLiteral {
     this.line = line;
   }
 
+  runStatements (v,i) {
+    let c = -1;
+    for (let stat of this.statements) {
+      c += 1;
+      let o = stat.run(v,i);
+      if (c == this.statements.length-1) {
+        return o;
+      }
+    }
+  }
+
+
   run (v,i) {
-    // fix
+    let o = this.runStatements(v,i);
+    return o;
+  }
+}
+
+class ChainLiteral {
+  constructor (chain,line) {
+    this.type = "ChainExpression";
+    this.chain = chain;
+    this.line = line;
+  }
+
+  run (v,i) {
+    let pos = -1;
+    if (this.chain[0].type != "IfExpression") {
+      throw new Error("IfChain's first member should be an IfExpression, not " + JSON.stringify(this.chain[0]));
+    }
+    let conditions = [];
+    for (let member of this.chain) {
+      pos += 1;
+      let type = member.constructor.name;
+      if (type == "IfLiteral" || type == "ElifLiteral") {
+        let condition = member.runCondition(v,i);
+        console.log("COND " + condition);
+        console.log("MEM " + member.constructor.name);
+        if (condition == true) {
+          let o = member.run(v,i);
+          console.log("O " + o);
+          return o;
+        }
+        else {
+          conditions.push(condition);
+          continue;
+        }
+      }
+      else if (type == "ElseLiteral") {
+        let o = member.run(v,i);
+        return o;
+      }
+      else {
+        throw new Error("Unknown type in ifNodeChain: " + type);
+      }
+    }
+    return conditions[conditions.length - 1];
   }
 }
 

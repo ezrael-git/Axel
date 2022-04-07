@@ -296,6 +296,8 @@ class BinaryOperatorLiteral {
     let lhs = this.lhs.run(v,i);
     let rhs = this.rhs.run(v,i);
     let op = this.op;
+    console.log("LHS " + lhs);
+    console.log("RHS " + rhs);
     if (lhs.constructor.name != rhs.constructor.name) {
       throw new Error(`At line ${this.lhs.line}:\nCannot perform ${this.opToS()} on a ${lhs.constructor.name} and ${rhs.constructor.name}`);
     }

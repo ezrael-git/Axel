@@ -479,8 +479,10 @@ class ChainLiteral {
       throw new Error("IfChain's first member should be an IfExpression, not " + JSON.stringify(this.chain[0]));
     }
     let conditions = [];
+    console.log("ENTERED CHAINLITERAL");
     for (let member of this.chain) {
       pos += 1;
+      console.log("p " + pos);
       let type = member.constructor.name;
       if (type == "IfLiteral" || type == "ElifLiteral") {
         let condition = member.runCondition(v,i);

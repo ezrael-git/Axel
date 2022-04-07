@@ -371,14 +371,11 @@ class IfLiteral {
     conditionResult = i.resolveRun(conditionResult);
 
     if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
-      conditionResult = String(conditionResult.to_b());
+      conditionResult = conditionResult.to_b();
     }
 
-    if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
-      conditionResult = conditionResult.run();
-    }
-
-    return conditionResult
+    console.log("CR " + conditionResult);
+    return conditionResult;
   }
 
   run (v,i) {

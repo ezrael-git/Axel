@@ -482,6 +482,7 @@ class ChainLiteral {
       console.log("p " + pos);
       let type = member.constructor.name;
       if (type == "IfLiteral" || type == "ElifLiteral") {
+        console.log(" IN INSIDE ");
         let condition = member.runCondition(v,i);
         console.log("COND " + condition);
         console.log("MEM " + member.constructor.name);

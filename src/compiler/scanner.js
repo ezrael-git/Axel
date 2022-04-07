@@ -558,6 +558,7 @@ module.exports = class Scanner {
       obj = obj.run(interpreter.variables, interpreter);
       console.log("new obj " + obj.constructor.name);
     }
+    throw new Error()
     return obj;
   }
 

@@ -19,7 +19,6 @@ class VarAssignNode {
     /* 
     Takes in an Object containing the variables for the program and returns an edited version of it containing the information of the variable.
     */
-    let variables;
     if (mode == 0) {
       variables[this.name] = this.value;
     } else {

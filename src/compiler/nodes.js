@@ -15,11 +15,16 @@ class VarAssignNode {
     this.line = line;
   }
   
-  run (variables) {
+  run (variables, mode=0) {
     /* 
     Takes in an Object containing the variables for the program and returns an edited version of it containing the information of the variable.
     */
-    variables[this.body.name] = this.body.value;
+    let variables;
+    if (mode == 0) {
+      variables[this.name] = this.value;
+    } else {
+      variables = value;
+    }
     return variables;
   }
 }

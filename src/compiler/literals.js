@@ -548,6 +548,24 @@ class ForLiteral {
   }
 }
 
+class WhileLiteral {
+  constructor (expression, statements) {
+    this.type = "WhileExpression";
+    this.expression = expression;
+    this.value = expression;
+    this.statements = statements;
+  }
+
+  run (v,i) {
+    let cycle = 0;
+    while (true) {
+      i.variables = v;
+      let cond = i.interpretNode(this.expression);
+      if (
+    }
+  }
+}
+
 
 
 

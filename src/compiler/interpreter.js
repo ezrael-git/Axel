@@ -137,6 +137,7 @@ module.exports = class Interpreter {
       if (this.variables[name] != undefined) {
         return this.variables[name];
       } else {
+        console.log(JSON.stringify(this.variables));
         throw new Error(`At line ${node.line}:\nCannot access unknown variable ${name}`)
       }
     }

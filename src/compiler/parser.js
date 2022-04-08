@@ -382,7 +382,7 @@ module.exports = class Parser {
     this.expect('DO');
     let block = this.parseBlock(this.current());
 
-    let node = new Literal.ForLiteral(placeholder, iterable, block, token.line);
+    let node = new Literal.ForLiteral(placeholder.tk, iterable, block, token.line);
     return node;
   }
 

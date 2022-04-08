@@ -369,6 +369,22 @@ module.exports = class Parser {
     return node;
   }
 
+  parseFor (token) {
+    if (token.type != "FOR") {
+      throw new Error(`Error in parseFor(): expected token.type "FOR", got ${token.type} instead`);
+    }
+
+    let placeholder = this.expect('IDENTIFIER');
+    this.expect('IN');
+    let iterable_tk = this.next();
+    let iterable = this.parseStatement(iterable_tk);
+    this.expect('DO');
+    let block = this.parseBlock(this.current());
+
+    let node = new Literal.ForLiteral(placeholder, iterable, block, token.line);
+    return node;
+  }
+
 
   parseStatement (token, invalid=[]) {
     /*
@@ -446,6 +462,12 @@ module.exports = class Parser {
     // arrays
     else if (type == "LBRACKET") {
       let res = this.parseArray(token);
+      return res;
+    }
+
+    // for loops
+    else if (type == "FOR") {
+      let res = this.parseFor(token);
       return res;
     }
 

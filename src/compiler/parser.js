@@ -377,7 +377,8 @@ module.exports = class Parser {
     let placeholder = this.expect('IDENTIFIER');
     this.expect('IN');
     let iterable_tk = this.next();
-    let iterable = this.parseStatement(iterable_tk);
+    let iterable = this.parseStatement(iterable_tk, ["DO"]);
+    console.log("it " + JSON.stringify(iterable));
     this.expect('DO');
     let block = this.parseBlock(this.current());
 

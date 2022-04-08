@@ -233,10 +233,8 @@ class CallLiteral {
     let scanner = new Scanner();
     // iterate over given args and introduce them as variables in the function scope
     for (let arg of args_given) {
-      console.log("Arg " + JSON.stringify(arg));
       argPos += 1;
       let name = args_requested[argPos].name;
-      console.log("name " + name);
       let value = arg.run(v,i);
       i.variables[name] = i.toLiteral(value);
     }
@@ -299,8 +297,6 @@ class BinaryOperatorLiteral {
     let lhs = this.lhs.run(v,i);
     let rhs = this.rhs.run(v,i);
     let op = this.op;
-    console.log("LHS " + lhs);
-    console.log("RHS " + rhs);
     if (lhs.constructor.name != rhs.constructor.name) {
       throw new Error(`At line ${this.lhs.line}:\nCannot perform ${this.opToS()} on a ${lhs.constructor.name} and ${rhs.constructor.name}`);
     }
@@ -360,14 +356,11 @@ class IfLiteral {
   }
 
   runStatements (v,i) {
-    console.log("entered runstatemenets");
     let c = -1;
     i.variables = v; // pass global variables
     for (let stat of this.statements) {
-      console.log("STAT " + JSON.stringify(stat));
       c += 1;
       let o = i.interpretNode(stat);
-      console.log("VARIABLES " + JSON.stringify(i.variables));
       if (c == this.statements.length-1) {
         return o;
       }
@@ -375,7 +368,7 @@ class IfLiteral {
   }
 
   runCondition (v,i) {
-    i.variables = v; // pass global variables to the ifNode interpreter
+    i.variables = v; // pass global variables to the ifLiteral interpreter
     let conditionResult = i.interpretNode(this.condition);
     conditionResult = i.resolveRun(conditionResult);
 
@@ -383,7 +376,6 @@ class IfLiteral {
       conditionResult = conditionResult.to_b();
     }
 
-    console.log("CR " + conditionResult);
     return conditionResult;
   }
 
@@ -410,9 +402,10 @@ class ElifLiteral {
 
   runStatements (v,i) {
     let c = -1;
+    i.variables = v; // pass global variables
     for (let stat of this.statements) {
       c += 1;
-      let o = stat.run(v,i);
+      let o = i.interpretNode(stat);
       if (c == this.statements.length-1) {
         return o;
       }
@@ -420,19 +413,15 @@ class ElifLiteral {
   }
 
   runCondition (v,i) {
-    i.variables = v; // pass global variables to the ifNode interpreter
+    i.variables = v; // pass global variables to the ifLiteral interpreter
     let conditionResult = i.interpretNode(this.condition);
     conditionResult = i.resolveRun(conditionResult);
 
     if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
-      conditionResult = String(conditionResult.to_b());
+      conditionResult = conditionResult.to_b();
     }
 
-    if (["TrueLiteral", "FalseLiteral", "NilLiteral"].includes(conditionResult.constructor.name)) {
-      conditionResult = conditionResult.run();
-    }
-
-    return conditionResult
+    return conditionResult;
   }
 
   run (v,i) {
@@ -444,6 +433,7 @@ class ElifLiteral {
       return false;
     }
   }
+
 }
 
 class ElseLiteral {
@@ -485,16 +475,11 @@ class ChainLiteral {
       throw new Error("IfChain's first member should be an IfExpression, not " + JSON.stringify(this.chain[0]));
     }
     let conditions = [];
-    console.log("ENTERED CHAINLITERAL");
     for (let member of this.chain) {
       pos += 1;
-      console.log("p " + pos);
       let type = member.constructor.name;
       if (type == "IfLiteral" || type == "ElifLiteral") {
-        console.log(" IN INSIDE ");
         let condition = member.runCondition(v,i);
-        console.log("COND " + condition);
-        console.log("MEM " + member.constructor.name);
         if (condition == true) {
           let o = member.run(v,i);
           console.log("O " + o);

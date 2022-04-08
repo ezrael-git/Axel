@@ -19,13 +19,11 @@ class VarAssignNode {
     /* 
     Takes in an Object containing the variables for the program and returns an edited version of it containing the information of the variable.
     */
-    console.log("ENTERED VAN");
     if (mode == 0) {
       variables[this.name] = this.value;
     } else {
       variables = this.value;
     }
-    console.log("v " + JSON.stringify(variables));
     return variables;
   }
 }

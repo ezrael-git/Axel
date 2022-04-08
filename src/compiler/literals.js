@@ -360,8 +360,10 @@ class IfLiteral {
   }
 
   runStatements (v,i) {
+    console.log("entered runstatemenets");
     let c = -1;
     for (let stat of this.statements) {
+      console.log("STAT " + JSON.stringify(stat));
       c += 1;
       let o = stat.run(v,i);
       if (c == this.statements.length-1) {

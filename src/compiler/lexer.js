@@ -30,6 +30,8 @@ let TT_NIL = "nil"
 let TT_IF = "if"
 let TT_ELIF = "elif"
 let TT_ELSE = "else"
+let TT_FOR = "for"
+let TT_IN = "in"
 
 
 
@@ -261,6 +263,14 @@ class Lexer {
       // else keyword
       else if (it.endsWith(TT_ELSE) && !this.letters.includes(source[pos-4]) && !this.letters.includes(this.peek(pos))) {
         add("ELSE", pos-2, pos, TT_ELSE);
+      }
+      // for keyword
+      else if (it.endsWith(TT_FOR) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
+        add("FOR", pos-2, pos, TT_FOR);
+      }
+      // in keyword
+      else if (it.endsWith(TT_IN) && !this.letters.includes(source[pos-2]) && !this.letters.includes(this.peek(pos))) {
+        add("IN", pos-1, pos, TT_IN);
       }
       // return keyword
       else if (it.endsWith(TT_RETURN) && !this.letters.includes(source[pos-6]) && !this.letters.includes(this.peek(pos))) {

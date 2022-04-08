@@ -255,6 +255,18 @@ class CallLiteral {
   }
 }
 
+class ArgLiteral {
+  constructor (name,line) {
+    this.type = "ArgExpression";
+    this.name = name;
+    this.line = line;
+  }
+
+  run () {
+    return this.name;
+  }
+}
+
 class VariableLiteral {
   constructor (value,mutable,line) {
     this.type = "VariableExpression"
@@ -344,7 +356,7 @@ class BinaryOperatorLiteral {
   }
 }
 
-// ifs
+// loops
 
 class IfLiteral {
   constructor (condition,statements,line) {
@@ -503,15 +515,36 @@ class ChainLiteral {
   }
 }
 
-class ArgLiteral {
-  constructor (name,line) {
-    this.type = "ArgExpression";
-    this.name = name;
+class ForLiteral {
+  /*
+  Nothing special, just for loops.
+  Syntax:
+    for (placeholder) in (iterable) do
+      (statements)
+    end
+  */
+  constructor (placeholder, iterable, statements, line) {
+    this.type = "ForExpression";
+    this.placeholder = placeholder;
+    this.value = placeholder;
+    this.iterable = iterable;
+    this.statements = statements;
     this.line = line;
   }
 
-  run () {
-    return this.name;
+  run (v,i) {
+    i.variables = v;
+    let iterable = this.iterable.run(v,i);
+    
+    let o;
+    for (let itera of iterable) {
+      i.variables[this.placeholder] = itera;
+      for (let stat of this.statements) {
+        o = i.interpretNode(stat);
+      }
+    }
+    
+    return o;
   }
 }
 
@@ -535,5 +568,6 @@ module.exports = {
   ChainLiteral:ChainLiteral,
   ArrayLiteral:ArrayLiteral,
   PrintLiteral:PrintLiteral,
-  ArgLiteral:ArgLiteral
+  ArgLiteral:ArgLiteral,
+  ForLiteral:ForLiteral
 }

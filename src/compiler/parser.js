@@ -115,7 +115,7 @@ module.exports = class Parser {
       where = this.token_iterated;
     }
     let token = this.guard(kind);
-    if (!token) { throw new Error(`Error in ${where}: expected ${kind}, got ${this.peek().kind}`) };
+    if (!token) { throw new Error(`Error in ${where}: expected ${kind}, got ${this.peek().type}`) };
     return token;
   }
 
@@ -377,9 +377,8 @@ module.exports = class Parser {
     let placeholder = this.expect('IDENTIFIER');
     this.expect('IN');
     let iterable_tk = this.next();
-    let iterable = this.parseStatement(iterable_tk, ["DO"]);
-    console.log("it " + JSON.stringify(iterable));
-    console.log(JSON.stringify(this.current()));
+    let iterable = this.parseStatement(iterable_tk);
+    this.next(); // skip rparen
     this.expect('DO');
     let block = this.parseBlock(this.current());
 

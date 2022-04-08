@@ -558,10 +558,18 @@ class WhileLiteral {
 
   run (v,i) {
     let cycle = 0;
+    let o;
     while (true) {
       i.variables = v;
-      let cond = i.interpretNode(this.expression);
-      if (
+      let cond = this.expression.run(v,i);
+      if (cond == true) {
+        for (let stat of this.statements) {
+          o = i.interpretNode(stat);
+        }
+        cycle += 1;
+      } else {
+        return o;
+      }
     }
   }
 }
@@ -587,5 +595,6 @@ module.exports = {
   ArrayLiteral:ArrayLiteral,
   PrintLiteral:PrintLiteral,
   ArgLiteral:ArgLiteral,
-  ForLiteral:ForLiteral
+  ForLiteral:ForLiteral,
+  WhileLiteral:WhileLiteral
 }

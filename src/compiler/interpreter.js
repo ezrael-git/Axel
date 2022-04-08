@@ -134,6 +134,7 @@ module.exports = class Interpreter {
     // variable accesses
     else if (type == "VariableLiteral") {
       let name = node.name;
+      console.log("name " + name);
       if (this.variables[name] != undefined) {
         return this.variables[name];
       } else {

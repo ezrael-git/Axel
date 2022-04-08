@@ -366,6 +366,7 @@ class IfLiteral {
       console.log("STAT " + JSON.stringify(stat));
       c += 1;
       let o = stat.run(v,i);
+      console.log("VARIABLES " + JSON.stringify(i.variables));
       if (c == this.statements.length-1) {
         return o;
       }

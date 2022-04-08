@@ -446,9 +446,10 @@ class ElseLiteral {
 
   runStatements (v,i) {
     let c = -1;
+    i.variables = v;
     for (let stat of this.statements) {
       c += 1;
-      let o = stat.run(v,i);
+      let o = i.interpretNode(stat);
       if (c == this.statements.length-1) {
         return o;
       }

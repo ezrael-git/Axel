@@ -170,6 +170,11 @@ module.exports = class Interpreter {
       let value = node.run();
       return value;
     }
+    // for loops
+    else if (type == "ForLiteral") {
+      let value = node.run(this.variables, new Interpreter());
+      return value;
+    }
     // other literals
     else if (node.constructor.name.includes("Literal")) {
       return node.run();

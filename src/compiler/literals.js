@@ -261,6 +261,7 @@ class VariableLiteral {
   constructor (value,mutable,line) {
     this.type = "VariableExpression"
     this.value = value;
+    this.name = value;
     this.mutable = mutable;
     this.line = line;
   }

@@ -362,10 +362,11 @@ class IfLiteral {
   runStatements (v,i) {
     console.log("entered runstatemenets");
     let c = -1;
+    i.variables = v; // pass global variables
     for (let stat of this.statements) {
       console.log("STAT " + JSON.stringify(stat));
       c += 1;
-      let o = stat.run(v,i);
+      let o = i.interpretNode(stat);
       console.log("VARIABLES " + JSON.stringify(i.variables));
       if (c == this.statements.length-1) {
         return o;

@@ -330,6 +330,16 @@ module.exports = class Parser {
     return node;
   }
 
+  parseReturn (token) {
+    if (token.type != "RETURN") {
+      throw new Error(`Error in parseReturn(): expected token.type "RETURN", got ${token.type} instead`);
+    }
+
+    let expression = this.parseStatement(this.next());
+    let node = new Literal.ReturnLiteral(expression,token.line);
+    return node;
+  }
+
   parseVarAccess (token) {
     let mutable = true;
     if (this.scanner.uppercase.includes(token.tk[0])) {
@@ -408,6 +418,7 @@ module.exports = class Parser {
   }
 
 
+
   parseStatement (token, invalid=[]) {
     /*
       Parse a single token.
@@ -472,6 +483,12 @@ module.exports = class Parser {
     // function calls
     else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
       let res = this.parseFuncCall(token);
+      return res;
+    }
+
+    // return expressions
+    else if (type == "RETURN") {
+      let res = this.parseReturn(token);
       return res;
     }
 

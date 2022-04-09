@@ -598,7 +598,7 @@ class ReturnLiteral {
 
   run (v,i) {
     i.variables = v;
-    let expr = i.resolveRun(expr);
+    let expr = i.resolveRun(this.expression);
     
     return expr;
   }

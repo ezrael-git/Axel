@@ -317,7 +317,13 @@ module.exports = class Parser {
     let arg_token;
     while ((arg_token = this.unlessGuard("RPAREN"))) {
       let node_tree_lite = this.parseStatement(arg_token);
-      args = args.concat(node_tree_lite);
+      // some backstory for the next few lines:
+      // when parseStatement sees a comma, it returns "SKIP" as it cannot parse it
+      // due to this reason, the check below is added. essentially, commas are skipped
+      // this allows for cleaner interpretation
+      if (node_tree_lite != "SKIP") {
+        args = args.concat(node_tree_lite);
+      }
     }
     this.expect('RPAREN');
     let node = new Literal.CallLiteral(identifier_token.tk, args, token.line);

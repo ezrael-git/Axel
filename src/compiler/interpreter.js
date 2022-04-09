@@ -175,6 +175,11 @@ module.exports = class Interpreter {
       let value = node.run(this.variables, new Interpreter());
       return value;
     }
+    // while loops
+    else if (type == "WhileLiteral") {
+      let value = node.run(this.variables, new Interpreter());
+      return value;
+    }
     // other literals
     else if (node.constructor.name.includes("Literal")) {
       return node.run();

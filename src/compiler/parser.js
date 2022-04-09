@@ -384,7 +384,7 @@ module.exports = class Parser {
     this.expect('IN');
     let iterable_tk = this.next();
     let iterable = this.parseStatement(iterable_tk);
-    if (this.peek().type == "RPAREN") {
+    if (this.peek().type == "RBRACKET") {
       this.next();
     }
     this.expect('DO');

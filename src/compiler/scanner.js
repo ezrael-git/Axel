@@ -485,7 +485,7 @@ module.exports = class Scanner {
     for (let char of it_str) {
       curPos -=1;
       it += char;
-      if (!this.letters.includes(char)) {
+      if (!this.letters.includes(char) && char == "?") {
         it = it.split('')
         it[it.length-1] = ''
         it = it.join('')

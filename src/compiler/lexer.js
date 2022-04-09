@@ -41,7 +41,7 @@ class Lexer {
     this.source = "";
     this.lexed = undefined;
     this.line = 0;
-    this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ?".split('');
+    this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     this.lowercase = [];
     for (let lett of this.letters) {
       this.lowercase.push(lett.toLowerCase());

@@ -384,11 +384,11 @@ class IfLiteral {
   runCondition (v,i) {
     i.variables = v; // pass global variables to the ifLiteral interpreter
     let conditionResult = i.interpretNode(this.condition);
-    conditionResult = i.resolveRun(conditionResult);
 
     if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = conditionResult.to_b();
     }
+    conditionResult = i.resolveRun(conditionResult);
 
     return conditionResult;
   }
@@ -558,12 +558,24 @@ class WhileLiteral {
     this.statements = statements;
   }
 
+  runCondition (v,i) {
+    let expression = this.expression;
+    i.variables = v;
+
+    if (["TextLiteral", "IntegerLiteral"].includes(expression.constructor.name)) {
+      expression = expression.to_b();
+    }
+    expression = i.resolveRun(expression);
+
+    return expression;
+  }
+
   run (v,i) {
     let cycle = 0;
     let o;
     while (true) {
       i.variables = v;
-      let cond = this.expression.run(v,i);
+      let cond = this.runCondition(v,i);
       if (cond == true) {
         for (let stat of this.statements) {
           o = i.interpretNode(stat);

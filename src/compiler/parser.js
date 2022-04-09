@@ -181,7 +181,7 @@ module.exports = class Parser {
       throw new Error("Unknown value given to parseVarDecl: " + type);
     }
     let mutable = true;
-    if (this.scanner.uppercase.includes(mutable[0])) {
+    if (this.scanner.uppercase.includes(token.tk[0])) {
       mutable = false;
     }
 

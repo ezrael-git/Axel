@@ -378,11 +378,25 @@ module.exports = class Parser {
     this.expect('IN');
     let iterable_tk = this.next();
     let iterable = this.parseStatement(iterable_tk);
-    this.next(); // skip rparen
+    if (this.peek().type == "RPAREN") {
+      this.next();
+    }
     this.expect('DO');
     let block = this.parseBlock(this.current());
 
     let node = new Literal.ForLiteral(placeholder.tk, iterable, block, token.line);
+    return node;
+  }
+
+  parseWhile (token) {
+    if (token.type != "WHILE") {
+      throw new Error(`Error in parseWhile(): expected token.type "WHILE", got ${token.type} instead`);
+    }
+
+    let expression = this.parseStatement(this.next(), ["DO"]);
+    let block = this.parseBlock(this.current());
+    
+    let node = new Literal.WhileLiteral(expression, block);
     return node;
   }
 

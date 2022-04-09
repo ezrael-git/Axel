@@ -588,6 +588,22 @@ class WhileLiteral {
   }
 }
 
+class ReturnLiteral {
+  constructor (expression, line) {
+    this.type = "ReturnExpression";
+    this.expression = expression;
+    this.value = expression;
+    this.line = line;
+  }
+
+  run (v,i) {
+    i.variables = v;
+    let expr = i.resolveRun(expr);
+    
+    return expr;
+  }
+}
+
 
 
 
@@ -610,5 +626,6 @@ module.exports = {
   PrintLiteral:PrintLiteral,
   ArgLiteral:ArgLiteral,
   ForLiteral:ForLiteral,
-  WhileLiteral:WhileLiteral
+  WhileLiteral:WhileLiteral,
+  ReturnLiteral:ReturnLiteral
 }

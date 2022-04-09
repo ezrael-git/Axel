@@ -492,6 +492,12 @@ module.exports = class Parser {
       return res;
     }
 
+    // while loops
+    else if (type == "WHILE") {
+      let res = this.parseWhile(token);
+      return res;
+    }
+
     // blocks
     else if (type == "DO") {
       let res = this.parseBlock(token);

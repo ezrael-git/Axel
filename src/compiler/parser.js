@@ -208,7 +208,7 @@ module.exports = class Parser {
     while ((arg_token = this.guard('IDENTIFIER'))) {
       let arg_node = new Literal.ArgLiteral(arg_token.tk,arg_token.line);
       args.push(arg_node);
-      if (!this.guard("COMMA")) { break };
+      //if (!this.guard("COMMA")) { break };
     }
     this.expect('RPAREN');
     let do_tk = this.expect('DO');

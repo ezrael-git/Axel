@@ -377,6 +377,8 @@ class IfLiteral {
       let o = i.interpretNode(stat);
       if (c == this.statements.length-1) {
         return o;
+      } else if (o.type == "RETURN") {
+        return o.output;
       }
     }
   }
@@ -422,6 +424,8 @@ class ElifLiteral {
       let o = i.interpretNode(stat);
       if (c == this.statements.length-1) {
         return o;
+      } else if (o.type == "RETURN") {
+        return o.output;
       }
     }
   }
@@ -429,11 +433,11 @@ class ElifLiteral {
   runCondition (v,i) {
     i.variables = v; // pass global variables to the ifLiteral interpreter
     let conditionResult = i.interpretNode(this.condition);
-    conditionResult = i.resolveRun(conditionResult);
 
     if (["TextLiteral", "IntegerLiteral"].includes(conditionResult.constructor.name)) {
       conditionResult = conditionResult.to_b();
     }
+    conditionResult = i.resolveRun(conditionResult);
 
     return conditionResult;
   }
@@ -543,6 +547,9 @@ class ForLiteral {
       i.variables[this.placeholder] = itera;
       for (let stat of this.statements) {
         o = i.interpretNode(stat);
+        if (o.type == "RETURN") {
+          return o.output;
+        }
       }
     }
     
@@ -579,6 +586,9 @@ class WhileLiteral {
       if (cond == true) {
         for (let stat of this.statements) {
           o = i.interpretNode(stat);
+          if (o.type == "RETURN") {
+            return o.output;
+          }
         }
         cycle += 1;
       } else {

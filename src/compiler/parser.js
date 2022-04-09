@@ -400,6 +400,7 @@ module.exports = class Parser {
     }
 
     let expression = this.parseStatement(this.next(), ["DO"]);
+    this.next();
     let block = this.parseBlock(this.current());
     
     let node = new Literal.WhileLiteral(expression, block);

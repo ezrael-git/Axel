@@ -281,7 +281,7 @@ class Lexer {
         // identifiers
         if (lastToken() != undefined) {
           if (lastToken().type == "FUNCTION" || lastToken().type == "DEFINE" || lastToken().type == "IMMUTABLE") {
-            let identifier = sc.getUntil(source,pos," ")
+            let identifier = sc.getUntil(source,pos,"(")
             add("IDENTIFIER", pos, identifier.curPos, identifier.string);
             pos = identifier.curPos;
             continue;

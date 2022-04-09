@@ -32,6 +32,7 @@ let TT_ELIF = "elif"
 let TT_ELSE = "else"
 let TT_FOR = "for"
 let TT_IN = "in"
+let TT_WHILE = "while"
 
 
 
@@ -267,6 +268,10 @@ class Lexer {
       // for keyword
       else if (it.endsWith(TT_FOR) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
         add("FOR", pos-2, pos, TT_FOR);
+      }
+      // while keyword
+      else if (it.endsWith(TT_WHILE) && !this.letters.includes(source[pos-5]) && !this.letters.includes(this.peek(pos))) {
+        add("WHILE", pos-4, pos, TT_WHILE);
       }
       // in keyword
       else if (it.endsWith(TT_IN) && !this.letters.includes(source[pos-2]) && !this.letters.includes(this.peek(pos))) {

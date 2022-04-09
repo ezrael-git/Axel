@@ -238,6 +238,7 @@ class CallLiteral {
       let value = arg.run(v,i);
       i.variables[name] = i.toLiteral(value);
     }
+    i.variables = v; // pass global variables
     let output = i.walk(statements);
     return output;
   }

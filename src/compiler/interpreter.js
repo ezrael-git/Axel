@@ -124,6 +124,9 @@ module.exports = class Interpreter {
 
       value = this.toLiteral(value);
       let mutable = node.mutable;
+      console.log("VALUE " + JSON.stringify(value));
+      console.log("mutable " + mutable);
+      console.log("check " + this.variables[name] == undefined);
       if (this.variables[name] == undefined || mutable == true) {
         this.variables[name] = value;
         return value;

@@ -534,7 +534,7 @@ class ForLiteral {
 
   run (v,i) {
     i.variables = v;
-    let iterable = this.iterable.run(v,i);
+    let iterable = i.resolveRun(this.iterable);
     
     let o;
     for (let itera of iterable) {

@@ -231,6 +231,7 @@ class CallLiteral {
 
     let argPos = -1;
     let scanner = new Scanner();
+    i.variables = v; // pass global variables
     // iterate over given args and introduce them as variables in the function scope
     for (let arg of args_given) {
       argPos += 1;
@@ -238,7 +239,6 @@ class CallLiteral {
       let value = arg.run(v,i);
       i.variables[name] = i.toLiteral(value);
     }
-    i.variables = v; // pass global variables
     let output = i.walk(statements);
     return output;
   }

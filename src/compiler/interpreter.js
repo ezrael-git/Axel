@@ -117,6 +117,11 @@ module.exports = class Interpreter {
       let o = node.run(this.variables,new Interpreter());
       return this.toLiteral(o);
     }
+    // return exprs
+    else if (type == "ReturnLiteral") {
+      let o = node.run(this.variables, new Interpreter());
+      return {type:"RETURN",output:this.toLiteral(o)};
+    }
     // variable assignment
     else if (type == "VarAssignNode") {
       let name = node.name;
@@ -160,11 +165,6 @@ module.exports = class Interpreter {
       let o = node.run(this.variables,new Interpreter());
       return this.toLiteral(o);
     }
-    // return expressions
-    else if (type == "ReturnLiteral") {
-      let value = node.run(this.variables,new Interpreter());
-      return value;
-    }
     // arrays
     else if (type == "ArrayLiteral") {
       let value = node.run();
@@ -204,6 +204,9 @@ module.exports = class Interpreter {
       let node = this.next();
       console.log("ND " + JSON.stringify(node));
       let o = this.interpretNode(node);
+      if (o.type == "RETURN") {
+        return o.output;
+      }
       outputs.push(o);
     }
     // return last expression's result

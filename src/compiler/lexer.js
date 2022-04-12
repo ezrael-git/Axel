@@ -16,6 +16,7 @@ let TT_COMMA = ","
 let TT_AND = "&&"
 let TT_OR = "||"
 let TT_ARROW = "=>"
+let TT_COLON = ":"
 
 let TT_FN = "fn"
 let TT_RETURN = "return"
@@ -210,6 +211,14 @@ class Lexer {
       else if (it.endsWith(TT_COMMA)) {
         add("COMMA", pos, pos, TT_COMMA);
       }
+      // colon operator
+      else if (it.endsWith(TT_COLON)) {
+        add("COLON", pos, pos, TT_COLON);
+      }
+      // arrow operator
+      else if (it.endsWith(TT_ARROW)) {
+        add("ARROW", pos, pos, TT_ARROW);
+      }
       // integers
       else if (this.digits.includes(it[it.length - 1])) {
         // get full integer
@@ -220,14 +229,6 @@ class Lexer {
       // fn keyword
       else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {
         add("FUNCTION", pos-1, pos, TT_FN);
-      }
-      // def keyword
-      else if (it.endsWith(TT_DEF) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ") {
-        add("DEFINE", pos-2, pos, TT_DEF);
-      }
-      // imm keyword
-      else if (it.endsWith(TT_IMM) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ") {
-        add("IMMUTABLE", pos-2, pos, TT_DEF);
       }
       // do keyword
       else if (it.endsWith(TT_DO) && !this.letters.includes(source[pos-2]) && !this.letters.includes(this.peek(pos))) {
@@ -285,8 +286,8 @@ class Lexer {
       else {
         // identifiers
         if (lastToken() != undefined) {
-          if (lastToken().type == "FUNCTION" || lastToken().type == "DEFINE" || lastToken().type == "IMMUTABLE") {
-            let identifier = sc.getUntil(source,pos,"(")
+          if (lastToken().type == "FUNCTION") {
+            let identifier = sc.getUntil(source,pos,"("," ")
             add("IDENTIFIER", pos, identifier.curPos-1, identifier.string);
             pos = identifier.curPos-1;
             continue;

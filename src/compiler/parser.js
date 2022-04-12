@@ -96,11 +96,15 @@ module.exports = class Parser {
     return this.peek() != undefined ? this.next() : null;
   }
 
-  guard (kind) {
+  guard (kind,multiple=undefined) {
     /*
     Returns the next token if the next token matches the guard, else null.
     */
-    return this.peek(true).type === kind ? this.next() : null;
+    if (multiple == undefined) {
+      return this.peek(true).type === kind ? this.next() : null;
+    } else {
+      return multiple.includes(this.peek(true).type) ? this.next() : null;
+    }
   }
 
   unlessGuard (kind,sec="hell") {
@@ -334,7 +338,7 @@ module.exports = class Parser {
     }
     let args = [];
     let arg_token;
-    while ((arg_token = this.guardLine())) {
+    while ((arg_token = this.guard(0,["STRING","INTEGER","IDENTIFIER"]))) {
       let node_tree_lite = this.parseStatement(arg_token);
       // some backstory for the next few lines:
       // when parseStatement sees a comma, it returns "SKIP" as it cannot parse it

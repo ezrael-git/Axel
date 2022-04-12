@@ -493,7 +493,7 @@ module.exports = class Parser {
     }
 
     // function calls
-    else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
+    else if (type == "IDENTIFIER" && ["LPAREN","IDENTIFIER"].includes(this.peek(true).type)) {
       let res = this.parseFuncCall(token);
       return res;
     }

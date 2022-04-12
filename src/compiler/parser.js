@@ -100,7 +100,7 @@ module.exports = class Parser {
     /*
     Returns the next token if the next token matches the guard, else null.
     */
-    return this.peek().type === kind ? this.next() : null;
+    return this.peek(true).type === kind ? this.next() : null;
   }
 
   unlessGuard (kind,sec="hell") {
@@ -108,7 +108,7 @@ module.exports = class Parser {
     Opposite of this.guard.
     Returns the next token if the next token does NOT match the kind, else returns null.
     */
-    return this.peek().type !== kind && this.peek().type !== sec ? this.next() : null;
+    return this.peek(true).type !== kind && this.peek(true).type !== sec ? this.next() : null;
   }
 
   expect (kind, where=undefined) {

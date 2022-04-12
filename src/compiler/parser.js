@@ -111,6 +111,10 @@ module.exports = class Parser {
     return this.peek(true).type !== kind && this.peek(true).type !== sec ? this.next() : null;
   }
 
+  guardLine () {
+    return this.peek(true).line !== this.current().line ? this.next() : null;
+  }
+
   expect (kind, where=undefined) {
     if (where == undefined) {
       where = this.token_iterated;
@@ -330,7 +334,7 @@ module.exports = class Parser {
     }
     let args = [];
     let arg_token;
-    while ((arg_token = this.unlessGuard("RPAREN","DO"))) {
+    while ((arg_token = this.guardLine())) {
       let node_tree_lite = this.parseStatement(arg_token);
       // some backstory for the next few lines:
       // when parseStatement sees a comma, it returns "SKIP" as it cannot parse it

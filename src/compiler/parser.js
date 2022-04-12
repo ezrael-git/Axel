@@ -246,6 +246,7 @@ module.exports = class Parser {
   parseIf (token) {
     const copy_token = token;
     token = this.next();
+    console.log("if token " + token.tk);
     let condition_node = this.parseStatements(["DO"])[0];
     console.log("CURT " + this.current());
     let statements = this.parseBlock(this.current());

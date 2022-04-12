@@ -874,6 +874,34 @@ class ReturnLiteral {
   }
 }
 
+// classes
+
+class InstanceLiteral {
+  constructor (name, methods, line) {
+    this.name = name;
+    this.methods = methods;
+    this.line = line;
+  }
+
+  run (v,i) {
+    // fix
+  }
+}
+
+class ClassLiteral {
+  constructor (name, statements, line) {
+    this.name = name;
+    this.value = name;
+    this.statements = statements;
+    this.line = line;
+  }
+
+  run (v,i) {
+    let methods = [];
+    // fix
+  }
+}
+
 
 
 

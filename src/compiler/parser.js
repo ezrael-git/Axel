@@ -19,6 +19,7 @@ module.exports = class Parser {
     
     this.ast = [];
     this.scanner = new Scanner();
+    this.env = [];
   }
 
   // iterating methods
@@ -463,7 +464,8 @@ module.exports = class Parser {
 
     // function declarations
     else if (["FUNCTION"].includes(type)) {
-      let res = this.parseDecl(token);
+      let res = this.parseFuncDecl(token);
+      this.env.push(res.name); // save function name
       return res;
     }
 
@@ -492,8 +494,17 @@ module.exports = class Parser {
       return res;
     }
 
-    // function calls
+    // function calls in the format:
+    // name variable
+    // name()
     else if (type == "IDENTIFIER" && ["LPAREN","IDENTIFIER"].includes(this.peek(true).type)) {
+      let res = this.parseFuncCall(token);
+      return res;
+    }
+
+    // since the above condition doesn't recognize function calls without parentheses and no arguments
+    // this is a last ditch effort to recognize those
+    else if (type == "IDENTIFIER" && this.env.includes(token.tk)) {
       let res = this.parseFuncCall(token);
       return res;
     }

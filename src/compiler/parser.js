@@ -513,7 +513,7 @@ module.exports = class Parser {
     // variable accesses
     else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
       console.log("parsing " + token.tk + " as var");
-      console.log(JSON.stringify(env));
+      console.log(JSON.stringify(this.env));
       let res = this.parseVarAccess(token);
       return res;
     }

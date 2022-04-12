@@ -35,6 +35,10 @@ class StringLiteral {
     return this.value;
   }
 
+  inspect () {
+    return this.value;
+  }
+
   to_s () {
     return String(this.value);
   }
@@ -56,6 +60,10 @@ class IntegerLiteral {
   }
 
   run () {
+    return this.value;
+  }
+
+  inspect () {
     return this.value;
   }
 
@@ -83,6 +91,31 @@ class ArrayLiteral {
   run () {
     return this.elements;
   }
+
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    let res = "";
+    for (let e of this.elements) {
+      res += e.value+"\n"
+    }
+    return res;
+  }
+
+  to_i () {
+    let res = "";
+    for (let e of this.elements) {
+      res += e.value
+    }
+    res = parseInt(res);
+    return res;
+  }
+
+  to_b () {
+    return !!this.value;
+  }
 }
 
 
@@ -94,6 +127,10 @@ class TrueLiteral {
   }
 
   run () {
+    return this.value;
+  }
+
+  inspect () {
     return this.value;
   }
 
@@ -120,6 +157,10 @@ class FalseLiteral {
     return this.value;
   }
 
+  inspect () {
+    return this.value;
+  }
+
   to_s () {
     return String(this.value);
   }
@@ -141,6 +182,10 @@ class NilLiteral {
   }
 
   run () {
+    return this.value;
+  }
+
+  inspect () {
     return this.value;
   }
 
@@ -172,6 +217,22 @@ class PrintLiteral {
     console.log(value);
     return value;
   }
+
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
 }
 
 // objects
@@ -186,6 +247,10 @@ class FunctionLiteral {
   }
 
   run (v,w) {
+    return this.value;
+  }
+
+  inspect () {
     return this.value;
   }
 
@@ -244,6 +309,10 @@ class CallLiteral {
     return output;
   }
 
+  inspect () {
+    return this.value;
+  }
+
   to_s () {
     return this.value;
   }
@@ -261,11 +330,28 @@ class ArgLiteral {
   constructor (name,line) {
     this.type = "ArgExpression";
     this.name = name;
+    this.value = name;
     this.line = line;
+  }
+
+  inspect () {
+    return this.value;
   }
 
   run () {
     return this.name;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
   }
 }
 
@@ -282,6 +368,10 @@ class VariableLiteral {
     let res = v[this.value];
     res = Scanner.resolveRun(res,i);
     return res;
+  }
+
+  inspect () {
+    return this.value;
   }
 
   to_s () {
@@ -356,6 +446,22 @@ class BinaryOperatorLiteral {
         return "COMPARISON";
     }
   }
+
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
 }
 
 // loops
@@ -405,6 +511,22 @@ class IfLiteral {
     }
   }
 
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
+
 }
 
 class ElifLiteral {
@@ -452,6 +574,22 @@ class ElifLiteral {
     }
   }
 
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
+
 }
 
 class ElseLiteral {
@@ -479,12 +617,29 @@ class ElseLiteral {
     let o = this.runStatements(v,i);
     return o;
   }
+
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
 }
 
 class ChainLiteral {
   constructor (chain,line) {
     this.type = "ChainExpression";
     this.chain = chain;
+    this.value = chain;
     this.line = line;
   }
 
@@ -518,6 +673,22 @@ class ChainLiteral {
       }
     }
     return conditions[conditions.length - 1];
+  }
+
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
   }
 }
 
@@ -554,6 +725,22 @@ class ForLiteral {
     }
     
     return o;
+  }
+
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
   }
 }
 
@@ -596,6 +783,22 @@ class WhileLiteral {
       }
     }
   }
+
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
 }
 
 class ReturnLiteral {
@@ -611,6 +814,22 @@ class ReturnLiteral {
     let expr = i.resolveRun(this.expression);
     
     return expr;
+  }
+
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
   }
 }
 

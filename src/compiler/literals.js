@@ -10,6 +10,10 @@ class BaseLiteral {
     this.line = line;
   }
 
+  inspect () {
+    return this.value;
+  }
+
   to_s () {
     return String(this.value);
   }
@@ -464,6 +468,43 @@ class BinaryOperatorLiteral {
   }
 }
 
+class UnaryOperatorLiteral {
+  constructor (rhs, op, line) {
+    this.type = "UnaryExpression";
+    this.rhs = rhs;
+    this.op = op;
+    this.value = op;
+  }
+
+  run (v,i) {
+    i.variables = v;
+    let rhs = i.resolveRun(this.rhs);
+    let op = this.op;
+    
+    if (op == "!") {
+      return !rhs;
+    } else {
+      throw new Error("Unknown unary operator: " + this.op);
+    }
+  }
+
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    return String(this.value);
+  }
+
+  to_i () {
+    return parseInt(this.value);
+  }
+
+  to_b () {
+    return !!this.value;
+  }
+}
+
 // loops
 
 class IfLiteral {
@@ -847,6 +888,7 @@ module.exports = {
   CallLiteral:CallLiteral,
   VariableLiteral:VariableLiteral,
   BinaryOperatorLiteral:BinaryOperatorLiteral,
+  UnaryOperatorLiteral:UnaryOperatorLiteral,
   IfLiteral:IfLiteral,
   ElifLiteral:ElifLiteral,
   ElseLiteral:ElseLiteral,

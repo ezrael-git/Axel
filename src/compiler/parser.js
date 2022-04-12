@@ -181,6 +181,8 @@ module.exports = class Parser {
     if (type != "IDENTIFIER" || this.peek(true).type != "EQUALITY") {
       throw new Error("Unknown value given to parseVarDecl: " + type);
     }
+    console.log("parsing " + token.tk + " as var");
+    console.log(JSON.stringify(env));
     let mutable = true;
     if (this.scanner.uppercase.includes(token.tk[0])) {
       mutable = false;

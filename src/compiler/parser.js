@@ -181,8 +181,7 @@ module.exports = class Parser {
     if (type != "IDENTIFIER" || this.peek(true).type != "EQUALITY") {
       throw new Error("Unknown value given to parseVarDecl: " + type);
     }
-    console.log("parsing " + token.tk + " as var");
-    console.log(JSON.stringify(env));
+
     let mutable = true;
     if (this.scanner.uppercase.includes(token.tk[0])) {
       mutable = false;
@@ -499,16 +498,7 @@ module.exports = class Parser {
       return res;
     }
 
-    // function calls in the format:
-    // name variable
-    // name()
-    else if (type == "IDENTIFIER" && ["LPAREN","IDENTIFIER"].includes(this.peek(true).type)) {
-      let res = this.parseFuncCall(token);
-      return res;
-    }
-
-    // since the above condition doesn't recognize function calls without parentheses and no arguments
-    // this is a last ditch effort to recognize those
+    // function calls
     else if (type == "IDENTIFIER" && this.env.includes(token.tk)) {
       let res = this.parseFuncCall(token);
       return res;
@@ -522,6 +512,8 @@ module.exports = class Parser {
 
     // variable accesses
     else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
+      console.log("parsing " + token.tk + " as var");
+      console.log(JSON.stringify(env));
       let res = this.parseVarAccess(token);
       return res;
     }

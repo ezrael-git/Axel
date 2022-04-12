@@ -320,7 +320,7 @@ module.exports = class Parser {
   parseFuncCall (token) {
     let identifier_token = token;
     let paren_start = false;
-    if (this.peek().type == "LPAREN") {
+    if (this.peek(true).type == "LPAREN") {
       this.expect('LPAREN');
       paren_start = true;
     }

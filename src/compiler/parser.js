@@ -249,6 +249,7 @@ module.exports = class Parser {
     console.log("if token " + token.tk);
     console.log("env " + JSON.stringify(this.env));
     let condition_node = this.parseStatements(["DO"])[0];
+    console.log("cond " + JSON.stringify(condition_node));
     console.log("CURT " + this.current());
     let statements = this.parseBlock(this.current());
 

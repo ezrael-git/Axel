@@ -102,12 +102,12 @@ module.exports = class Parser {
     return this.peek().type === kind ? this.next() : null;
   }
 
-  unlessGuard (kind) {
+  unlessGuard (kind,sec="hell") {
     /*
     Opposite of this.guard.
     Returns the next token if the next token does NOT match the kind, else returns null.
     */
-    return this.peek().type !== kind ? this.next() : null;
+    return this.peek().type !== kind && this.peek().type !== sec ? this.next() : null;
   }
 
   expect (kind, where=undefined) {
@@ -201,7 +201,11 @@ module.exports = class Parser {
   parseFuncDecl (token) {
     let type = token.type;
     let identifier_token = this.expect('IDENTIFIER');
-    this.expect('LPAREN');
+    let paren_start = false;
+    if (this.peek().type == "LPAREN") {
+      this.expect('LPAREN');
+      paren_start = true;
+    }
 
     let args = [];
     let arg_token;
@@ -210,7 +214,9 @@ module.exports = class Parser {
       args.push(arg_node);
       //if (!this.guard("COMMA")) { break };
     }
-    this.expect('RPAREN');
+    if (paren_start) {
+      this.expect('RPAREN');
+    }
     let do_tk = this.expect('DO');
 
     console.log("THIS.TOKEN ATM " + this.current().type);
@@ -312,10 +318,14 @@ module.exports = class Parser {
 
   parseFuncCall (token) {
     let identifier_token = token;
-    this.expect('LPAREN');
+    let paren_start = false;
+    if (this.peek().type == "LPAREN") {
+      this.expect('LPAREN');
+      paren_start = true;
+    }
     let args = [];
     let arg_token;
-    while ((arg_token = this.unlessGuard("RPAREN"))) {
+    while ((arg_token = this.unlessGuard("RPAREN","DO"))) {
       let node_tree_lite = this.parseStatement(arg_token);
       // some backstory for the next few lines:
       // when parseStatement sees a comma, it returns "SKIP" as it cannot parse it
@@ -325,7 +335,9 @@ module.exports = class Parser {
         args = args.concat(node_tree_lite);
       }
     }
-    this.expect('RPAREN');
+    if (paren_start) {
+      this.expect('RPAREN');
+    }
     let node = new Literal.CallLiteral(identifier_token.tk, args, token.line);
     return node;
   }

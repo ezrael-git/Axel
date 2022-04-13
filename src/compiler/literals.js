@@ -122,6 +122,54 @@ class ArrayLiteral {
   }
 }
 
+class HashLiteral {
+  constructor (keys,values,line) {
+    this.keys = keys;
+    this.values = values;
+    this.value = values;
+    this.line = line;
+  }
+
+  run () {
+    let c = -1;
+    let obj = [];
+    for (let key of this.keys) {
+      c += 1;
+      let val = this.values[c];
+      obj[key] = val;
+    }
+
+    return obj;
+  }
+
+  inspect () {
+    return this.value;
+  }
+
+  to_s () {
+    let res = "";
+    let obj = this.run();
+    for (let k of obj) {
+      let v = obj[k];
+      res += k " => " + v.to_s;
+    }
+    return res;
+  }
+
+  to_i () {
+    let res = "";
+    for (let e of this.values) {
+      res += e.value
+    }
+    res = parseInt(res);
+    return res;
+  }
+
+  to_b () {
+    return !!this.value;
+  }
+}
+
 
 class TrueLiteral {
   constructor (line) {
@@ -980,6 +1028,7 @@ module.exports = {
   ElseLiteral:ElseLiteral,
   ChainLiteral:ChainLiteral,
   ArrayLiteral:ArrayLiteral,
+  HashLiteral:HashLiteral,
   PrintLiteral:PrintLiteral,
   ArgLiteral:ArgLiteral,
   ForLiteral:ForLiteral,

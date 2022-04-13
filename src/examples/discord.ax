@@ -1,0 +1,12 @@
+-- this program will use the discord module provided in the standard library
+-- to create a basic bot
+
+discord = require("standard/discord.ax")
+
+client = discord.Client.new(token: ...)
+
+client.on_ready = fn =>
+  print "#{client.user.name} has connected to Discord!"
+end
+
+client.run()

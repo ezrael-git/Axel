@@ -1,139 +1,37 @@
+
 # Legend
 
 - expr = expression
 - iden = identifier
 - ... = some code
 
-# Index
-- [Legend](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Legend)
-- [Index](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Index)
-- [Syntax](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Syntax)
-  - [blocks](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#blocks)
-  - [data types](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#data-types)
-    - [variables](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#variables)
-    - [lists](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#lists)
-    - [hashes](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#hashes)
-  - [if statements](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#if-statements)
-  - [loops](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#loops)
-  - [functions and classes](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#functions-and-classes)
-- [Standard Builtin Library (stdblib)](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#Standard-Builtin-Library)
-  - [description](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#description)
-  - [common functions](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#common-functions)
-  - [script](https://github.com/ezrael-git/Axel/blob/development/src/data/grammar.md#script)
+# EBNF
 
-
-
-
-
-
-
-
-
-
-# Syntax
-
-### blocks
-Blocks of code need a starter and an ender to work properly. Think of these as curly braces in JS.
-
-The starter is `&` and the ender is `end`, or `#`.
-Most blocks of code don't need a starter (the opposite of `end`), however some do, such as in class methods.
-
-For example, this code doesn't need a starter,
+Note: expressions and statements are the same in Axel, due to everything in Axel being an expression.
+However, there's a difference between expressions/statements and blocks.
+These are expressions:
 ```rb
-fn hello
-  log "hey"
-end
+a == b
+b == a
 ```
-as Axel puts them automatically. However there are some cases where you do need one, like here:
+This, on the other hand, is a block:
 ```rb
-cls Person
-  greet () &
-    log "hey"
-  #
-#
-```
-
-### data types
-#### variables:
-```rb
-def mutable = "hello"
-
-imm immutable = "hey"
-```
-#### lists:
-```
-["something", "something"]
-```
-#### hashes:
-```
-{"name" : "Axel"}
-```
-
-### if statements
-```rb
-if expr
-    ...
-end
-elf expr
-    ...
-end
-els
-    ...
+do 
+  a == b
+  b == a
 end
 ```
 
+Let's get to the language's structure/grammar.
+```ebnf
+program := {<statements>} ;
+statements := {<statement>} ;
+statement := <if-expr> | <declaration> ;
+block := 'do' <statements> 'end'
 
-### loops
-```rb
-while expr
-    ...
-end
+declaration := <func-decl> | <var-decl> ;
+func-decl := 'fn' <identifier> '(' {<identifier> ','} ')' <block> ;
+var-decl := 'def' | 'imm' <identifier> '=' <statement> ;
+if-expr := 'if' <expression> <block> {'elif' <expression> <block>} ['else' <block>] ;
 
-for a in b
-    ...
-end
-
-for a of b
-    ...
-end
 ```
-
-
-### functions and classes
-```rb
-fn iden
-    ...
-end
-
-cls iden
-    ...
-#
-```
-It is convention to use the `#` ender when ending a class.
-
-# Standard Builtin Library
-## description
-The Standard Builtin Library, or stdblib (not to be confused with Standard Library, or stdlib), holds built-in Axel functions and classes.
-The stdblib is defined in the `src/standard/stdblib.js` file. It is injected into every program that you run by the main Axel file, `src/axel.js`. It compiles everytime you run your program.
-
-The stdblib is mostly written in Axel and JavaScript.
-
-## common functions
-
-Some common functions in the stdblib are:
-
-`log`: Logs a message to the console.
-
-`compile`: Compiles Axel or JavaScript code, from a string.
-
-## script
-The `Script` class of the stdblib handles everything related to the current program/script being executed.
-It contains information such as the script name, the functions defined in the script, and etc. 
-
-Along with it comes the constant `script`, which is an automatically made instance of the `Script` class. There's also `scriptReference` (also a constant) which refers to the current script being executed.
-
-One useful method of the class is `kill`, which kills the current program.
-```js
-script.kill()
-```
-Nothing too fancy.

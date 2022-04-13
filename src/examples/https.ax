@@ -1,0 +1,21 @@
+-- this simple program gets the weather of a small city in pakistan, that is, sukkur
+-- using the HTTPS module included in the standard library
+
+HTTPS = require("standard/https.ax")
+
+response = HTTPS.get("weather.com/sukkur/")
+print(response)
+-- => Response { ... }
+
+
+-- to create a session, you can simply create an instance of the https class
+-- this allows you to save cookies, auth, and etc
+https = HTTPS.new()
+-- now, sending a request will automatically log it 
+https.get("weather.com/sukkur/")
+https.record 
+-- => { ... }
+
+
+
+-- documentation on the https module is available in standard/https.docs

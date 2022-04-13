@@ -2,57 +2,51 @@
 // generate AST
 
 const Node = require("./nodes.js");
+const Literal = require("./literals.js");
 const Scanner = require("./scanner.js");
+const ErrorHandler = require("./error_handler.js");
 
+
+
+class Expression {
+  constructor (value) {
+    this.value = value;
+  }
+
+  run () {
+    return this.value
+  }
+}
 
 
 
 module.exports = class Parser {
   constructor () {
-    this.variables = {};
     this.token_iterated = -1;
     this.tokens = [];
-    this.line = 0;
+    this.token = {}; // current token
+    this.bin_ops = ["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE","COMPAREOPP"];
+    this.booleans = ["TRUE", "FALSE", "NIL"];
     
-    this.lineTokens = {};
-    this.ast = {};
+    this.ast = [];
+    this.scanner = new Scanner();
   }
 
-  next () {
+  // iterating methods
+
+  next (safety=false) {
     /*
     Next token
     */
     this.token_iterated += 1;
     let n = this.tokens[this.token_iterated];
+    if (n == undefined && safety == true) {
+      return {0:0}
+    }
+    this.token = n;
     return n;
   }
 
-  allAfter () {
-    this.token_iterated += 1;
-    let n = this.tokens.slice(this.token_iterated,this.tokens.length);
-    this.token_iterated = this.tokens.length;
-    return n;
-  }
-
-  allAfterSort (types) {
-    let sorted = [];
-    for (let token of this.tokens.slice(this.token_iterated,this.tokens.length)) {
-      if (types.includes(token.type)) {
-        sorted.push(token);
-      }
-    }
-    return sorted;
-  }
-
-  allBeforeSort (types) {
-    let sorted = [];
-    for (let token of this.tokens.slice(0,this.token_iterated)) {
-      if (types.includes(token.type)) {
-        sorted.push(token);
-      }
-    }
-    return sorted;
-  }
 
   previous () {
     /*
@@ -60,6 +54,7 @@ module.exports = class Parser {
     */
     this.token_iterated -= 1;
     let n = this.tokens[this.token_iterated];
+    this.token = n;
     return n;
   }
 
@@ -70,7 +65,7 @@ module.exports = class Parser {
     return this.tokens[this.token_iterated];
   }
 
-  peek (safety=false) { // fix
+  peek (safety=false) {
     /*
     Get next token without incrementing token_iterated
     */
@@ -86,222 +81,422 @@ module.exports = class Parser {
     }
   }
 
-  lookBack (tokens=1) { // fix
+  lookBack (tokens=1) {
     /*
     Get previous token without de-incrementing token_iterated
     */
-    return this.tokens[this.token_iterated - 1];
+    return this.tokens[this.token_iterated - tokens];
   }
   
-  nextLine () {
-    /*
-    Get next line in lineTokens
-    */
-    this.line += 1;
-    return this.lineTokens[this.line]
-  }
-  
-  previousLine () {
-    /*
-    Get previous line in lineTokens
-    */
-    this.line -= 1;
-    return this.lineTokens[this.line]
-  }
-
-  peekLine (l=1) {
-    /*
-    Peek forward in lineTokens without changing this.line
-    */
-    return this.lineTokens[this.line + l];
-  }
-
-  lookBackLine (l=1) {
-    /*
-    Peek backwards in lineTokens without changing this.line
-    */
-    return this.lineTokens[this.line - l];
-  }
-  
-  currentLine () {
-    /*
-    Get current line in lineTokens
-    */
-    return this.lineTokens[this.line]
-  }
 
 
-  recursiveParse (tokens) {
+  operatorCheck () {
     /*
-    Parse tokens from a new instance of the Parser
+    Check if the next operator is a bin op
     */
-    let parser = new Parser();
-    let node_tree = parser.parse({1:tokens});
-    return node_tree;
+    if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE", "COMPAREOPP", "EQUALITY"].includes(this.peek(true).type)) {
+      return true; // good to go!
+    }
+    else {
+      return false;
+    }
+  }
+
+  protect () {
+    return this.peek() != undefined ? this.next() : null;
+  }
+
+  guard (kind) {
+    /*
+    Returns the next token if the next token matches the guard, else null.
+    */
+    return this.peek().type === kind ? this.next() : null;
+  }
+
+  unlessGuard (kind) {
+    /*
+    Opposite of this.guard.
+    Returns the next token if the next token does NOT match the kind, else returns null.
+    */
+    return this.peek().type !== kind ? this.next() : null;
+  }
+
+  expect (kind, where=undefined) {
+    if (where == undefined) {
+      where = this.token_iterated;
+    }
+    let token = this.guard(kind);
+    if (!token) { throw new Error(`Error in ${where}: expected ${kind}, got ${this.peek().kind}`) };
+    return token;
+  }
+
+  skip () {
+    this.token_iterated += 1;
+  }
+
+  // parse methods
+
+
+  parseSuccess (node) {
+    this.ast = this.ast.concat(node);
+    return true;
+  }
+
+  parseFailure (tokens,reason) {
+    throw new Error(`Failed to parse ${tokens.length} token(s): ${JSON.stringify(tokens)}\nReason given: ${reason}`);
+  }
+
+  parseBinOp (token) {
+    let type = token.type;
+    let node;
+    if (type == "PLUS") {
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.next());
+      node = new Node.BinaryOperatorNode(lhs,rhs,"+");
+    }
+    // subtraction operator
+    else if (type == "MINUS") {
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.next());
+      node = new Node.BinaryOperatorNode(lhs,rhs,"-");
+    }
+    // multiplication operator
+    else if (type == "MULTIPLY") {
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.next());
+      node = new Node.BinaryOperatorNode(lhs,rhs,"*");
+    }
+    // division operator
+    else if (type == "DIVIDE") {
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.next());
+      node = new Node.BinaryOperatorNode(lhs,rhs,"/");
+    }
+    // comparison operator
+    else if (type == "COMPARE") {
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.next());
+      node = new Node.BinaryOperatorNode(lhs,rhs,"==");
+    }
+    else if (type == "COMPAREOPP") {
+      let lhs = this.parseStatement(this.lookBack());
+      let rhs = this.parseStatement(this.next());
+      node = new Node.BinaryOperatorNode(lhs,rhs,"!=");
+    }
+    return node;
+  }
+
+  parseVarDecl (token) {
+    let type = token.type;
+    if (type != "IDENTIFIER" || this.peek(true).type != "EQUALITY") {
+      throw new Error("Unknown value given to parseVarDecl: " + type);
+    }
+    let mutable = true;
+    if (this.scanner.uppercase.includes(mutable[0])) {
+      mutable = false;
+    }
+
+    let name_token = token;
+    // enforce variable name policy
+    // no numbers allowed and name mustn't be of an existing keyword
+    // the former is to preserve readability, the latter is to prevent avoidable errors
+    this.scanner.enforceVarPol(name_token);
+    this.expect("EQUALITY");
+    let value_token = this.next();
+
+    let value_node = this.parseStatement(value_token);
+    let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_token.end);
+    return node;
+  }
+
+  parseFuncDecl (token) {
+    let type = token.type;
+    let identifier_token = this.expect('IDENTIFIER');
+    this.expect('LPAREN');
+
+    let args = [];
+    let arg_token;
+    while ((arg_token = this.guard('IDENTIFIER'))) {
+      let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
+      args.push(arg_node);
+      if (!this.guard("COMMA")) { break };
+    }
+    this.expect('RPAREN');
+    let do_tk = this.expect('DO');
+
+    console.log("THIS.TOKEN ATM " + this.current().type);
+    let body = this.parseStatement(this.current());
+
+
+    console.log("BODY " + JSON.stringify(body));
+    let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
+    return node;
+  }
+
+  parseDecl (token) {
+    let type = token.type;
+    let node;
+    if (type == "IDENTIFIER" && this.peek(true).type == "EQUALITY") {
+      node = this.parseVarDecl(token);
+    } else if (type == "FUNCTION") {
+      node = this.parseFuncDecl(token);
+    } else {
+      throw new Error("Unknown value given to parseDecl: " + token.type);
+    }
+    return node;
   }
 
 
-  
-  
-  parse (lineTokens) {
+  parseIf (token) {
+    const copy_token = token;
+    token = this.next();
+    let condition_node = this.parseStatements(["DO"])[0];
+    console.log("CURT " + this.current());
+    let statements = this.parseBlock(this.current());
+
+    let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+
+    // go through the next few lines checking if there are any elif statements
+    // this is so we can build a proper if-elif-else chain if possible
+    let elif_tokens = {};
+    let elif_it = 0;
+    let helper = 0;
+    let elif_nodes = [];
+
+    let tkn;
+    while ( (tkn = this.guard("ELIF")) ) {
+      let elif_node = this.parseElif(tkn);
+      elif_nodes = elif_nodes.concat(elif_node);
+    }
+
+    // now that we have elif nodes, we should look for an else statement
+    let else_node = [];
+    if (this.peek(true).type == "ELSE") {
+      let res = this.parseElse(this.next());
+      else_node = else_node.concat(res);
+    }
+
+    // finally we can construct the chain
+    let chain = [if_node].concat(elif_nodes).concat(else_node);
+    let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
+    return node;
+  }
+
+  parseElif (token) {
+    const copy_token = token;
+    token = this.next();
+    let condition_node = this.parseStatements(["DO"])[0];
+    let statements = this.parseBlock(this.current());
+
+    let node = new Node.ElifNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+    return node;
+  }
+
+  parseElse (token) {
+    const copy_token = token;
+    this.expect('DO');
+    let statements = this.parseBlock(this.current());
+
+    let node = new Node.ElseNode(statements,copy_token.line,copy_token.start,token.end);
+    return node;
+  }
+
+  parsePrint (token) {
+    token = this.next();
+    let value_node = this.parseStatement(token);
+    let node = new Node.PrintNode(value_node, token.line, token.start, token.end);
+    return node;
+  }
+
+  parseBool (token) {
+    let node;
+    let type = token.type;
+    if (type == "TRUE") {
+      node = new Node.TrueNode(token.line,token.start,token.end);
+    } else if (type == "FALSE") {
+      node = new Node.FalseNode(token.line,token.start,token.end);
+    } else {
+      node = new Node.NilNode(token.line,token.start,token.end);
+    }
+    return node;
+  }
+
+  parseFuncCall (token) {
+    let identifier_token = token;
+    this.expect('LPAREN');
+    let args = [];
+    let arg_token;
+    while ((arg_token = this.unlessGuard("RPAREN"))) {
+      let node_tree_lite = this.parseStatement(arg_token);
+      args = args.concat(node_tree_lite);
+    }
+    this.expect('RPAREN');
+    let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, this.current().end);
+    return node;
+  }
+
+  parseVarAccess (token) {
+    let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
+    return node;
+  }
+
+  parseString (token) {
+    let node = new Node.TextNode(token.tk,token.line,token.start,token.end);
+    return node;
+  }
+
+  parseInteger (token) {
+    let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
+    return node;
+  }
+
+  parseBlock (token) {
+    if (token.type != "DO") {
+      throw new Error(`Error in parseBlock(): expected token.type "DO", got ${token.type} instead`);
+    }
+    let block = this.parseStatements();
+    return block; // array of block statements
+  }
+
+
+  parseStatement (token, invalid=[]) {
     /*
-    Parse code and return the AST.Program
-    Arguments:
-      lineTks must be an Object containing { line : tokens }
+      Parse a single token.
+      Warning: the method might ask for more tokens.
     */
-    this.lineTokens = lineTokens;
-    let ast = [];
-    while (this.peekLine() != undefined) {
-      let tokens = this.nextLine();
-      this.tokens = tokens;
-      this.token_iterated = -1;
-  
-      let node_tree = [];
-      while (this.peek() != undefined) {
-        let token = this.next();
-        console.log("TOKEN " + JSON.stringify(token));
-        let type = token.type;
-        // handle...
-        // addition operator
-        if (type == "PLUS") {
-          let lhs = this.recursiveParse([this.lookBack()]);
-          let rhs = this.recursiveParse([this.peek()]);
-          let node = new Node.BinaryOperatorNode(lhs,rhs,"+");
-          node_tree.push(node);
-        }
-        // subtraction operator
-        else if (type == "MINUS") {
-          let lhs = this.lookBack().tk;
-          let rhs = this.peek().tk;
-          let node = new Node.BinaryOperatorNode(lhs,rhs,"-");
-          node_tree.push(node);
-        }
-        // multiplication operator
-        else if (type == "MULTIPLY") {
-          let lhs = this.lookBack().tk;
-          let rhs = this.peek().tk;
-          let node = new Node.BinaryOperatorNode(lhs,rhs,"*");
-          node_tree.push(node);
-        }
-        // division operator
-        else if (type == "DIVIDE") {
-          let lhs = this.lookBack().tk;
-          let rhs = this.peek().tk;
-          let node = new Node.BinaryOperatorNode(lhs,rhs,"/");
-          node_tree.push(node);
-        }
-        // def keyword
-        else if (type == "DEFINE") {
-          let name_token = this.next();
-          if (this.next().type != "EQUALITY") {
-            throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
-          }
-          let value_tokens = this.allAfter();
-          // Since recursiveParse returns a full-blown AST generated from a bunch of statements,
-          // we need to get the first element of the AST and assume it's the value. I mean, no one defines their variables like:
-          // def a = 1 + 4 + 
-          // print(5) + 3
-          let value_node = this.recursiveParse(value_tokens)[0];
-          let node = new Node.VarAssignNode(name_token.tk,true,value_node.constructor.name,value_node,token.line,token.start,value_tokens[value_tokens.length-1].end);
-          node_tree.push(node);
-        }
-        // imm keyword
-        else if (type == "IMMUTABLE") {
-          let name_token = this.next();
-          if (this.next().type != "EQUALITY") {
-            throw new Error(`Expected TokenType to be EQUALITY, got ${this.current().type} instead`);
-          }
-          let value_token = this.next();
-          // Refer to the comments above to figure out why we're assuming the first element of the AST of recursiveParse as the value,
-          // instead of the whole AST.
-          let value_node = this.recursiveParse([value_token])[0];
-          let node = new Node.VarAssignNode(name_token.tk,false,value_token.type,value_node,token.line,token.start,value_token.end);
-          node_tree.push(node);
-        }
-        // fn keyword
-        else if (type == "FUNCTION") {
-          let identifier_token = this.next();
-          if (this.next().type != "LPAREN") {
-            throw new Error(`Expected TokenType to be LPAREN, got ${this.current().type} instead`);
-          }
-          let args = [];
-          while (this.peek().type == "IDENTIFIER") {
-            let arg_token = this.next();
-            let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
-            args.push(arg_node);
-          }
-          if (this.next().type != "RPAREN") {
-            throw new Error(`Expected TokenType to be RPAREN, got ${this.current().type} instead`);
-          }
-          let body = [];
-          while (this.currentLine()[0].type != "END") {
-            let tokens_lite = this.nextLine();
-            console.log("TOKENS LITE " + JSON.stringify(tokens_lite));
-            console.log(typeof tokens_lite);
-            let node_tree_lite = this.recursiveParse(tokens_lite);
-            body = body.concat(node_tree_lite);
-          }
-          let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
-          node_tree.push(node);
-        }
-        // print keyword
-        else if (type == "PRINT") {
-          let value_token = this.next();
-          let value_node = this.recursiveParse([value_token])[0];
-          let node = new Node.PrintNode(value_node,value_token.line,value_token.start,value_token.end);
-          node_tree.push(node);
-        }
-        // function calls
-        else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
-          let identifier_token = token;
-          this.next(); // skip lparen
-          let args = [];
-          while (this.peek().type != "RPAREN") {
-            let arg_token = this.next();
-            let node_tree_lite = this.recursiveParse([arg_token]);
-            args = args.concat(node_tree_lite);
-          }
-          let rparen_token = this.current();
-          let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, rparen_token.end);
-          node_tree.push(node);
-        }
-        // variable accesses
-        else if (type == "IDENTIFIER") {
-          let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
-          node_tree.push(node);
-        }
-        // strings
-        else if (type == "STRING") {
-          let node = new Node.TextNode(token.tk,token.line,token.start,token.end);
-          node_tree.push(node);
-        }
-        // integers
-        else if (type == "INTEGER" && !["PLUS","MINUS","DIVIDE","MULTIPLY"].includes(this.peek(true).type)) {
-          let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
-          node_tree.push(node);
-        }
+    let type = token.type;
+    console.log("PS type " + type + " and line " + token.line);
+    // handle...
+    // block ends
+    if (type == "END") {
+      return null;
+    }
+    if (invalid.includes(type)) {
+      return null;
+    }
+
+
+    // binary operations
+    if (this.bin_ops.includes(type)) {
+      let res = this.parseBinOp(token);
+      return res;
+    }
+
+    // catch early binary operations
+    else if (this.bin_ops.includes(this.peek(true).type)) {
+      let token_li = this.next();
+      let res = this.parseBinOp(token_li);
+      return res;
+    }
+
+    // function declarations
+    else if (["FUNCTION"].includes(type)) {
+      let res = this.parseDecl(token);
+      return res;
+    }
+
+    // variable declare/change handling
+    else if (type == "IDENTIFIER" && this.peek(true).type == "EQUALITY") {
+      let res = this.parseVarDecl(token);
+      return res;
+    }
+
+    // print keyword
+    else if (type == "PRINT") {
+      let res = this.parsePrint(token);
+      return res;
+    }
+
+    // if keyword
+    // elif-else aren't mentioned here because they're handled by the if statement parser
+    else if (type == "IF") {
+      let res = this.parseIf(token);
+      return res;
+    }
+
+    // booleans
+    else if (this.booleans.includes(type) && this.operatorCheck() == true) {
+      let res = this.parseBool(token);
+      return res;
+    }
+
+    // function calls
+    else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
+      let res = this.parseFuncCall(token);
+      return res;
+    }
+
+    // variable accesses
+    else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
+      let res = this.parseVarAccess(token);
+      return res;
+    }
+
+    // blocks
+    else if (type == "DO") {
+      let res = this.parseBlock(token);
+      return res;
+    }
+
+    // strings
+    else if (type == "STRING") {
+      let res = this.parseString(token);
+      return res;
+    }
+
+    // integers
+    else if (type == "INTEGER" && this.operatorCheck() == true) {
+      let res = this.parseInteger(token);
+      return res;
+    }
+
+    // parse failure
+    else {
+      //this.parseFailure([token],"unknown token");
+      // skip
+      return "SKIP"
+    }
+  }
+
+  parseStatements (invalid=[]) {
+    /*
+    Parse the next statements from tokens
+    */
+    let generated = [];
+    
+    let token;
+    while ((token = this.protect())) {
+      console.log("TOKEN " + JSON.stringify(token));
+      let node = this.parseStatement(token,invalid);
+      console.log("RESULT NODE " + JSON.stringify(node));
+      // block safety
+      if (node === null) {
+        break;
+      } else if (node === "SKIP") {
+        continue;
+      } else {
+        generated.push(node);
       }
-  
-      ast = ast.concat(node_tree);
     }
-    return ast;
+    return generated;
   }
 
-  wrap (ast) {
-    /*
-    Wrap the AST from Parser.parse nicely
+  parseProgram (tokens) {
+    /* 
+    Wrapper around parseStatements. This is made for the whole program instead of just a few statements.
+    Interface function.
     */
-    let new_ast = {};
-    new_ast["Program"] = ast;
-    let tokens = 0;
-    for (let line_number in this.lineTokens) {
-      tokens += this.lineTokens[line_number].length;
-    }
-    let name = "main.ax";
-    new_ast["tokens"] = tokens;
-    new_ast["name"] = name;
-    return new_ast;
+    this.tokens = tokens;
+    this.token_iterated = -1;
+    this.ast = [];
+
+    let ast = this.parseStatements();
+    this.ast = ast;
+    return this.ast;
   }
+
+
+
     
 
 

@@ -1,5 +1,5 @@
 # Axel
-The Axel programming language. Compiles to JavaScript.
+Official implementation of the Axel programming language. Written in JavaScript.
 Designed to be simple, flexible, and elegant, while being as fast as JavaScript.
 
 
@@ -12,7 +12,7 @@ Designed to be simple, flexible, and elegant, while being as fast as JavaScript.
 3. [Installing](https://github.com/ezrael-git/Axel/tree/development#Installing)
 4. [Comments](https://github.com/ezrael-git/Axel/tree/development#Comments)
 5. [Data Types](https://github.com/ezrael-git/Axel/tree/development#Data-Types)
-6. [Object Oriented Axel](https://github.com/ezrael-git/Axel/tree/development#Object-Oriented-Axel)
+6. [Functions and Object Oriented Axel](https://github.com/ezrael-git/Axel/tree/development#Functions-and-Object-Oriented-Axel)
 7. [Grammar](https://github.com/ezrael-git/Axel/tree/development#Grammar)
 8. [Support](https://github.com/ezrael-git/Axel/tree/development#Support)
 
@@ -24,19 +24,6 @@ Designed to be simple, flexible, and elegant, while being as fast as JavaScript.
 I was bored.
 Also I wanted a language containing Ruby's syntax, Python's flexibility and JavaScript's speed.
 
-Oh, and did I tell you that you can use JavaScript code in an Axel file? The `Ax2JS` standard library provides this functionality. For example:
-```js
-import standard.ax2js as Ax2JS
-fn say (sentence)
-  Ax2JS.from_js(`console.log(sentence)`)
-end
-
-say("Hello World!")
-```
-The output:
-```
->>> Hello World!
-```
 Let's get to the installation and the syntax.
 
 
@@ -64,62 +51,73 @@ Comments are made using `--`. Multiline comments are made using `-( comment )-`
 So, data types.
 ## Variables
 There are two kinds of variables in Axel: mutable and immutable.
-Mutable variables are defined using `def`, and immutable using `imm`.
+Mutable variables are those that can be changed once declared, immutable are those which cannot.
 
+All variables made with the first letter capital are automatically declared as immutable, while those that have a lowercase first letter are considered mutable.
+Trying to change an immutable variable will result in an error.
 Example:
 ```py
-def foo = "bar";
+foo = "bar"
+>>> "bar"
+foo = "baz"
+>>> "baz"
+
+Baz = "foo"
+>>> "foo"
+Baz = "bar"
+>>> DeclarationError: At line 5:
+>>> Cannot change an immutable variable
 ```
 
 ## Lists and hashes
-Lists are a collection of objects, or items. You can define them using `[]` syntax.
+Lists are a collection of items. You can define them using `[]` syntax.
 
 ```js
-def fruits = ["peach", "orange"];
+fruits = ["peach", "orange"]
 ```
 
 Hashes, the equivalent of dictionaries in Python, can be made using curly braces (`{}`).
 ```js
-def headers = {"Authentication" : "Bearer"};
+headers = {"Authentication" => "Bearer"}
 ```
 
-# Object Oriented Axel
+# Functions and Object Oriented Axel
 ## Functions
 You can define a function in Axel using the `fn` keyword.
 
 
 ```rust
 fn greet ()
-  log("hello world");
+  print "hello world"
 end
 ```
-Tiny note: the parentheses after the function name isn't necessary, but it's recommended for the sake of readability.
 
 
 ## Classes
-Classes are made using the `cls` keyword.
+Note: classes aren't implemented yet, but this is how the syntax would look like, roughly.
+Classes are made using the `class` keyword.
 ```
-cls Person
+class Person
   initialize (name)
     @name = name
   end
 
-  say (sentence)
-    log("#{@name} says '#{sentence}'")
+  say (sentence) 
+    print "#{@name} says '#{sentence}'"
   end
 end
 ```
 We can insert an expression into a string using `#{expression}`, as shown above.
 
-The class can then be instantiated using the `new` static property, in this case:
+The class can then be instantiated using the `new` static method, in this case:
 ```js
 arnold = Person.new("Arnold")
 arnold.say("Hello, I'm Arnold!")
--- >>> Arnold says 'Hello, I'm Arnold!'
+>>> Arnold says 'Hello, I'm Arnold!'
 ```
 
 # Grammar
-Detailed information about keywords and syntax is available in the `grammar.md` file, located inside the `src/data/` folder.
+Detailed information about keywords and syntax (the language's EBNF) is available in the `grammar.md` file, located inside the `src/data/` folder.
 
 # Support
 

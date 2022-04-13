@@ -3,7 +3,7 @@ const fs = require("fs");
 const Preprocessor = require("./compiler/preprocessor.js");
 const Lexer = require("./compiler/lexer.js");
 const Parser = require("./compiler/parser.js");
-const Emitter = require("./compiler/emitter.js");
+const Interpreter = require("./compiler/interpreter.js");
 
 class Axel {
 
@@ -11,7 +11,7 @@ class Axel {
     this.preprocessor = new Preprocessor();
     this.lexer = new Lexer();
     this.parser = new Parser();
-    this.emitter = new Emitter();
+    this.interpreter = new Interpreter();
     /*
     this.stdblib = fs.readFileSync("./standard/stdblib.js",
     {encoding:'utf8', flag:'r'}
@@ -19,40 +19,43 @@ class Axel {
     */
   }
 
-  purify (lis) {
-    /*
-    Purify a list, removing unnecessary items such as empty elements and whitespaces.
-    */
-    let n = [];
-    lis.forEach(function (e) {
-      if (e != " " && e != "" && e.length > 0) {
-        n.push(e);
+  collectMicros (stats) {
+    let m = [];
+    for (let stat of stats) {
+      if (stat.startsWith("#")) {
+        m.push(stat.replaceAll("#",""));
       }
-    });
-    return n;
+    }
+    return m;
   }
+
 
 
   program (statements) {
     /*
     One-for-all interface to execute Axel code. This function acts as a middleman between the code and the compiler, passing the statements into the compiler and executing it in the end.
     */
-    statements = this.preprocessor.process(statements.trim().split('\n'));
-    console.log("Preprocessor:")
-    console.log(statements)
-    console.log("Prepr end")
+    // default settings
+    // can be edited through micros
+    let preprocessor = true;
 
-    for (let line of statements) {
-      let lex = this.lexer.lex(line);
-      this.parser.parse(lex,line);
+    statements = statements.replaceAll(';', '\n').trim().split('\n');
+    // execute micros
+    let micros = this.collectMicros(statements);
+    for (let m of micros) {
+      eval(m);
     }
-    this.emitter.add(this.parser.emitted);
-    this.emitter.script["variables"] = this.preprocessor.variables;
-    this.emitter.script["imports"] = this.preprocessor.imports;
-    console.log("Axel:");
-    let retcode = this.emitter.eval();
 
-    return retcode;
+    // compile the statements
+    // optional compiling stages are under if statements and can be edited through micros
+    if (preprocessor == true) {
+      statements = this.preprocessor.process(statements);
+    }
+
+    let tokens = this.lexer.process(statements);
+    let ast = this.parser.parseProgram(tokens);
+    let o = this.interpreter.walk(ast);
+    return o
   }
 
 }

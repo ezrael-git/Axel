@@ -4,6 +4,8 @@ let TT_LPAREN = "("
 let TT_RPAREN = ")"
 let TT_LBRACKET = "["
 let TT_RBRACKET = "]"
+let TT_LBRACE = "{"
+let TT_RBRACE = "}"
 let TT_EQ = "="
 let TT_COMPARE = "=="
 let TT_COMPAREOPP = "!="
@@ -174,6 +176,14 @@ class Lexer {
           add("LBRACKET", pos, pos, TT_LBRACKET);
         } else {
           add("RBRACKET", pos, pos, TT_RBRACKET);
+        }
+      }
+      // braces ({})
+      else if (it.endsWith(TT_LBRACE) || it.endsWith(TT_RBRACE)) {
+        if (it.endsWith(TT_LBRACE)) {
+          add("LBRACE", pos, pos, TT_LBRACE);
+        } else {
+          add("RBRACE", pos, pos, TT_RBRACE);
         }
       }
       // addition operator

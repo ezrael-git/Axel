@@ -410,6 +410,30 @@ module.exports = class Parser {
     return node;
   }
 
+  parseHash (token) {
+    if (token.type != "LBRACE") {
+      throw new Error(`Error in parseHash(): expected token.type "LBRACE", got ${token.type} instead`);
+    }
+
+    let keys = [];
+    let values = [];
+    let tk;
+    while ((tk = this.unlessGuard("RBRACE"))) {
+      if (this.peek(true).type == "ARROW") {
+        let res = this.parseStatement(tk);
+        keys.push(res);
+      } else if (this.lookBack(true).type == "ARROW" ) {
+        let res = this.parseStatement(tk);
+        values.push(res);
+      } else {
+        continue;
+      }
+    }
+
+    let node = new Node.HashLiteral(keys,values,token.line);
+    return node;
+  }
+
   parseFor (token) {
     if (token.type != "FOR") {
       throw new Error(`Error in parseFor(): expected token.type "FOR", got ${token.type} instead`);
@@ -529,6 +553,12 @@ module.exports = class Parser {
     // arrays
     else if (type == "LBRACKET") {
       let res = this.parseArray(token);
+      return res;
+    }
+
+    // hashes / dicts
+    else if (type == "LBRACE") {
+      let res = this.parseHash(token);
       return res;
     }
 

@@ -151,7 +151,7 @@ class HashLiteral {
     let obj = this.run();
     for (let k of obj) {
       let v = obj[k];
-      res += k " => " + v.to_s;
+      res += k + " => " + v.to_s;
     }
     return res;
   }

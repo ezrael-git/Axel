@@ -877,18 +877,51 @@ class ReturnLiteral {
 // classes
 
 class InstanceLiteral {
-  constructor (name, methods, line) {
+  /*
+  For when an instance of a class is created.
+  Syntax:
+    class_name.new(arguments)
+  */
+  constructor (name, statements, line) {
     this.name = name;
-    this.methods = methods;
+    this.statements = statements;
+    this.value = statements;
     this.line = line;
+
+    this.methods = {};
+    this.variables = {};
   }
 
   run (v,i) {
-    // fix
+    /*
+    Runs the statements and then filters out the instance methods and variables.
+    */
+    i.variables = v;
+    let res = i.walk(this.statements);
+    
+    for (let member in res.variables) {
+      let type = member.constructor.name
+      if (type == "FunctionLiteral") {
+        this.methods.push(member);
+      } else if (type == "VariableLiteral") {
+        this.variables.push(member);
+      } else {
+        continue;
+      }
+    }
+
+    return this.methods;
   }
 }
 
 class ClassLiteral {
+  /*
+  For when a class is declared.
+  Syntax:
+    class Class_Name
+      statements
+    end
+  */
   constructor (name, statements, line) {
     this.name = name;
     this.value = name;
@@ -899,6 +932,31 @@ class ClassLiteral {
   run (v,i) {
     let methods = [];
     // fix
+  }
+}
+
+class PropertyAccessLiteral {
+  /*
+  For when properties of an instance are accessed.
+  
+  Arguments:
+    parent (object): the parent instance
+    property (string): the property
+
+  Syntax:
+    parent.property
+  */
+  constructor (parent, property, line) {
+    this.parent = parent;
+    this.property = property;
+    this.value = property;
+    this.line = line;
+  }
+
+  run (v,i) {
+    let parent = this.parent.run(v,i);
+    let res = parent[this.property];
+    return res;
   }
 }
 

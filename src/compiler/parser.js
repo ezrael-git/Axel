@@ -1,22 +1,11 @@
 // parser.js
 // generate AST
 
-const Node = require("./nodes.js");
 const Literal = require("./literals.js");
+const Node = require("./nodes.js");
 const Scanner = require("./scanner.js");
 const ErrorHandler = require("./error_handler.js");
 
-
-
-class Expression {
-  constructor (value) {
-    this.value = value;
-  }
-
-  run () {
-    return this.value
-  }
-}
 
 
 
@@ -30,6 +19,7 @@ module.exports = class Parser {
     
     this.ast = [];
     this.scanner = new Scanner();
+    this.env = [];
   }
 
   // iterating methods
@@ -106,19 +96,27 @@ module.exports = class Parser {
     return this.peek() != undefined ? this.next() : null;
   }
 
-  guard (kind) {
+  guard (kind,multiple=undefined) {
     /*
     Returns the next token if the next token matches the guard, else null.
     */
-    return this.peek().type === kind ? this.next() : null;
+    if (multiple == undefined) {
+      return this.peek(true).type === kind ? this.next() : null;
+    } else {
+      return multiple.includes(this.peek(true).type) ? this.next() : null;
+    }
   }
 
-  unlessGuard (kind) {
+  unlessGuard (kind,sec="hell") {
     /*
     Opposite of this.guard.
     Returns the next token if the next token does NOT match the kind, else returns null.
     */
-    return this.peek().type !== kind ? this.next() : null;
+    return this.peek(true).type !== kind && this.peek(true).type !== sec ? this.next() : null;
+  }
+
+  guardLine () {
+    return this.peek(true).line !== this.current().line ? this.next() : null;
   }
 
   expect (kind, where=undefined) {
@@ -126,7 +124,7 @@ module.exports = class Parser {
       where = this.token_iterated;
     }
     let token = this.guard(kind);
-    if (!token) { throw new Error(`Error in ${where}: expected ${kind}, got ${this.peek().kind}`) };
+    if (!token) { throw new Error(`Error in ${where}: expected ${kind}, got ${this.peek().type}`) };
     return token;
   }
 
@@ -152,36 +150,36 @@ module.exports = class Parser {
     if (type == "PLUS") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"+");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"+",token.line);
     }
     // subtraction operator
     else if (type == "MINUS") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"-");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"-",token.line);
     }
     // multiplication operator
     else if (type == "MULTIPLY") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"*");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"*",token.line);
     }
     // division operator
     else if (type == "DIVIDE") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"/");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"/",token.line);
     }
     // comparison operator
     else if (type == "COMPARE") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"==");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"==",token.line);
     }
     else if (type == "COMPAREOPP") {
       let lhs = this.parseStatement(this.lookBack());
       let rhs = this.parseStatement(this.next());
-      node = new Node.BinaryOperatorNode(lhs,rhs,"!=");
+      node = new Literal.BinaryOperatorLiteral(lhs,rhs,"!=",token.line);
     }
     return node;
   }
@@ -191,8 +189,9 @@ module.exports = class Parser {
     if (type != "IDENTIFIER" || this.peek(true).type != "EQUALITY") {
       throw new Error("Unknown value given to parseVarDecl: " + type);
     }
+
     let mutable = true;
-    if (this.scanner.uppercase.includes(mutable[0])) {
+    if (this.scanner.uppercase.includes(token.tk[0])) {
       mutable = false;
     }
 
@@ -205,23 +204,29 @@ module.exports = class Parser {
     let value_token = this.next();
 
     let value_node = this.parseStatement(value_token);
-    let node = new Node.VarAssignNode(name_token.tk,mutable,value_node.constructor.name,value_node,token.line,token.start,value_token.end);
+    let node = new Node.VarAssignNode(name_token.tk,value_node,mutable,token.line);
     return node;
   }
 
   parseFuncDecl (token) {
     let type = token.type;
     let identifier_token = this.expect('IDENTIFIER');
-    this.expect('LPAREN');
+    let paren_start = false;
+    if (this.peek().type == "LPAREN") {
+      this.expect('LPAREN');
+      paren_start = true;
+    }
 
     let args = [];
     let arg_token;
     while ((arg_token = this.guard('IDENTIFIER'))) {
-      let arg_node = new Node.ArgNode(arg_token.tk,arg_token.line,arg_token.start,arg_token.end);
+      let arg_node = new Literal.ArgLiteral(arg_token.tk,arg_token.line);
       args.push(arg_node);
-      if (!this.guard("COMMA")) { break };
+      //if (!this.guard("COMMA")) { break };
     }
-    this.expect('RPAREN');
+    if (paren_start) {
+      this.expect('RPAREN');
+    }
     let do_tk = this.expect('DO');
 
     console.log("THIS.TOKEN ATM " + this.current().type);
@@ -229,7 +234,7 @@ module.exports = class Parser {
 
 
     console.log("BODY " + JSON.stringify(body));
-    let node = new Node.FuncAssignNode(identifier_token.tk,token.line,token.start,token.end,args,body);
+    let node = new Node.FuncAssignNode(identifier_token.tk,args,body,token.line);
     return node;
   }
 
@@ -249,12 +254,15 @@ module.exports = class Parser {
 
   parseIf (token) {
     const copy_token = token;
-    token = this.next();
+    //token = this.next();
+    console.log("if token " + token.tk);
+    console.log("env " + JSON.stringify(this.env));
     let condition_node = this.parseStatements(["DO"])[0];
+    console.log("cond " + JSON.stringify(condition_node));
     console.log("CURT " + this.current());
     let statements = this.parseBlock(this.current());
 
-    let if_node = new Node.IfNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+    let if_node = new Literal.IfLiteral(condition_node,statements,copy_token.line);
 
     // go through the next few lines checking if there are any elif statements
     // this is so we can build a proper if-elif-else chain if possible
@@ -278,7 +286,7 @@ module.exports = class Parser {
 
     // finally we can construct the chain
     let chain = [if_node].concat(elif_nodes).concat(else_node);
-    let node = new Node.IfChainNode(chain,chain[0].line,chain[0].start,chain[chain.length-1].end);
+    let node = new Literal.ChainLiteral(chain,chain[0].line);
     return node;
   }
 
@@ -288,7 +296,7 @@ module.exports = class Parser {
     let condition_node = this.parseStatements(["DO"])[0];
     let statements = this.parseBlock(this.current());
 
-    let node = new Node.ElifNode(condition_node,statements,copy_token.line,copy_token.start,token.end);
+    let node = new Literal.ElifLiteral(condition_node,statements,copy_token.line);
     return node;
   }
 
@@ -297,14 +305,14 @@ module.exports = class Parser {
     this.expect('DO');
     let statements = this.parseBlock(this.current());
 
-    let node = new Node.ElseNode(statements,copy_token.line,copy_token.start,token.end);
+    let node = new Literal.ElseLiteral(statements,copy_token.line);
     return node;
   }
 
   parsePrint (token) {
     token = this.next();
     let value_node = this.parseStatement(token);
-    let node = new Node.PrintNode(value_node, token.line, token.start, token.end);
+    let node = new Literal.PrintLiteral(value_node, token.line);
     return node;
   }
 
@@ -312,41 +320,67 @@ module.exports = class Parser {
     let node;
     let type = token.type;
     if (type == "TRUE") {
-      node = new Node.TrueNode(token.line,token.start,token.end);
+      node = new Literal.TrueLiteral(token.line);
     } else if (type == "FALSE") {
-      node = new Node.FalseNode(token.line,token.start,token.end);
+      node = new Literal.FalseLiteral(token.line);
     } else {
-      node = new Node.NilNode(token.line,token.start,token.end);
+      node = new Literal.NilLiteral(token.line);
     }
     return node;
   }
 
   parseFuncCall (token) {
     let identifier_token = token;
-    this.expect('LPAREN');
+    let paren_start = false;
+    if (this.peek(true).type == "LPAREN") {
+      this.expect('LPAREN');
+      paren_start = true;
+    }
     let args = [];
     let arg_token;
-    while ((arg_token = this.unlessGuard("RPAREN"))) {
+    while ((arg_token = this.guard(0,["STRING","INTEGER","IDENTIFIER"]))) {
       let node_tree_lite = this.parseStatement(arg_token);
-      args = args.concat(node_tree_lite);
+      // some backstory for the next few lines:
+      // when parseStatement sees a comma, it returns "SKIP" as it cannot parse it
+      // due to this reason, the check below is added. essentially, commas are skipped
+      // this allows for cleaner interpretation
+      if (node_tree_lite != "SKIP") {
+        args = args.concat(node_tree_lite);
+      }
     }
-    this.expect('RPAREN');
-    let node = new Node.CallNode(identifier_token.tk, args, this.line, identifier_token.start, this.current().end);
+    if (paren_start) {
+      this.expect('RPAREN');
+    }
+    let node = new Literal.CallLiteral(identifier_token.tk, args, token.line);
+    return node;
+  }
+
+  parseReturn (token) {
+    if (token.type != "RETURN") {
+      throw new Error(`Error in parseReturn(): expected token.type "RETURN", got ${token.type} instead`);
+    }
+
+    let expression = this.parseStatement(this.next());
+    let node = new Literal.ReturnLiteral(expression,token.line);
     return node;
   }
 
   parseVarAccess (token) {
-    let node = new Node.VarAccessNode(token.tk,token.line,token.start,token.end);
+    let mutable = true;
+    if (this.scanner.uppercase.includes(token.tk[0])) {
+      mutable = false;
+    }
+    let node = new Literal.VariableLiteral(token.tk,mutable,token.line);
     return node;
   }
 
   parseString (token) {
-    let node = new Node.TextNode(token.tk,token.line,token.start,token.end);
+    let node = new Literal.StringLiteral(token.tk,token.line);
     return node;
   }
 
   parseInteger (token) {
-    let node = new Node.IntegerNode(token.tk,token.line,token.start,token.end);
+    let node = new Literal.IntegerLiteral(parseInt(token.tk),token.line);
     return node;
   }
 
@@ -357,6 +391,81 @@ module.exports = class Parser {
     let block = this.parseStatements();
     return block; // array of block statements
   }
+
+  parseArray (token) {
+    if (token.type != "LBRACKET") {
+      throw new Error(`Error in parseList(): expected token.type "LBRACKET", got ${token.type} instead`);
+    }
+
+    let elements = [];
+    let elem;
+    while ( ( elem = this.unlessGuard('RBRACKET') ) ) {
+      let reformed = this.parseStatement(elem);
+      if (reformed != "SKIP") {
+        elements.push(reformed);
+      }
+    }
+
+    let node = new Literal.ArrayLiteral(elements,token.line);
+    return node;
+  }
+
+  parseHash (token) {
+    if (token.type != "LBRACE") {
+      throw new Error(`Error in parseHash(): expected token.type "LBRACE", got ${token.type} instead`);
+    }
+
+    let keys = [];
+    let values = [];
+    let tk;
+    while ((tk = this.unlessGuard("RBRACE"))) {
+      if (this.peek(true).type == "ARROW") {
+        let res = this.parseStatement(tk);
+        keys.push(res);
+      } else if (this.lookBack(true).type == "ARROW" ) {
+        let res = this.parseStatement(tk);
+        values.push(res);
+      } else {
+        continue;
+      }
+    }
+
+    let node = new Node.HashLiteral(keys,values,token.line);
+    return node;
+  }
+
+  parseFor (token) {
+    if (token.type != "FOR") {
+      throw new Error(`Error in parseFor(): expected token.type "FOR", got ${token.type} instead`);
+    }
+
+    let placeholder = this.expect('IDENTIFIER');
+    this.expect('IN');
+    let iterable_tk = this.next();
+    let iterable = this.parseStatement(iterable_tk);
+    if (this.peek().type == "RBRACKET") {
+      this.next();
+    }
+    this.expect('DO');
+    let block = this.parseBlock(this.current());
+
+    let node = new Literal.ForLiteral(placeholder.tk, iterable, block, token.line);
+    return node;
+  }
+
+  parseWhile (token) {
+    if (token.type != "WHILE") {
+      throw new Error(`Error in parseWhile(): expected token.type "WHILE", got ${token.type} instead`);
+    }
+
+    let expression = this.parseStatement(this.next(), ["DO"]);
+    this.next();
+    let block = this.parseBlock(this.current());
+    
+    let node = new Literal.WhileLiteral(expression, block);
+    return node;
+  }
+
 
 
   parseStatement (token, invalid=[]) {
@@ -391,7 +500,8 @@ module.exports = class Parser {
 
     // function declarations
     else if (["FUNCTION"].includes(type)) {
-      let res = this.parseDecl(token);
+      let res = this.parseFuncDecl(token);
+      this.env.push(res.name); // save function name
       return res;
     }
 
@@ -421,14 +531,46 @@ module.exports = class Parser {
     }
 
     // function calls
-    else if (type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
+    else if (type == "IDENTIFIER" && this.env.includes(token.tk)) {
       let res = this.parseFuncCall(token);
+      return res;
+    }
+
+    // return expressions
+    else if (type == "RETURN") {
+      let res = this.parseReturn(token);
       return res;
     }
 
     // variable accesses
     else if (type == "IDENTIFIER" && this.operatorCheck() == true) {
+      console.log("parsing " + token.tk + " as var");
+      console.log(JSON.stringify(this.env));
       let res = this.parseVarAccess(token);
+      return res;
+    }
+
+    // arrays
+    else if (type == "LBRACKET") {
+      let res = this.parseArray(token);
+      return res;
+    }
+
+    // hashes / dicts
+    else if (type == "LBRACE") {
+      let res = this.parseHash(token);
+      return res;
+    }
+
+    // for loops
+    else if (type == "FOR") {
+      let res = this.parseFor(token);
+      return res;
+    }
+
+    // while loops
+    else if (type == "WHILE") {
+      let res = this.parseWhile(token);
       return res;
     }
 

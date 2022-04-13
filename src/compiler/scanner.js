@@ -1,13 +1,13 @@
 // scanner.js
 const Keywords = require("../data/keyword.js");
-const Literal = require("./literals.js");
 const ErrorHandler = require("./error_handler.js");
 
 module.exports = class Scanner {
-  constructor () {
+  constructor (literal) {
     this.variables = [];
     this.imports = [];
     this.functions = [];
+    this.literal = literal;
 
     this.uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     this.lowercase = [];
@@ -485,7 +485,7 @@ module.exports = class Scanner {
     for (let char of it_str) {
       curPos -=1;
       it += char;
-      if (!this.letters.includes(char)) {
+      if (!this.letters.includes(char) && char != "?") {
         it = it.split('')
         it[it.length-1] = ''
         it = it.join('')
@@ -552,10 +552,9 @@ module.exports = class Scanner {
     }
   }
 
-  resolveRun (obj,interpreter) {
-    console.log("IN " + interpreter.interpretNode.constructor.name);
+  static resolveRun (obj,interpreter) {
     while (obj.run != undefined) {
-      obj = interpreter.interpretNode(obj);
+      obj = obj.run(interpreter.variables, interpreter);
     }
     return obj;
   }

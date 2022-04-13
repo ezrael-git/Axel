@@ -4,6 +4,8 @@ let TT_LPAREN = "("
 let TT_RPAREN = ")"
 let TT_LBRACKET = "["
 let TT_RBRACKET = "]"
+let TT_LBRACE = "{"
+let TT_RBRACE = "}"
 let TT_EQ = "="
 let TT_COMPARE = "=="
 let TT_COMPAREOPP = "!="
@@ -16,6 +18,7 @@ let TT_COMMA = ","
 let TT_AND = "&&"
 let TT_OR = "||"
 let TT_ARROW = "=>"
+let TT_COLON = ":"
 
 let TT_FN = "fn"
 let TT_RETURN = "return"
@@ -30,6 +33,9 @@ let TT_NIL = "nil"
 let TT_IF = "if"
 let TT_ELIF = "elif"
 let TT_ELSE = "else"
+let TT_FOR = "for"
+let TT_IN = "in"
+let TT_WHILE = "while"
 
 
 
@@ -38,7 +44,7 @@ class Lexer {
     this.source = "";
     this.lexed = undefined;
     this.line = 0;
-    this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+    this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ?".split('');
     this.lowercase = [];
     for (let lett of this.letters) {
       this.lowercase.push(lett.toLowerCase());
@@ -172,6 +178,14 @@ class Lexer {
           add("RBRACKET", pos, pos, TT_RBRACKET);
         }
       }
+      // braces ({})
+      else if (it.endsWith(TT_LBRACE) || it.endsWith(TT_RBRACE)) {
+        if (it.endsWith(TT_LBRACE)) {
+          add("LBRACE", pos, pos, TT_LBRACE);
+        } else {
+          add("RBRACE", pos, pos, TT_RBRACE);
+        }
+      }
       // addition operator
       else if (it.endsWith(TT_PLUS)) {
         add("PLUS", pos, pos, TT_PLUS);
@@ -207,6 +221,14 @@ class Lexer {
       else if (it.endsWith(TT_COMMA)) {
         add("COMMA", pos, pos, TT_COMMA);
       }
+      // colon operator
+      else if (it.endsWith(TT_COLON)) {
+        add("COLON", pos, pos, TT_COLON);
+      }
+      // arrow operator
+      else if (it.endsWith(TT_ARROW)) {
+        add("ARROW", pos, pos, TT_ARROW);
+      }
       // integers
       else if (this.digits.includes(it[it.length - 1])) {
         // get full integer
@@ -217,14 +239,6 @@ class Lexer {
       // fn keyword
       else if (it.endsWith(TT_FN) && !this.letters.includes(source[pos-2]) && this.peek(pos) == " ") {
         add("FUNCTION", pos-1, pos, TT_FN);
-      }
-      // def keyword
-      else if (it.endsWith(TT_DEF) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ") {
-        add("DEFINE", pos-2, pos, TT_DEF);
-      }
-      // imm keyword
-      else if (it.endsWith(TT_IMM) && !this.letters.includes(source[pos-3]) && this.peek(pos) == " ") {
-        add("IMMUTABLE", pos-2, pos, TT_DEF);
       }
       // do keyword
       else if (it.endsWith(TT_DO) && !this.letters.includes(source[pos-2]) && !this.letters.includes(this.peek(pos))) {
@@ -262,6 +276,18 @@ class Lexer {
       else if (it.endsWith(TT_ELSE) && !this.letters.includes(source[pos-4]) && !this.letters.includes(this.peek(pos))) {
         add("ELSE", pos-2, pos, TT_ELSE);
       }
+      // for keyword
+      else if (it.endsWith(TT_FOR) && !this.letters.includes(source[pos-3]) && !this.letters.includes(this.peek(pos))) {
+        add("FOR", pos-2, pos, TT_FOR);
+      }
+      // while keyword
+      else if (it.endsWith(TT_WHILE) && !this.letters.includes(source[pos-5]) && !this.letters.includes(this.peek(pos))) {
+        add("WHILE", pos-4, pos, TT_WHILE);
+      }
+      // in keyword
+      else if (it.endsWith(TT_IN) && !this.letters.includes(source[pos-2]) && !this.letters.includes(this.peek(pos))) {
+        add("IN", pos-1, pos, TT_IN);
+      }
       // return keyword
       else if (it.endsWith(TT_RETURN) && !this.letters.includes(source[pos-6]) && !this.letters.includes(this.peek(pos))) {
         add("RETURN", pos-5, pos, TT_RETURN);
@@ -270,10 +296,10 @@ class Lexer {
       else {
         // identifiers
         if (lastToken() != undefined) {
-          if (lastToken().type == "FUNCTION" || lastToken().type == "DEFINE" || lastToken().type == "IMMUTABLE") {
-            let identifier = sc.getUntil(source,pos," ")
-            add("IDENTIFIER", pos, identifier.curPos, identifier.string);
-            pos = identifier.curPos;
+          if (lastToken().type == "FUNCTION") {
+            let identifier = sc.getUntil(source,pos,"("," ")
+            add("IDENTIFIER", pos, identifier.curPos-1, identifier.string);
+            pos = identifier.curPos-1;
             continue;
           }
         }

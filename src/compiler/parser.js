@@ -338,7 +338,7 @@ module.exports = class Parser {
     }
     let args = [];
     let arg_token;
-    while ((arg_token = this.guard(0,["STRING","INTEGER","IDENTIFIER"]))) {
+    while ((arg_token = this.guard(0,["STRING","INTEGER","IDENTIFIER","COMMA"]))) {
       let node_tree_lite = this.parseStatement(arg_token);
       // some backstory for the next few lines:
       // when parseStatement sees a comma, it returns "SKIP" as it cannot parse it

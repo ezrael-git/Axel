@@ -1010,6 +1010,8 @@ class PropertyAccessLiteral {
     let property = this.property.to_s;
     let res = parent[property];
     console.log("PRP RES " + res);
+    console.log("PRP PARENT " + JSON.stringify(parent));
+    console.log("PRP PROPERTY " + property);
     if (res == undefined) {
       throw new Error(`At line ${this.line}:\nTried to access a property that doesn't exist`);
     }

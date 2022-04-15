@@ -135,7 +135,9 @@ class HashLiteral {
     let obj = [];
     for (let key of this.keys) {
       c += 1;
+      key = key.run();
       let val = this.values[c];
+      val = val.run();
       obj[key] = val;
     }
 

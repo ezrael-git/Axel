@@ -467,8 +467,11 @@ module.exports = class Parser {
   }
 
   parsePropertyAccess (token) {
-    let parent = this.parseStatement(token,["DOT"]);
-    this.expect('DOT');
+    if (token.type != "DOT") {
+      throw new Error(`Error in parsePropertyAccess(): expected token.type "DOT", got ${token.type} instead`);
+    }
+
+    let parent = this.parseStatement(this.lookBack());
     let child = this.next();
     child = this.parseStatement(child);
 
@@ -573,7 +576,7 @@ module.exports = class Parser {
     }
 
     // property accesses
-    else if (this.peek(true).type == "DOT") {
+    else if (type == "DOT") {
       let res = this.parsePropertyAccess(token);
       return res;
     }

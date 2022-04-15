@@ -1006,7 +1006,7 @@ class PropertyAccessLiteral {
   }
 
   run (v,i) {
-    let parent = this.parent.run(v,i);
+    let parent = this.parent;
     let property = this.property.to_s;
     let res = parent[property];
     console.log("PRP RES " + res);

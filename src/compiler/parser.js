@@ -84,7 +84,7 @@ module.exports = class Parser {
     /*
     Check if the next operator is a bin op
     */
-    if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE", "COMPAREOPP", "EQUALITY"].includes(this.peek(true).type)) {
+    if (!["PLUS","MINUS","DIVIDE","MULTIPLY","COMPARE", "COMPAREOPP", "EQUALITY", "DOT"].includes(this.peek(true).type)) {
       return true; // good to go!
     }
     else {
@@ -600,7 +600,7 @@ module.exports = class Parser {
     }
 
     // strings
-    else if (type == "STRING") {
+    else if (type == "STRING" && this.operatorCheck() == true) {
       let res = this.parseString(token);
       return res;
     }

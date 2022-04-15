@@ -420,10 +420,10 @@ module.exports = class Parser {
     let tk;
     while ((tk = this.unlessGuard("RBRACE"))) {
       if (this.peek(true).type == "ARROW") {
-        let res = this.parseStatement(tk);
+        let res = this.parseStatement(tk,["ARROW"]);
         keys.push(res);
       } else if (this.lookBack(true).type == "ARROW" ) {
-        let res = this.parseStatement(tk);
+        let res = this.parseStatement(tk,["COMMA"]);
         values.push(res);
       } else {
         continue;

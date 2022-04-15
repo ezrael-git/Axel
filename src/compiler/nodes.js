@@ -7,10 +7,11 @@ class VarAssignNode {
   /*
   Node for when a variable is declared, or assigned to.
   */
-  constructor (name, value, mutable, line) {
+  constructor (name, value, mutable, line, bind="main") {
     this.type = "DeclarationExpression";
     this.name = name;
     this.mutable = mutable;
+    this.bind = bind;
     this.value = value;
     this.line = line;
   }
@@ -33,10 +34,11 @@ class FuncAssignNode {
   /*
   For when a function is declared.
   */
-  constructor (name, args, statements, line) {
+  constructor (name, args, statements, line, bind="main") {
     this.type = "DeclarationExpression";
     this.name = name;
     this.args = args;
+    this.bind = bind;
     this.statements = statements;
     this.line = line;
   }

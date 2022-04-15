@@ -206,6 +206,10 @@ class Lexer {
       else if (it.endsWith(TT_EQ) && this.peek(pos) != "=" && this.back(pos) != "=" && this.back(pos) != "!") {
         add("EQUALITY", pos, pos, TT_EQ);
       }
+      // comma
+      else if (it.endsWith(TT_COMMA)) {
+        add("COMMA", pos, pos, TT_COMMA);
+      }
       // comparison operator
       else if (it.endsWith(TT_COMPARE)) {
         add("COMPARE", pos-1, pos, TT_COMPARE);

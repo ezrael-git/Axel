@@ -466,6 +466,16 @@ module.exports = class Parser {
     return node;
   }
 
+  parsePropertyAccess (token) {
+    let parent = this.parseStatement(token,["DOT"]):
+    this.expect('DOT');
+    let child = this.next();
+    child = this.parseStatement(child);
+
+    let node = new Literal.PropertyAccessLiteral(parent, child, token.line);
+    return node;
+  }
+
 
 
   parseStatement (token, invalid=[]) {
@@ -559,6 +569,12 @@ module.exports = class Parser {
     // hashes / dicts
     else if (type == "LBRACE") {
       let res = this.parseHash(token);
+      return res;
+    }
+
+    // property accesses
+    else if (this.peek(true).type == "DOT") {
+      let res = this.parsePropertyAccess(token);
       return res;
     }
 

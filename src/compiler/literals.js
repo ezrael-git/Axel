@@ -417,6 +417,8 @@ class VariableLiteral {
   }
 
   run (v,i) {
+    console.log("v: " + JSON.stringify(v));
+    console.log("tryna access " + this.value);
     let res = v[this.value];
     res = Scanner.resolveRun(res,i);
     return res;

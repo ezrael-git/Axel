@@ -576,8 +576,9 @@ module.exports = class Parser {
     }
 
     // property accesses
-    else if (type == "DOT") {
-      let res = this.parsePropertyAccess(token);
+    else if (this.peek(true).type == "DOT") {
+      let token_li = this.next();
+      let res = this.parsePropertyAccess(token_li);
       return res;
     }
 

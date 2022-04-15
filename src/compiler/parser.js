@@ -430,7 +430,7 @@ module.exports = class Parser {
       }
     }
 
-    let node = new Node.HashLiteral(keys,values,token.line);
+    let node = new Literal.HashLiteral(keys,values,token.line);
     return node;
   }
 

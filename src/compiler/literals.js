@@ -1037,5 +1037,6 @@ module.exports = {
   ArgLiteral:ArgLiteral,
   ForLiteral:ForLiteral,
   WhileLiteral:WhileLiteral,
-  ReturnLiteral:ReturnLiteral
+  ReturnLiteral:ReturnLiteral,
+  PropertyAccessLiteral:PropertyAccessLiteral
 }

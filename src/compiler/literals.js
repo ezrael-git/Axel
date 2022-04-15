@@ -935,6 +935,7 @@ class InstanceLiteral {
     class_name.new(arguments)
   */
   constructor (name, statements, line) {
+    this.type = "InstanceExpression";
     this.name = name;
     this.statements = statements;
     this.value = statements;
@@ -975,6 +976,7 @@ class ClassLiteral {
     end
   */
   constructor (name, statements, line) {
+    this.type = "ClassExpression";
     this.name = name;
     this.value = name;
     this.statements = statements;
@@ -999,6 +1001,7 @@ class PropertyAccessLiteral {
     parent.property
   */
   constructor (parent, property, line) {
+    this.type = "AccessExpression";
     this.parent = parent;
     this.property = property;
     this.value = property;
@@ -1007,6 +1010,9 @@ class PropertyAccessLiteral {
 
   run (v,i) {
     let parent = this.parent;
+    if (parent.constructor.name == "VariableLiteral") {
+      parent = this.parent.run(v,i);
+    }
     let property = this.property.value;
     let res = parent[property];
     console.log("PRP RES " + res);

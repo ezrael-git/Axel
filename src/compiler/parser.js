@@ -467,7 +467,7 @@ module.exports = class Parser {
   }
 
   parsePropertyAccess (token) {
-    let parent = this.parseStatement(token,["DOT"]):
+    let parent = this.parseStatement(token,["DOT"]);
     this.expect('DOT');
     let child = this.next();
     child = this.parseStatement(child);

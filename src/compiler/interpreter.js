@@ -180,6 +180,11 @@ module.exports = class Interpreter {
       let value = node.run(this.variables, new Interpreter());
       return value;
     }
+    // property accesses
+    else if (type == "PropertyAccessLiteral") {
+      let value = node.run(this.variables, new Interpreter());
+      return value;
+    }
     // other literals
     else if (node.constructor.name.includes("Literal")) {
       return node.run();

@@ -1007,8 +1007,12 @@ class PropertyAccessLiteral {
 
   run (v,i) {
     let parent = this.parent.run(v,i);
-    let res = parent[this.property];
+    let property = this.property.run(v,i);
+    let res = parent[property];
     console.log("PRP RES " + res);
+    if (res == undefined) {
+      throw new Error(`At line ${this.line}:\nTried to access a property that doesn't exist`);
+    }
     return res;
   }
 }

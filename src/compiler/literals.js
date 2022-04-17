@@ -1053,19 +1053,27 @@ class MethodAccessLiteral {
 
   run (v,i) {
     i.variables = v;
+    let p_name = this.parent.value;
+    let c_name = this.property.value;
+    let parent = this.parent;
+    let child = this.property;
+
+    if (parent.constructor.name == "VariableLiteral") {
+      parent = parent.run(v,i);
+    }
     // check validity
-    if (v[this.parent] == undefined) {
+    if (parent == undefined) {
       throw new Error(`At line ${this.line}:\nUnknown instance: ${this.parent}`);
     }
-    else if (v[this.parent][this.property] == undefined) {
+    else if (parent[c_name] == undefined) {
       throw new Error(`At line ${this.line}:\nUnknown method: ${this.property}`);
     }
 
     // get and load the method into the variable scope
-    let method = v[this.parent][this.property];
-    v[this.property] = method;
+    let method = parent[c_name];
+    v[c_name] = method;
 
-    let call = new i.literal.CallLiteral(this.property,this.args,this.line);
+    let call = new i.literal.CallLiteral(c_name,this.args,this.line);
     let res = call.run(v,i);
     return res;
   }

@@ -54,6 +54,10 @@ class StringLiteral {
   to_b () {
     return !!this.value;
   }
+
+  valid () {
+    return "yes"
+  }
 }
 
 class IntegerLiteral {

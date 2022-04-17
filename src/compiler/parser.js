@@ -479,6 +479,18 @@ module.exports = class Parser {
     return node;
   }
 
+  parseMethodAccess (token) {
+    if (token.type != "DOT") {
+      throw new Error(`Error in parseMethodAccess(): expected token.type "DOT", got ${token.type} instead`);
+    }
+
+    let parent = this.parseStatement(this.lookBack());
+    let child = this.next();
+    child = this.parseStatement(child);
+
+    let node // fix
+  }
+
 
 
   parseStatement (token, invalid=[]) {

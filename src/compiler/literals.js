@@ -1033,20 +1033,37 @@ class MethodAccessLiteral {
   Arguments:
     parent (object): the parent instance
     property (string): the method
+    args (array): the arguments to be passed
 
   Syntax:
     parent.property()
   */
-  constructor (parent, property, line) {
+  constructor (parent, property, args, line) {
     this.type = "CallExpression";
     this.parent = parent;
     this.property = property;
+    this.args = args;
     this.value = property;
     this.line = line;
   }
 
   run (v,i) {
-    
+    i.variables = v;
+    // check validity
+    if (v[this.parent] == undefined) {
+      throw new Error(`At line ${this.line}:\nUnknown instance: ${this.parent}`);
+    }
+    else if (v[this.parent][this.property] == undefined) {
+      throw new Error(`At line ${this.line}:\nUnknown method: ${this.property}`);
+    }
+
+    // get and load the method into the variable scope
+    let method = v[this.parent][this.property];
+    v[this.property] = method;
+
+    let call = new i.literal.CallLiteral(this.property,this.args,this.line);
+    let res = call.run(v,i);
+    return res;
   }
 }
 
@@ -1076,5 +1093,6 @@ module.exports = {
   ForLiteral:ForLiteral,
   WhileLiteral:WhileLiteral,
   ReturnLiteral:ReturnLiteral,
-  PropertyAccessLiteral:PropertyAccessLiteral
+  PropertyAccessLiteral:PropertyAccessLiteral,
+  MethodAccessLiteral:MethodAccessLiteral
 }

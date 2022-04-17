@@ -926,7 +926,7 @@ class ReturnLiteral {
   }
 }
 
-// classes
+// object oriented axel
 
 class InstanceLiteral {
   /*
@@ -1022,6 +1022,31 @@ class PropertyAccessLiteral {
       throw new Error(`At line ${this.line}:\nTried to access a property that doesn't exist`);
     }
     return res;
+  }
+}
+
+class MethodAccessLiteral {
+  /*
+  For when methods of an instance are called.
+  Wrapper around a CallLiteral.
+  
+  Arguments:
+    parent (object): the parent instance
+    property (string): the method
+
+  Syntax:
+    parent.property()
+  */
+  constructor (parent, property, line) {
+    this.type = "CallExpression";
+    this.parent = parent;
+    this.property = property;
+    this.value = property;
+    this.line = line;
+  }
+
+  run (v,i) {
+    
   }
 }
 

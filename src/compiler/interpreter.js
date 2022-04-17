@@ -10,6 +10,7 @@ module.exports = class Interpreter {
     this.node = -1;
     this.variables = {};
     this.scanner = new Scanner();
+    this.literal = Literal;
   }
   
   next () {

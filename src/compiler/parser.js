@@ -487,8 +487,10 @@ module.exports = class Parser {
     let parent = this.parseStatement(this.lookBack());
     let child = this.next();
     child = this.parseStatement(child);
+    let args = child.args;
 
-    let node // fix
+    let node = new Literal.MethodAccessLiteral(parent, child, args, token.line);
+    return node;
   }
 
 
@@ -588,9 +590,16 @@ module.exports = class Parser {
     }
 
     // property accesses
-    else if (this.peek(true).type == "DOT") {
+    else if (this.peek(true).type == "DOT" && this.tokens[this.token_iterated+3].type != "LPAREN") {
       let token_li = this.next();
       let res = this.parsePropertyAccess(token_li);
+      return res;
+    }
+
+    // method accesses
+    else if (this.peek(true).type == "DOT" && this.tokens[this.token_iterated+3].type == "LPAREN") {
+      let token_li = this.next();
+      let res = this.parseMethodAccess(token_li);
       return res;
     }
 

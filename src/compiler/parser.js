@@ -558,7 +558,7 @@ module.exports = class Parser {
     }
 
     // function calls
-    else if (type == "IDENTIFIER" && this.env.includes(token.tk)) {
+    else if (type == "IDENTIFIER" && this.env.includes(token.tk) || type == "IDENTIFIER" && this.peek(true).type == "LPAREN") {
       let res = this.parseFuncCall(token);
       return res;
     }

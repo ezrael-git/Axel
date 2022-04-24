@@ -22,6 +22,8 @@ do
 end
 ```
 
+Statements cannot exactly be passed around (at least not conveniently), hence blocks exist.
+
 Let's get to the language's structure/grammar.
 ```ebnf
 program := {<statements>} ;

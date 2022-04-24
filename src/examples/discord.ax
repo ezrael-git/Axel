@@ -5,7 +5,7 @@ discord = require("standard/discord.ax")
 
 client = discord.Client.new(token: ...)
 
-client.on_ready = fn =>
+client.on_ready = fn anon
   print "#{client.user.name} has connected to Discord!"
 end
 

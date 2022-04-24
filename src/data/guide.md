@@ -1,4 +1,4 @@
-I will document all the language's non-basic features in this file.
+I will document all the language's non-basic features, conventions and behaviors, in this file.
 
 # BEGIN and END
 
@@ -58,3 +58,27 @@ execute(:some_function)
 
 -- some_function gets called correctly
 ```
+
+# Parentheses
+
+While parentheses aren't usually required, they're highly recommended. I suggest you use them wherever you can. The compiler has to do a lot of guesswork when it sees a function call/anything you can use parentheses on, without parentheses. This can lead to unexpected behavior.
+
+For simple calls and code, however, not using parentheses may be more readable. For example, this:
+```rb
+if response? do
+  ...
+end
+```
+looks better than this:
+```rb
+if response?() do
+  ...
+end
+```
+Just my opinion. After all, what do I know about conventions.
+
+# Indentation
+
+It is conventional to indent *two spaces* for each block of code. *Four* spaces is also permitted, but you must stay consistent with your choice throughout the whole project.
+
+Come on guys, no excuses. If you don't want to press the space key so many times, just set your editor/IDE to enter *two*/*four* spaces on the TAB key.

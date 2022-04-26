@@ -1,11 +1,16 @@
 -- built-in library providing a simple interface to making HTTPS requests
 
-import https as https
+https = std.js("require('http')");
 
-module
+module HTTPS
+
+  fn default ()
+    return @Request
+  end
+
   class Request 
   
-    meth constructor (url, headers=undefined)
+    fn constructor (url, headers=undefined)
       @url = url
       @headers = headers
     end
@@ -14,16 +19,16 @@ module
   
   class Response
   
-    meth constructor (request, data, status)
+    fn constructor (request, data, status)
       @request = request
       @data = data
       @status = status
     end
   
-    meth successful? ()
+    fn successful? ()
       if @status == 200
         return true
-      end else
+      else
         return false
       end
     end
@@ -31,12 +36,12 @@ module
   end
   
   class HTTPS
-    meth constructor ()
+    fn constructor ()
       @record = []
     end
   
-    meth request (options)
-      /*
+    fn request (options)
+      -*
       Perform a request issued to the url.
       Interface.
       Arguments {
@@ -47,36 +52,40 @@ module
           - auth <Object> : basic auth
         }
       }
-      */
-      https.request(options, res => do
-        def data = [];
-        def status = res.statusCode
+      *-
+      https.request(options, do |res|
+        data = [];
+        status = res.status_code
         
-        res.on('data', chunk => do
-          data.push(chunk)
-        end);
+        res.on('data',
+          do |chunk|
+            data.push(chunk)
+          end
+        )
   
-        res.on('end', () => do
-          imm parsedData = JSON.parse(Buffer.concat(data).toString())
-          def request = new Request(url, options["headers"])
-          def response = new Response(request, parsedData, status)
-          return response
-        end)
+        res.on('end',
+          do
+            parsed_data = JSON.parse(Buffer.concat(data).to_s())
+            request = Request.new(url, options["headers"])
+            response = Response.new(request, parsed_data, status)
+            return response
+          end
+        )
       end
     end
   
-    meth get (options)
+    fn get (options)
       options["method"] = "GET"
-      def response = @request(options)
+      response = @request(options)
       return response
     end
   
-    meth put (options)
+    fn put (options)
       options["method"] = "PUT"
       return @request(options)
     end
   
-    meth delete (options)
+    fn delete (options)
       options["method"] = "DELETE"
       return @request(options)
     end

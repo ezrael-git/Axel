@@ -4,7 +4,7 @@ So you've decided to contribute to Axel. Excellent!
 
 ## Using the issue tracker
 
-The [issue tracker](https://github.com/Axel/issues) is the heart of Axel's work. Use it for bugs, questions, proposals and feature requests.
+The [issue tracker](https://github.com/ezrael-git/Axel/issues) is the heart of Axel's work. Use it for bugs, questions, proposals and feature requests.
 
 Please always **open a new issue before sending a pull request** if you want to add a new feature to Crystal, unless it is a minor fix, and wait until someone from the core team approves it before you actually start working on it. Otherwise, you risk having the pull request rejected, and the effort implementing it goes to waste. And if you start working on an implementation for an issue, please **let everyone know in the comments** so someone else does not start working on the same thing.
 

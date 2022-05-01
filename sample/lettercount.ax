@@ -1,0 +1,15 @@
+# Count the number of letters in a string
+
+class LetterCounter
+  fn count(string)
+    c = 0
+
+    for ltr in string
+      if std.alphabets.includes? ltr
+        c += 1
+      end
+    end
+
+    return c
+  end
+end
